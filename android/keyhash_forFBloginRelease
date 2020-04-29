@@ -1,0 +1,5 @@
+
+keytool -exportcert -alias kikoApp -keystore ./kikokeystore | openssl sha1 -binary | openssl base64
+
+Key Hash For Facebook App: hxGQkesxUfQ7Jlsy7lOoWfeU7sE=
+
