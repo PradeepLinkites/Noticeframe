@@ -3,7 +3,7 @@
 
     <item>
         <bitmap
-            android:src="@mipmap/splash"/>
+            android:src="@mipmap/spalsh"/>
     </item>
 
 </layer-list>

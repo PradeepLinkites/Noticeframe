@@ -171,7 +171,7 @@ export default class Signup extends React.Component {
 
   render() {
     const { state } = this.props.navigation
-    const route = get(state, 'routeName', '')  === 'Signup' ? 'SIGN UP' : ''
+    const route = get(state, 'routeName', '')  === 'Ragister' ? 'SIGN UP' : ''
     const {
       name,
       emailRegister,

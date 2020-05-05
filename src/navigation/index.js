@@ -1,9 +1,12 @@
 import React from 'react'
 import { createStackNavigator } from 'react-navigation-stack'
 import { createAppContainer } from 'react-navigation'
-import DrawerScreen from './drawer'
+import DrawerScreen from './drawerScreen'
 import Welcome from '../screen/Welcome/Container'
-import Login from '../screen/Login/Container'
+import Ragister from '../screen/Ragister/Container'
+import SignIn from '../screen/SignIn/Container'
+import ForgotPassword from '../screen/ForgotScreen/Container'	
+import HomePage from '../screen/HomeScreen/Container'
 import Signup from '../screen/Signup/Container'
 import Forgot from '../screen/Forgot/Container'
 import Tour from '../screen/Tour/Container'
@@ -18,18 +21,21 @@ const AuthStack = createStackNavigator({
 	Tour: {
 		screen: Tour
 	},
-	Login: {
-		screen: Login,
-	  },
-	Signup:{
-		screen: Signup,
-	},
-	Forgot:{
+	Forgot: {
 		screen: Forgot,
+	},
+	SignIn: {
+		screen: SignIn,
+	  },
+	Ragister:{
+		screen: Ragister,
+	},
+	ForgotPassword:{
+		screen: ForgotPassword,
 	}
 },{
-    headerMode: 'none',
-	initialRouteName: 'Welcome',
+    headerMode: 'true',
+	initialRouteName: 'SignIn',
     // mode: 'modal'
 });
 
@@ -46,11 +52,14 @@ const SignupStack = createStackNavigator({
 });
 
 const AppStack = createStackNavigator({
-	Home:{
-		screen: DrawerScreen,
+	// Home:{
+	// 	screen: DrawerScreen,
+	// },
+	HomePage:{
+		screen: DrawerScreen
 	}
 },{
-	initialRoute: 'Home',
+	initialRoute: 'HomePage',
     headerMode: 'none',
     navigationOptions: {
         headerVisible: false,
@@ -73,10 +82,11 @@ const mainStack = createStackNavigator({
 
 },{
     headerMode: 'none',
-	initialRoute: 'AuthStack',
+	initialRoute: 'AppStack',
 });
 
-const AppContainer = createAppContainer(mainStack);
+// const AppContainer = createAppContainer(mainStack);
+const AppContainer = createAppContainer(AppStack);
 const AppContainerHome = createAppContainer(AppStack);
 
 export default class App extends React.Component {

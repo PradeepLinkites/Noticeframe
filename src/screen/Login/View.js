@@ -237,7 +237,7 @@ export default class Login extends React.Component {
         <Image source={require('../../assets/auth/bg.png')} style={{ position: 'absolute', width: deviceWidth, height: deviceHeight }} />
         <Navbar navigation={this.props.navigation} navTitle={route} type={'detail'} />
         <View style={AppStyles.authContainer}>
-          <Text style={AppStyles.authDetails}>Enter Your Details</Text>
+          <Text style={AppStyles.authDetails}>8888Enter Your Details</Text>
           <View style={AppStyles.textBoxView}>
             <Text style={AppStyles.authLabel}>Email*</Text>
             <TextInput
