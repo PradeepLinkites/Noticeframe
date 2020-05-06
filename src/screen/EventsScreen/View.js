@@ -37,13 +37,20 @@ const actions = [
   }
 ];
 
-const items = [
-  { name: 'TURQUOISE', code: '#1abc9c' }, { name: 'EMERALD', code: '#2ecc71' },
-  { name: 'PETER RIVER', code: '#3498db' }, { name: 'AMETHYST', code: '#9b59b6' },
-  { name: 'WET ASPHALT', code: '#34495e' }, { name: 'GREEN SEA', code: '#16a085' },
-];
+const items = [[
+  { name: 'TURQUOISE', code: '#1abc9c' }, 
+  { name: 'EMERALD', code: '#2ecc71' }],
 
-export default class Home extends React.Component {
+  [{ name: 'PETER RIVER', code: '#3498db' }, 
+  { name: 'AMETHYST', code: '#9b59b6' },
+  { name: 'WET ASPHALT', code: '#34495e' },
+  { name: 'GREEN SEA', code: '#16a085' }],
+  
+  [{ name: 'PETER RIVER', code: '#3498db' }, 
+  { name: 'AMETHYST', code: '#9b59b6' }]
+]
+
+export default class Event extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,32 +60,37 @@ export default class Home extends React.Component {
   render() {
     const { getUserData } = this.state
     const { state } = this.props.navigation
-    const route = get(state, 'routeName', '')  === 'Setting' ? 'KIKO KIDS' : ''
+    const route = get(state, 'routeName', '')  === 'Events' ? 'KIKO KIDS' : ''
     return (
-      <SafeAreaView style={AppStyles.container}>       
-        <Text style={styles.text}>Recent Events</Text>
-        <FlatGrid
-          itemDimension={130}
-          items={items}
-          style={styles.gridView}
-          // staticDimension={300}
-          // fixed
-          // spacing={20}
-          renderItem={({ item, index }) => (
-            <View style={[styles.itemContainer, { backgroundColor: item.code }]}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemCode}>{item.code}</Text>
+      <SafeAreaView style={styles.container}>       
+        <ScrollView style={AppStyles.container}>
+          {items.map( data => {
+            return(
+            <View style={styles.gridView}>
+              <Text style={styles.dateText}>23 Feb 2020</Text>
+              <FlatGrid
+                itemDimension={130}
+                items={data}
+                renderItem={({ item, index }) => (
+                  <View style={[styles.itemContainer, { backgroundColor: item.code }]} key={index}>
+                    <Text style={styles.itemName}>{item.name}</Text>
+                    <Text style={styles.itemCode}>{item.code}</Text>
+                  </View>
+                )}
+              />
             </View>
-          )}
-        />
-          <FloatingAction
-            color={'#ff6600'}
-            animated={false}
-            actions={actions}
-            onPressItem={name => {
-              console.log(`selected button: ${name}`);
-            }}
-          />
+            )
+           })
+           }
+          </ScrollView>
+            <FloatingAction
+              color={'#ff6600'}
+              animated={false}
+              actions={actions}
+              onPressItem={name => {
+                console.log(`selected button: ${name}`);
+              }}
+            />
       </SafeAreaView>
     )
   }
@@ -88,28 +100,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  text:{
-    marginLeft:20,
-    marginTop:8,
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
-	  fontFamily: AppFonts.NBlack
-  },
   gridView: {
+    // marginTop: 10,
+    // marginLeft: 25,
     // backgroundColor:'red',
-    // paddingHorizontal:5,
-    marginTop: 12,
-    flex: 1,
-    marginLeft: 30,
+    paddingLeft: 25,
+    borderBottomWidth: .3,
+    borderBottomColor: '#A2a2a2'
+  },
+  dateText: {
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(16),
+    fontWeight: '500',
+    marginTop: 15
   },
   itemContainer: {
     justifyContent: 'flex-end',
-    borderRadius: 28,
+    borderRadius: 22,
     borderWidth: 8,
     borderColor: 'red',
     padding: 10,
-    height: 150,
-    width:150,
-    marginBottom:10
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(125) : AppSizes.verticalScale(110),
+    width:Platform.OS === 'android' ? AppSizes.verticalScale(125) : AppSizes.verticalScale(110),
+    marginBottom: 2
   },
   itemName: {
     fontSize: 16,

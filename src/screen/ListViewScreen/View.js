@@ -237,7 +237,6 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 20,
     fontWeight: '400',
-
   },
   eventListView: {
     paddingLeft: Platform.OS === 'android' ? 20 : 20 ,

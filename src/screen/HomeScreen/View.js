@@ -163,8 +163,8 @@ const styles = StyleSheet.create({
     borderWidth: 8,
     borderColor: 'red',
     padding: 10,
-    height: 150,
-    width:150,
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(125) : AppSizes.verticalScale(110),
+    width:Platform.OS === 'android' ? AppSizes.verticalScale(125) : AppSizes.verticalScale(110),
     marginBottom:10
   },
   itemName: {

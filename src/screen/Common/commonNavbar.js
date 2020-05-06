@@ -108,7 +108,7 @@ export default class Navbar extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        height: Platform.OS === 'android' ? 60 : 70,
+        height: Platform.OS === 'android' ? 68 : 75,
 		backgroundColor: '#3b5261',
 	 },
 	 slideShowcontainer: {
@@ -155,9 +155,9 @@ const styles = StyleSheet.create({
         fontFamily: AppFonts.NBlack
     },
     appDiscriptionView: {
-		top:  Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(16),
+		top:  Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(16),
         position: 'absolute',
-        right: 20,  
+        right: 20,
     },
     appDiscriptionText: {
         right: 0,
