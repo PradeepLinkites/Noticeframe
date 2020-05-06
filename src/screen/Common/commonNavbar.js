@@ -27,7 +27,6 @@ export default class Navbar extends React.Component {
     }
 
     render() {
-        console.log('routeKey==>>', this.props.navigation)
         const from = get(this.props,'type','') === 'register' || get(this.props,'type','') === 'forgot' ? true : false
 	    const sty = get(this.props,'stylee','') ? this.props.stylee : {}
         return ( from ?
@@ -71,27 +70,36 @@ export default class Navbar extends React.Component {
 					</Animated.View>
 	            }
 
-              {this.props.routeKey === 'Setting' &&
-					<Animated.View style={styles.container}>
-						<Animated.View style={{ flexDirection: 'row', top: 30, alignItems: 'center', justifyContent: 'center', width: '100%', paddingTop: 10 }}>
-							<TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 23 }}>
-									<Image source={require('../../assets/Home_assets/Menu.png')} />
-							</TouchableOpacity>
-							<TouchableOpacity style={{ position: 'absolute', left: 60 }}>
-									<Image source={require('../../assets/sidemenuAssets/Home.png')} />
-							</TouchableOpacity>					  
-							<View style={styles.appTitleView}>
-								<Text style={styles.appTitleText}>
-									Notice Frame
-								</Text>
-							</View>
-							<View style={styles.appDiscriptionView}>
-								<Text style={styles.appDiscriptionText} adjustsFontSizeToFit>
-									Increasing productivity frame by frame 
-								</Text>
-							</View>     
-						</Animated.View>      
-					</Animated.View>
+			  { (this.props.routeKey === 'SlideShow' || this.props.routeKey === 'Support' || this.props.routeKey === 'Share') &&
+			    <SafeAreaView style={styles.slideShowcontainer}>
+					<Animated.View style={styles.mainContainer}>
+						<TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 23 }}>
+							<Image source={require('../../assets/Home_assets/Menu.png')} />
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={{ position: 'absolute', left: 60 }}>
+							<Image source={require('../../assets/icons/Home_white.png')} style={styles.homeIconStyle}/>
+						</TouchableOpacity>					  
+						<View style={styles.appTitleView}>
+							<Text style={styles.appTitleText}>
+								{this.props.navTitle}
+							</Text>
+						</View>   
+					</Animated.View>      
+				</SafeAreaView>
+	            }
+				{this.props.routeKey === 'Setting' &&
+			    <SafeAreaView style={styles.slideShowcontainer}>
+					<Animated.View style={styles.mainContainer}>
+						<TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={{ position: 'absolute', left: 25 }}>
+							<Image source={require('../../assets/icons/Home_white.png')} style={styles.homeIconStyle}/>
+						</TouchableOpacity>					  
+						<View style={styles.appTitleView}>
+							<Text style={styles.appTitleText}>
+								{this.props.navTitle}
+							</Text>
+						</View>   
+					</Animated.View>      
+				</SafeAreaView>
 	            }
             </SafeAreaView>
         )
@@ -100,8 +108,21 @@ export default class Navbar extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        height: Platform.OS === 'android' ? 68 : 114,
-		  backgroundColor: '#3b5261',
+        height: Platform.OS === 'android' ? 60 : 70,
+		backgroundColor: '#3b5261',
+	 },
+	 slideShowcontainer: {
+		height: Platform.OS === 'android' ? 60 : 70,
+		// backgroundColor: 'transparent',
+		// backgroundColor: 'rgba(52, 52, 52, .8)'
+   },
+    mainContainer: {
+        flexDirection: 'row', 
+        top: Platform.OS === 'android' ? 28 : 28 ,
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        width: '100%', 
+        paddingTop: Platform.OS === 'android' ? 12 : 18
     },
     checkBoxContainer:{
         marginTop:5,
@@ -130,11 +151,11 @@ const styles = StyleSheet.create({
     appTitleText: {
         right: 0 ,
         color: '#fff',
-        fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(16),
+        fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(20) : AppSizes.verticalScale(18),
         fontFamily: AppFonts.NBlack
     },
     appDiscriptionView: {
-		  top: 14,
+		top:  Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(16),
         position: 'absolute',
         right: 20,  
     },
@@ -143,5 +164,10 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
         fontFamily: AppFonts.NRegular
+    },
+    homeIconStyle: {
+        height: Platform.OS === 'android' ? AppSizes.verticalScale(24) : AppSizes.verticalScale(22),
+        width: 26,
+        // backgroundColor:'red'
     }
 })

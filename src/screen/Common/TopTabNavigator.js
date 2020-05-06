@@ -13,7 +13,6 @@ import ListViewScreen from '../ListViewScreen/Container'
 
   const TopNavigator = createMaterialTopTabNavigator({
     Daily: {
-      // title: 'Daily',
       screen: DailyScreen,
       navigationOptions: ({navigation}) => ({
         tabBarIcon:({tintColor, focused})=>(  
@@ -100,7 +99,7 @@ import ListViewScreen from '../ListViewScreen/Container'
       upperCaseLabel: false,
       showLabel: false,
       showIcon: true,
-      // tabBarComponent: ({navigation}) => alert('calll'),
+      tabBarComponent: ({navigation}) => alert('calll'),
       // pressColor: "#3293ed",
       // activeColor: '#f0edf6',
       // inactiveColor: '#3e2465'

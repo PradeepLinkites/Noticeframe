@@ -9,6 +9,7 @@ import Events from '../screen/EventsScreen/Container'
 import SlideShow from '../screen/SlideShowScreen/Container'
 import Setting from '../screen/SettingScreen/Container'
 import Support from '../screen/SupportScreen/Container'
+import Share from '../screen/ShareScreen/Container'
 // import Setting from '../screen/Setting/Container'
 // import VideoPlayer from '../screen/VideoPlayer/component'
 // import WebView from '../screen/WebView/component'
@@ -350,7 +351,14 @@ const SettingScreen = createStackNavigator({
 	  })
 	}
 })
-
+const ShareScreen = createStackNavigator({
+	Share: {
+	  screen: Share,
+	  navigationOptions: () => ({
+		headerShown: false
+	  })
+	}
+})
 
 export default DrawerNavigator = createDrawerNavigator({
 	Home: {
@@ -368,6 +376,9 @@ export default DrawerNavigator = createDrawerNavigator({
    Support: {
 		 screen: SupportScreen
    },
+   Share: {
+	screen: ShareScreen
+  },
 	Logout: {
 		screen: Logout,
 		navigationOptions: {

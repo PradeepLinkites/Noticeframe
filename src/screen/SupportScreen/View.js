@@ -1,6 +1,6 @@
 import React from 'react'
 import { Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
-import Navbar from '../Common/Navbar'
+import Navbar from '../Common/commonNavbar'
 import { get } from 'lodash'
 import AwesomeButton from 'react-native-really-awesome-button'
 const deviceWidth = Dimensions.get('window').width
@@ -8,28 +8,50 @@ const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import AsyncStorage from '@react-native-community/async-storage'
 
+const supportArray = [
+	{
+	  title: 'Contact Us',
+	  icon: require('../../assets/icons/Arrow.png')
+	},
+	{
+	  title: 'Software Version',
+	  icon: require('../../assets/icons/Arrow.png')
+	},
+	{
+	  title: 'Check for Updates',
+	  icon: require('../../assets/icons/Arrow.png')
+	},
+	{
+	  title: 'Account',
+	  icon: require('../../assets/icons/Arrow.png')
+	},
+	{
+	  title: 'Privacy & terms',
+	  icon: require('../../assets/icons/Arrow.png')
+	},
+  ]
 
-export default class Home extends React.Component {
+export default class Support extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
     }
   }
-  componentDidMount(){
-    console.log('callll')
-  }
+  // componentDidMount(){
+  //   console.log('callll')
+  // }
 
   render() {
     const { getUserData } = this.state
     const { state } = this.props.navigation
-    const route = get(state, 'routeName', '')  === 'Setting' ? 'KIKO KIDS' : ''
+    const route = get(state, 'routeName', '')  === 'Support' ? 'Support' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
         <Navbar 
           navigation={this.props.navigation} 
           navTitle={route} 
           style={{ height: this.state.height }}
-          routeKey={'Setting'} 
+          routeKey={'Support'} 
         />
         <View style={styles.container}>
           <View style={styles.container2}>
@@ -39,26 +61,14 @@ export default class Home extends React.Component {
             >
               <Text style={styles.buttonText}>USER MANUAL</Text>
             </TouchableOpacity>
-             <View style={styles.settingListView}>
-                <Text style={styles.settingText}>Contact Us</Text>
-                <Image  source={require('../../assets/sidemenuAssets/Arrow_up.png')} style={{ height: 15,width: 15 }}/>
-             </View>
-             <View style={styles.settingListView}>
-                <Text style={styles.settingText}>Software Version</Text>
-                <Image  source={require('../../assets/sidemenuAssets/Arrow_up.png')} style={{ height: 15,width: 15 }}/>
-             </View>
-             <View style={styles.settingListView}>
-                <Text style={styles.settingText}>Check for Updates</Text>
-                <Image  source={require('../../assets/sidemenuAssets/Arrow_up.png')} style={{ height: 15,width: 15 }}/>
-             </View>
-             <View style={styles.settingListView}>
-                <Text style={styles.settingText}>Account</Text>
-                <Image  source={require('../../assets/sidemenuAssets/Arrow_up.png')} style={{ height: 15,width: 15 }}/>
-             </View>
-             <View style={styles.settingListView}>
-                <Text style={styles.settingText}>Privacy & terms</Text>
-                <Image  source={require('../../assets/sidemenuAssets/Arrow_up.png')} style={{ height: 15,width: 15 }}/>
-             </View>
+            {supportArray.map((item, ind)=>{
+              return(
+                <View style={styles.settingListView} key={ind}>
+                  <Text style={styles.settingText}>{item.title}</Text>
+                  <Image  source={item.icon} style={{ height: 14,width: 6 }}/>
+                </View>
+              )})
+            } 
           </View>
         </View>
       </SafeAreaView>
@@ -93,6 +103,7 @@ const styles = StyleSheet.create({
     letterSpacing:.5
   },
   settingListView :{
+    marginTop: 2,
     height: Platform.OS === 'android' ? 70 : 110,
     flexDirection: 'row',
     justifyContent:'space-between',

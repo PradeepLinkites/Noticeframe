@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScrollView, Switch,Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {ScrollView, Switch,Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get } from 'lodash'
 import AwesomeButton from 'react-native-really-awesome-button'
@@ -98,11 +98,10 @@ export default class Home extends React.Component {
             </View>
             </View>
             <View style={styles.editView}>
-              <Text>Edit</Text>
+              <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
             </View>
             <View style={styles.shareView}>
-              <Text>Share</Text>
-              {/* <Image source={require('../../assets/listAssets/processed.jpeg')} /> */}
+              <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
             </View>
           </View>
           <View style={[styles.eventListView,{backgroundColor:'#d3eaed'}]}>
@@ -131,10 +130,10 @@ export default class Home extends React.Component {
             </View>
             </View>
             <View style={styles.editView}>
-              <Text>Edit</Text>
+              <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
             </View>
             <View style={styles.shareView}>
-              <Text>Share</Text>
+              <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
             </View>
           </View>
           <View style={styles.dateView}>
@@ -166,10 +165,10 @@ export default class Home extends React.Component {
             </View>
             </View>
             <View style={styles.editView}>
-              <Text>Edit</Text>
+              <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
             </View>
             <View style={styles.shareView}>
-              <Text>Share</Text>
+              <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
             </View>
           </View>
           <View style={[styles.eventListView,{backgroundColor:'#f8eedf'}]}>
@@ -199,10 +198,10 @@ export default class Home extends React.Component {
             </View>
             </View>
             <View style={styles.editView}>
-              <Text>Edit</Text>
+              <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
             </View>
             <View style={styles.shareView}>
-              <Text>Share</Text>
+              <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
             </View>
           </View>
         </ScrollView>
@@ -225,15 +224,15 @@ const styles = StyleSheet.create({
   },
   dateView1: {
     backgroundColor: '#fff',
-    paddingLeft: 25,
-    paddingTop: 25,
-    paddingBottom: 4
+    paddingLeft: Platform.OS === 'android' ? 20 : 20 ,
+    paddingTop: Platform.OS === 'android' ? 25 : 25	,
+    paddingBottom: Platform.OS === 'android' ? 4 : 6 ,
   },
   dateView: {
     backgroundColor: '#fff',
-    paddingLeft: 25,
-    paddingTop: 52,
-    paddingBottom: 6
+    paddingLeft: Platform.OS === 'android' ? 20 : 20 ,
+    paddingTop: Platform.OS === 'android' ? 52 : 54	,
+    paddingBottom: Platform.OS === 'android' ? 6 : 8 ,
   },
   dateText: {
     fontSize: 20,
@@ -241,10 +240,9 @@ const styles = StyleSheet.create({
 
   },
   eventListView: {
-    paddingLeft: 25,
-    // paddingRight: 10,
-    paddingTop: 15,
-    paddingBottom: 12,
+    paddingLeft: Platform.OS === 'android' ? 20 : 20 ,
+    paddingTop: Platform.OS === 'android' ? 14 : 18	,
+    paddingBottom: Platform.OS === 'android' ? 14 : 18 ,
     marginBottom: 1,
     flexDirection: 'row'
   },
@@ -262,19 +260,25 @@ const styles = StyleSheet.create({
   },
   slideShowText: {
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
-	  fontFamily: AppFonts.NRegular,
-    marginTop: 5,
+    fontFamily: AppFonts.NRegular,
+    fontWeight: '500',
+    marginTop: 4,
     letterSpacing: .2,
   },
   slideShowView: {
     flexDirection:'row',
     justifyContent:'space-between',
     alignSelf:'center',
-    // marginLeft: 10,
+    marginRight: 8,
   },
   editView: {
     marginTop:4,
     marginRight:8
+  },
+  imageStyle :{
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(35) : AppSizes.verticalScale(26),
+    width: 32,
+    // backgroundColor:'red'
   },
   shareView: {
     marginTop:4,
