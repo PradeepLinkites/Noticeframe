@@ -9,7 +9,7 @@ import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import AsyncStorage from '@react-native-community/async-storage'
 import CheckBox from 'react-native-checkbox'
 // import SwitchComponent from '../Common/Switch'
-// import ImagePicker from 'react-native-image-picker'
+import ImagePicker from 'react-native-image-picker'
 import { Dropdown } from 'react-native-material-dropdown'
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import moment from "moment"
@@ -35,7 +35,6 @@ export default class CreateEvent extends React.Component {
       eventDate: moment().utcOffset('+05:30').format('DD MMMM, YYYY'),
       isDatePickerVisible: false,
       selectValue:'Group'
-
     }
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
   }
