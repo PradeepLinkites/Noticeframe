@@ -8,6 +8,7 @@ import SignIn from '../screen/SignIn/Container'
 import ForgotPassword from '../screen/ForgotScreen/Container'	
 import HomePage from '../screen/HomeScreen/Container'
 import CreateEvent from '../screen/CreateEvent/Container'
+import EventDetail from '../screen/EventDetail/Container'
 import EditEvent from '../screen/EditEvent/Container'
 import Signup from '../screen/Signup/Container'
 import Forgot from '../screen/Forgot/Container'
@@ -60,7 +61,6 @@ const AppStack = createStackNavigator({
 	CreateEvent:{
 		screen: CreateEvent
 	},
-	
 },{
 	initialRoute: 'HomePage',
     headerMode: 'none',

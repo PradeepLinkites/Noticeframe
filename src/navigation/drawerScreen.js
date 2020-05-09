@@ -15,6 +15,7 @@ import Setting from '../screen/SettingScreen/Container'
 import Support from '../screen/SupportScreen/Container'
 import Share from '../screen/ShareScreen/Container'
 import CreateEvent from '../screen/CreateEvent/Container'
+import EventDetail from '../screen/EventDetail/Container'
 import AsyncStorage from '@react-native-community/async-storage'
 import { get } from 'lodash'
 import { AppFonts, AppSizes, AppColors } from '../theme'
@@ -487,6 +488,9 @@ export default DrawerNavigator = createDrawerNavigator({
   },
    CreateEvent:{
 	screen: CreateEvent
+   },
+   EventDetail:{
+	screen: EventDetail
    },
 	Logout: {
 		screen: Logout,

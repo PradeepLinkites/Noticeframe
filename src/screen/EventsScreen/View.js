@@ -44,10 +44,10 @@ export default class Event extends React.Component {
                 itemDimension={130}
                 items={data}
                 renderItem={({ item, index }) => (
-                  <View style={[styles.itemContainer, { backgroundColor: item.code }]} key={index}>
+                  <TouchableOpacity onPress={()=> this.props.navigation.navigate('EventDetail')} style={[styles.itemContainer, { backgroundColor: item.code }]} key={index}>
                     <Text style={styles.itemName}>{item.name}</Text>
                     <Text style={styles.itemCode}>{item.code}</Text>
-                  </View>
+                  </TouchableOpacity>
                 )}
               />
             </View>
