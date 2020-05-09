@@ -7,34 +7,6 @@ const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import AsyncStorage from '@react-native-community/async-storage'
-import { FloatingAction } from "react-native-floating-action";
-
-const actions = [
-  {
-    text: "Accessibility",
-    // icon: require("./images/ic_accessibility_white.png"),
-    name: "bt_accessibility",
-    position: 2
-  },
-  {
-    text: "Language",
-    // icon: require("./images/ic_language_white.png"),
-    name: "bt_language",
-    position: 1
-  },
-  {
-    text: "Location",
-    // icon: require("./images/ic_room_white.png"),
-    name: "bt_room",
-    position: 3
-  },
-  {
-    text: "Video",
-    // icon: require("./images/ic_videocam_white.png"),
-    name: "bt_videocam",
-    position: 4
-  }
-];
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -62,7 +34,6 @@ export default class Home extends React.Component {
     }
  }
   render() {
-    const { getUserData } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')
     return (
@@ -205,14 +176,6 @@ export default class Home extends React.Component {
             </View>
           </View>
         </ScrollView>
-        <FloatingAction
-          color={'#ff6600'}
-          animated={false}
-          actions={actions}
-          onPressItem={name => {
-            console.log(`selected button: ${name}`);
-          }}
-        />
       </SafeAreaView>
     )
   }

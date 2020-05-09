@@ -3,16 +3,18 @@ import { Text, Dimensions, StyleSheet, Platform, View, TouchableOpacity, Image, 
 import { createStackNavigator } from 'react-navigation-stack'
 import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer'
 import { StackActions, NavigationActions } from 'react-navigation'
-// import Home from '../screen/Home/Container'
-import HomePage from '../screen/HomeScreen/Container'
-import Events from '../screen/ListViewScreen/Container'
+import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
+import Navbar from '../screen/Common/TabNavbar'
+import TopNavigator from '../screen/Common/TopTabNavigator'
+
+
+import Home from '../screen/HomeScreen/Container'
+import Events from '../screen/EventListScreen/Container'
 import SlideShow from '../screen/SlideShowScreen/Container'
 import Setting from '../screen/SettingScreen/Container'
 import Support from '../screen/SupportScreen/Container'
 import Share from '../screen/ShareScreen/Container'
-// import Setting from '../screen/Setting/Container'
-// import VideoPlayer from '../screen/VideoPlayer/component'
-// import WebView from '../screen/WebView/component'
+import CreateEvent from '../screen/CreateEvent/Container'
 import AsyncStorage from '@react-native-community/async-storage'
 import { get } from 'lodash'
 import { AppFonts, AppSizes, AppColors } from '../theme'
@@ -20,6 +22,14 @@ import { AppFonts, AppSizes, AppColors } from '../theme'
 // import Calender from '../screen/Common/Calender';
 // import CheckBox from 'react-native-checkbox';
 // import Icon from 'react-native-vector-icons/Ionicons';
+
+//Tabs Screens
+import DailyScreen from '../screen/DailyScreen/Container'
+import WeeklyScreen from '../screen/WeeklyScreen/Container' 
+import MonthlyScreen from '../screen/MonthlyScreen/Container' 
+// import SlideShowScreen from '../SlideShowScreen/Container' 
+import EventsComponent from '../screen/EventsScreen/Container' 
+import ListViewScreen from '../screen/EventListScreen/Container'
 
 const data = ['Daily', 'Weekly','Monthly', 'Calender List']
 
@@ -180,6 +190,7 @@ const drawerStacks = [
 	const loginUser1 = JSON.parse(JSON.stringify(loginUser))
 
 	const [value, setValue] = useState(false)
+	const [isSelected , handleSelected] = useState(false)
 	const handleToggleValue = () => {
 		const newValue = !value
 		setValue(newValue);
@@ -235,12 +246,13 @@ const drawerStacks = [
 					<View style={styles.calenderListView}>
 						{data.map((item, ind) => {
 							return(
-							<View key={ind}>
+							<TouchableOpacity key={ind} 
+							   style={{justifyContent:'center', width:'100%',marginBottom:.5}}
+                               onPress={()=>props.navigation.navigate(item)}
+							>
 								<Text style={styles.calenderListText}>{item}</Text>
-								<TouchableOpacity style={{ right: 15, position:'absolute' }} onPress={handleToggleValue}>
-								{/* <Image source={require('../assets/sidemenuAssets/Tick.png')} style={{ height: 20, width: 20, resizeMode: 'contain' }} />  */}
-								</TouchableOpacity>
-							</View>
+							    {props.navigation.state.routes[props.navigation.state.index] === item && <Image source={require('../assets/sidemenuAssets/Tick.png')} style={{right: 15, position:'absolute', height: 20, width: 20, resizeMode: 'contain' }} />} 
+							</TouchableOpacity>
 						)})
 						}
 					</View>
@@ -299,24 +311,10 @@ class Logout extends React.Component {
 
 const HomeScreen = createStackNavigator({
 	Home: {
-	  screen: HomePage
+	  screen: Home
 	},
-	// VideoPlayer: {
-	// 	screen: VideoPlayer,
-	// 	navigationOptions: () => ({
-	// 	  headerShown: false
-	// 	})
-	// },
-	// WebView: {
-	// 	screen: WebView,
-	// 	navigationOptions: () => ({
-	// 	 headerShown: false
-	// 	})
-	// }
 },{
 	headerMode: 'none',
-	initialRouteName: 'Home',
-	// mode: 'modal'
 })
 
 const EventsScreen = createStackNavigator({
@@ -360,12 +358,120 @@ const ShareScreen = createStackNavigator({
 	}
 })
 
-export default DrawerNavigator = createDrawerNavigator({
+const TabNavigator = createMaterialTopTabNavigator(
+	{
+	  Daily: {
+		screen: DailyScreen,
+	  },
+	  Weekly: {
+		screen: WeeklyScreen,
+	  },
+	  Monthly: {
+		screen: MonthlyScreen,
+	  },
+	  SlideShow: {
+		screen: SlideShow,
+	  },
+	  Events: {
+		screen: EventsComponent,
+	  },
+	  ListView: {
+		screen: ListViewScreen,
+	  },
+	},
+	{
+		navigationOptions: ({ navigation }) => {
+		  const { routeName } = navigation.state.routes[navigation.state.index];
+		  return {
+			header: props => 
+			<Navbar 
+				navigation={navigation} 
+				navTitle={routeName} 
+				routeKey={routeName}
+		   />,		
+		  }		  
+		},	
+		tabBarOptions: {
+			activeTintColor: 'blue',
+	        inactiveTintColor: 'grey',
+	    style: {
+		    backgroundColor: 'red',
+		 },
+		labelStyle: {
+		   fontSize: 11,
+	    },
+	   },
+
+	//    tabBarIcon: ({ focused, horizontal, tintColor }) => {
+    //     const { routeName } = navigation.state;
+    //     if (routeName === 'Daily') {
+    //       return (
+    //         <Image
+    //           source={
+    //             focused
+    //               ? require('../assets/Home_assets/Daily_select.png')
+    //               : require('../assets/Home_assets/Daily_select.png')
+    //           }
+    //           style={{
+    //             width: 20,
+    //             height: 20,
+    //             borderRadius: 40 / 2,
+    //           }}
+    //         />
+    //       );
+    //     } else if (routeName === 'Settings') {
+    //       return (
+    //         <Image
+    //           source={
+    //             focused
+    //               ? require('../assets/Home_assets/Daily_select.png')
+    //               : require('../assets/Home_assets/Daily_select.png')
+    //           }
+    //           style={{
+    //             width: 20,
+    //             height: 20,
+    //             borderRadius: 40 / 2,
+    //           }}
+    //         />
+    //       );
+    //     }
+    //   },
+	},
+
+	// {
+	//   defaultNavigationOptions: ({navigation}) => ({
+	// 	tabBarIcon: ({horizontal, tintColor}) => {
+	// 	  const {routeName} = navigation.state;
+	// 	  let iconName;
+	// 	  if (routeName === 'DAILY') {
+	// 		iconName = 'ios-home';
+	// 	  } else if (routeName === 'Chat') {
+	// 		iconName = 'ios-chatboxes';
+	// 	  } else if (routeName === 'Settings') {
+	// 		iconName = 'ios-settings';
+	// 	  }
+	// 	  return (
+	// 		<Ionicons
+	// 		  name={iconName}
+	// 		  size={horizontal ? 20 : 25}
+	// 		  color={tintColor}
+	// 		/>
+	// 	  );
+	// 	},
+	//   }),
+	// },
+)
+
+const HomeStackNavigator = createStackNavigator({
+	TabNavigator: TabNavigator
+   });
+
+export default DrawerNavigator = createDrawerNavigator({	
 	Home: {
-	 	screen: HomeScreen
+	 	screen: HomeStackNavigator
 	},
 	Events: {
-     	screen: EventsScreen
+     	screen: EventsComponent
 	},
 	SlideShow: {
 		screen: SlideShowScreen
@@ -379,6 +485,9 @@ export default DrawerNavigator = createDrawerNavigator({
    Share: {
 	screen: ShareScreen
   },
+   CreateEvent:{
+	screen: CreateEvent
+   },
 	Logout: {
 		screen: Logout,
 		navigationOptions: {

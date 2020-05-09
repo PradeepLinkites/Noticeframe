@@ -9,9 +9,9 @@ import WeeklyScreen from '../WeeklyScreen/Container'
 import MonthlyScreen from '../MonthlyScreen/Container' 
 import SlideShowScreen from '../SlideShowScreen/Container' 
 import EventsScreen from '../EventsScreen/Container' 
-import ListViewScreen from '../ListViewScreen/Container'   
+import EventListScreen from '../EventListScreen/Container'   
 
-  const TopNavigator = createMaterialTopTabNavigator({
+  export default TopNavigator = createMaterialTopTabNavigator({
     Daily: {
       screen: DailyScreen,
       navigationOptions: ({navigation}) => ({
@@ -77,14 +77,9 @@ import ListViewScreen from '../ListViewScreen/Container'
       },     
     ListView: {
       title: 'ListView',
-      screen: ListViewScreen,
+      screen: EventListScreen,
       navigationOptions: (navigation) => ({
         tabBarIcon:({tintColor, focused})=>(  
-            // <Icon  
-            //     name={focused ? 'ios-home' : 'md-home'}  
-            //     color={'#939393'}  
-            //     size={25}  
-            // />  
           focused ?
           <Image source={require('../../assets/Home_assets/list_select.png')} />
           :
@@ -120,5 +115,13 @@ import ListViewScreen from '../ListViewScreen/Container'
         paddingRight: 10
       }
     }
-  })
-  export default createAppContainer(TopNavigator)
+  },{
+      navigationOptions: ({ navigation }) => {
+        const { routeName } = navigation.state.routes[navigation.state.index];
+        return {
+        headerTitle: routeName,
+        headerLeft:()=><Text>kkM</Text>
+        };
+      }
+    }
+  )

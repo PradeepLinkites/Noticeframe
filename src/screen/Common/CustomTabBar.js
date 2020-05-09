@@ -59,11 +59,9 @@ export default class CustomTabBar extends React.Component {
    }
   render() {
     return (
-      <View style={styles.container}>
         <View style={styles.tabBarView}>  
           {this.tabView()}
         </View>
-      </View>
     )
   }
 }
@@ -71,6 +69,7 @@ export default class CustomTabBar extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'red'
   },
   tabBarView: {
 	backgroundColor:'#fff',

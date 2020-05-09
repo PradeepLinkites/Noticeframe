@@ -7,6 +7,8 @@ import Ragister from '../screen/Ragister/Container'
 import SignIn from '../screen/SignIn/Container'
 import ForgotPassword from '../screen/ForgotScreen/Container'	
 import HomePage from '../screen/HomeScreen/Container'
+import CreateEvent from '../screen/CreateEvent/Container'
+import EditEvent from '../screen/EditEvent/Container'
 import Signup from '../screen/Signup/Container'
 import Forgot from '../screen/Forgot/Container'
 import Tour from '../screen/Tour/Container'
@@ -52,12 +54,13 @@ const SignupStack = createStackNavigator({
 });
 
 const AppStack = createStackNavigator({
-	// Home:{
-	// 	screen: DrawerScreen,
-	// },
-	HomePage:{
+	Home:{
 		screen: DrawerScreen
-	}
+	},
+	CreateEvent:{
+		screen: CreateEvent
+	},
+	
 },{
 	initialRoute: 'HomePage',
     headerMode: 'none',

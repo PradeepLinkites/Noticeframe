@@ -31,16 +31,16 @@ import { FlatGrid } from 'react-native-super-grid';
 import { FloatingAction } from "react-native-floating-action";
 
 import TopTabBar from '../Common/TopTabNavigator'
-import CustomTabBar from '../Common/CustomTabBar'
+// import CustomTabBar from '../Common/CustomTabBar'
 // import TabView from '../Common/TabView'
 
 //Tabs Screens
-import DailyScreen from '../DailyScreen/Container'
-import WeeklyScreen from '../WeeklyScreen/Container' 
-import MonthlyScreen from '../MonthlyScreen/Container' 
-import SlideShowScreen from '../SlideShowScreen/Container' 
-import EventsScreen from '../EventsScreen/Container' 
-import ListViewScreen from '../ListViewScreen/Container'  
+// import DailyScreen from '../DailyScreen/Container'
+// import WeeklyScreen from '../WeeklyScreen/Container' 
+// import MonthlyScreen from '../MonthlyScreen/Container' 
+// import SlideShowScreen from '../SlideShowScreen/Container' 
+// import EventsScreen from '../EventsScreen/Container' 
+import ListViewScreen from '../EventListScreen/Container'
 
 
 const actions = [
@@ -88,12 +88,11 @@ export default class Home extends React.Component {
 
 changeTabHandler =(index, route )=>{
    console.log( index, '===', route)
-   this.setState({ tabIndex: index, routeName: route },()=>{
-      // console.log('call')
-   }
-   )}
+   this.setState({ tabIndex: index, routeName: route })
+}
 
 render() {
+  console.log('pppp==>>', get(this.props,'navigation',''))
   const { state } = this.props.navigation
   const route = get(state, 'routeName', '')  === 'Home' ? 'Home' : ''
   const { isLoading, allVideosData, filterCategoryData, isModalVisible, height, contentHeight, all } = this.state
@@ -109,32 +108,56 @@ render() {
       />
       <TopTabBar />
       {/* <CustomTabBar changeTab={this.changeTabHandler} tabIndex={this.state.tabIndex} routeName={this.state.routeName}/> */}
-      {/* <TabView /> */}
-
-
-      {/* <Text style={styles.text}>Recent Events</Text>
-        <FlatGrid
-          itemDimension={130}
-          items={items}
-          style={styles.gridView}
-          // staticDimension={300}
-          // fixed
-          // spacing={20}
-          renderItem={({ item, index }) => (
-            <View style={[styles.itemContainer, { backgroundColor: item.code }]}>
-              <Text style={styles.itemName}>{item.name}</Text>
-              <Text style={styles.itemCode}>{item.code}</Text>
-            </View>
-          )}
-        />
-        <FloatingAction
-          color={'#ff6600'}
-          animated={false}
-          actions={actions}
-          onPressItem={name => {
-            console.log(`selected button: ${name}`);
-          }}
-        /> */}
+        {/* <Text style={styles.text}>Recent Events</Text>
+          <FlatGrid
+            items={items}
+            style={styles.gridView}
+            renderItem={({ item, index }) => (
+              <View style={[styles.itemContainer, { backgroundColor: item.code }]}>
+                <Text style={styles.itemName}>{item.name}</Text>
+                <Text style={styles.itemCode}>{item.code}</Text>
+              </View>
+            )}
+          />
+          <FloatingAction
+            color={'#ff6600'}
+            animated={false}
+            actions={actions}
+            onPressItem={name => {
+              console.log(`selected button: ${name}`);
+            }}
+            
+          /> */}
+      {/* {this.state.routeName === 'Daily' &&
+        <View style={{flex:1, backgroundColor:'pink'}}>
+          <Text style={styles.text}>Daily</Text>
+        </View>
+      }
+      {this.state.routeName === 'Weekly' &&
+        <View style={{flex:1, backgroundColor:'pink'}}>
+          <Text style={styles.text}>Weekly</Text>
+        </View>
+      }
+      {this.state.routeName === 'Monthly' &&
+        <View style={{flex:1, backgroundColor:'pink'}}>
+          <Text style={styles.text}>Monthly</Text>
+        </View>
+      }
+      {this.state.routeName === 'slideshow' &&
+        <View style={{flex:1, backgroundColor:'pink'}}>
+          <Text style={styles.text}>slideshow</Text>
+        </View>
+      }
+      {this.state.routeName === 'Events' &&
+        <View style={{flex:1, backgroundColor:'pink'}}>
+          <Text style={styles.text}>Events</Text>
+        </View>
+      } */}
+      {/* {this.state.routeName === 'ListView' &&
+        <View style={{flex:1, backgroundColor:'pink'}}>
+          <Text style={styles.text}>ListView</Text>
+        </View>
+      } */}
     </SafeAreaView>
   )
   }

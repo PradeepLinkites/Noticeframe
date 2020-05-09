@@ -8,34 +8,6 @@ const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import AsyncStorage from '@react-native-community/async-storage'
 import { FlatGrid } from 'react-native-super-grid';
-import { FloatingAction } from "react-native-floating-action";
-
-const actions = [
-  {
-    text: "Accessibility",
-    // icon: require("./images/ic_accessibility_white.png"),
-    name: "bt_accessibility",
-    position: 2
-  },
-  {
-    text: "Language",
-    // icon: require("./images/ic_language_white.png"),
-    name: "bt_language",
-    position: 1
-  },
-  {
-    text: "Location",
-    // icon: require("./images/ic_room_white.png"),
-    name: "bt_room",
-    position: 3
-  },
-  {
-    text: "Video",
-    // icon: require("./images/ic_videocam_white.png"),
-    name: "bt_videocam",
-    position: 4
-  }
-];
 
 const items = [[
   { name: 'TURQUOISE', code: '#1abc9c' }, 
@@ -83,14 +55,9 @@ export default class Event extends React.Component {
            })
            }
           </ScrollView>
-            <FloatingAction
-              color={'#ff6600'}
-              animated={false}
-              actions={actions}
-              onPressItem={name => {
-                console.log(`selected button: ${name}`);
-              }}
-            />
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
+            <Image source={require('../../assets/icons/Add.png')} style={{height: 60,width:60}}/>
+          </TouchableOpacity>
       </SafeAreaView>
     )
   }
@@ -120,7 +87,7 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     padding: 10,
     height: Platform.OS === 'android' ? AppSizes.verticalScale(125) : AppSizes.verticalScale(110),
-    width:Platform.OS === 'android' ? AppSizes.verticalScale(125) : AppSizes.verticalScale(110),
+    width:  Platform.OS === 'android' ? AppSizes.verticalScale(125) : AppSizes.verticalScale(110),
     marginBottom: 2
   },
   itemName: {
@@ -133,4 +100,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#fff',
   },
+  plusButtonStyle: {
+    width:  Platform.OS === 'android' ? AppSizes.verticalScale(50) : AppSizes.verticalScale(50), 
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(50) : AppSizes.verticalScale(50),  
+    borderRadius: Platform.OS === 'android' ?  25 : 25 ,                                             
+    position: 'absolute',                                          
+    bottom: Platform.OS === 'android' ? 26 : 26,                                                    
+    right: Platform.OS === 'android' ? 26 : 26,  
+  }
 })

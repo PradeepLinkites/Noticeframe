@@ -110,7 +110,7 @@ export default class Login extends React.Component {
               //  }
             >
               {/* <Text style = {AppStyles.submitButtonText} onPress={this.login}> LOGIN </Text> */}
-              <Text style = {AppStyles.submitButtonText} onPress={() => this.props.navigation.navigate('HomePage')}> LOGIN </Text>
+              <Text style = {AppStyles.submitButtonText} onPress={() => this.props.navigation.navigate('Home')}> LOGIN </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassword')}>
               <Text style={AppStyles.forgotText}>Forgot Password?</Text>

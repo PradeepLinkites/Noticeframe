@@ -162,5 +162,22 @@ error: {
   marginTop: 1,
   fontFamily: Fonts.NRegular
 },
+button: {
+  marginTop: 45, 
+  backgroundColor:'#ff6600',
+  alignItems: 'center',
+  justifyContent: 'center',
+  paddingTop: Platform.OS === 'android' ? 10 : 12,
+  paddingBottom: Platform.OS === 'android' ? 10 : 12,
+  marginLeft: 5,
+  marginRight: 5
+},
+buttonText: {
+  color: '#fff',
+  fontSize: Platform.OS === 'android' ? Sizes.verticalScale(18) : Sizes.verticalScale(14),
+  fontFamily: Fonts.NRegular,
+  fontWeight: '500',
+  letterSpacing:.5
+},
 
 };

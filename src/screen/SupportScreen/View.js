@@ -56,10 +56,10 @@ export default class Support extends React.Component {
         <View style={styles.container}>
           <View style={styles.container2}>
             <TouchableOpacity
-              style={styles.button}
+              style={AppStyles.button}
               onPress={()=>alert('call')}
             >
-              <Text style={styles.buttonText}>USER MANUAL</Text>
+              <Text style={AppStyles.buttonText}>USER MANUAL</Text>
             </TouchableOpacity>
             {supportArray.map((item, ind)=>{
               return(
@@ -85,23 +85,23 @@ const styles = StyleSheet.create({
   container2: {
     flex: 1,  
   },
-  button: {
-    marginTop: 45, 
-    backgroundColor:'#ff6600',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: Platform.OS === 'android' ? 10 : 12,
-    paddingBottom: Platform.OS === 'android' ? 10 : 12,
-    marginLeft: 5,
-    marginRight: 5
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
-    fontFamily: AppFonts.NRegular,
-    fontWeight: '500',
-    letterSpacing:.5
-  },
+  // button: {
+  //   marginTop: 45, 
+  //   backgroundColor:'#ff6600',
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   paddingTop: Platform.OS === 'android' ? 10 : 12,
+  //   paddingBottom: Platform.OS === 'android' ? 10 : 12,
+  //   marginLeft: 5,
+  //   marginRight: 5
+  // },
+  // buttonText: {
+  //   color: '#fff',
+  //   fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
+  //   fontFamily: AppFonts.NRegular,
+  //   fontWeight: '500',
+  //   letterSpacing:.5
+  // },
   settingListView :{
     marginTop: 2,
     height: Platform.OS === 'android' ? 70 : 110,

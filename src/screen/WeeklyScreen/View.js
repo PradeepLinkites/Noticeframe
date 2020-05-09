@@ -22,8 +22,7 @@ export default class Home extends React.Component {
     const route = get(state, 'routeName', '')  === 'Setting' ? 'KIKO KIDS' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
-        <Navbar navigation={this.props.navigation} navTitle={route} stylee={{ height: this.state.height }} />
-        <View style={{ flex:1,backgroundColor:'red',justifyContent:'center',alignItems:'center' }}>
+        <View style={{ flex:1,justifyContent:'center',alignItems:'center' }}>
           <Text>Weekly Screen</Text>
         </View>
       </SafeAreaView>
