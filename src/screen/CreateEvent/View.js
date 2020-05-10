@@ -2,18 +2,18 @@ import React from 'react'
 import {Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get } from 'lodash'
-import AwesomeButton from 'react-native-really-awesome-button'
-const deviceWidth = Dimensions.get('window').width
-const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
-import AsyncStorage from '@react-native-community/async-storage'
 import CheckBox from 'react-native-checkbox'
-// import SwitchComponent from '../Common/Switch'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
+import SwitchComponent from '../Common/Switch'
 import ImagePicker from 'react-native-image-picker'
-import { Dropdown } from 'react-native-material-dropdown'
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import moment from "moment"
 import ModalSelector from 'react-native-modal-selector'
+const deviceWidth = Dimensions.get('window').width
+const deviceHeight = Dimensions.get('window').height
+
 
 export default class CreateEvent extends React.Component {
   constructor(props) {
@@ -34,7 +34,7 @@ export default class CreateEvent extends React.Component {
       isEndPickerVisible: false,
       eventDate: moment().utcOffset('+05:30').format('DD MMMM, YYYY'),
       isDatePickerVisible: false,
-      selectValue:'Group'
+      selectValue:'GROUP'
     }
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
   }
@@ -128,11 +128,11 @@ export default class CreateEvent extends React.Component {
   }
 
   render() {
-    let index = 0;
+    let index = 0
     const data = [
-        { key: index++, label: 'Group' },
-        { key: index++, label: 'Personal' },
-        { key: index++, label: 'Business' },
+        { key: index++, label: 'GROUP' },
+        { key: index++, label: 'PERSONAL' },
+        { key: index++, label: 'BUSINESS' },
     ]
     const colorData = [
       { key: index++, label: 'Orange' },
@@ -144,15 +144,15 @@ export default class CreateEvent extends React.Component {
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'CreateEvent' ? 'Create Event' : ''
     return (
-        <SafeAreaView style={AppStyles.container}>
-        <ScrollView style={styles.container}>
+      <SafeAreaView style={[AppStyles.container,{backgroundColor:'#3b5261'}]}>
+      <ScrollView style={styles.container}>
           <Navbar 
             navigation={this.props.navigation} 
             navTitle={route} 
             style={{ height: this.state.height }}
-            routeKey={'Share'} 
-          />
-          
+            routeKey={'CreateEvent'} 
+          />        
+          <SwitchComponent />
             <View style={styles.topContainer}>
               {this.state.avatarSource === null ?
                 <TouchableOpacity
@@ -167,12 +167,6 @@ export default class CreateEvent extends React.Component {
             </View>
             <View style={styles.eventContainer}>
               <Text style={styles.listTitle}>Event Name</Text>
-              {/* <View style={{flexDirection:'row',justifyContent:'space-between'}}> */}
-                {/* <View style={{marginTop: 10}}>
-                  <Text style={styles.selectedText}>Board Metting</Text>
-                  <View style={styles.eventBottomLine} />
-                </View> */}
-
               <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                 <TextInput
                     multiline
@@ -194,15 +188,9 @@ export default class CreateEvent extends React.Component {
                  <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/>
               </View>
             </View>
-              {this.state.selectedValue === 'Group' &&
+              {this.state.selectValue === 'GROUP' &&
                 <View style={styles.selectGroupView}>
                   <Text style={styles.listTitle}>Select Group</Text>
-                  {/* <View style={{flexDirection:'row',marginTop:8,justifyContent:'space-between'}}>
-                    <View>
-                      <Text style={styles.selectedText}>Type Group name or select from list</Text>
-                      <View style={styles.selectGroupBottomLine} />
-                    </View>
-                  </View> */}
                   <TextInput
                     multiline
                     style={styles.inputBox}
@@ -216,9 +204,9 @@ export default class CreateEvent extends React.Component {
             <View style={styles.colorContainer}>
               <View style={{flexDirection:'row'}}>
                 <View>
-                  <Text style={[styles.listTitle,{fontWeight:'700',top: 10,marginRight: 10 }]}>Default Fill colour</Text>
+                  <Text style={[styles.listTitle,{fontWeight:'700',top: 10,marginLeft: 10 }]}>Default Fill colour</Text>
                 </View>
-                  <View style={ [styles.roundColorView, {backgroundColor : selectedColor === 'red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
+                  <View style={ [styles.roundColorView, {backgroundColor : selectedColor === 'Red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
                   {/* <Picker
                       selectedValue={selectedColor}
                       style={{ width: 120 ,marginLeft: 5 }}
@@ -482,22 +470,24 @@ const styles = StyleSheet.create({
     fontWeight: Platform.OS === 'android' ? '600' : '500'
   },
   eventContainer: {
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingLeft: 25,
+    paddingRight: 25,
     paddingTop: 25,
     paddingBottom: 25,
     backgroundColor:'#fff',
     // borderBottomWidth: .3
   },
   eventInputBox: {
-    width: deviceWidth * .60,
-    justifyContent:'center',
+    flex: 1,
+    marginRight: 30,
+    paddingTop: 10,
     borderColor: 'gray', 
-    borderBottomWidth: 1.5,
+    borderBottomWidth: 1.8,
     color: '#000',
 	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14),
     letterSpacing: 1,
     fontWeight: Platform.OS === 'android' ? '600' : '500'
+
   },
   // eventBottomLine: {
   //   marginTop: 8,
@@ -545,7 +535,7 @@ const styles = StyleSheet.create({
     height:18, 
     width:18, 
     borderRadius:9, 
-    marginLeft: 86 
+    marginLeft: 86,
   },
   timeText: {
     marginRight: 10,

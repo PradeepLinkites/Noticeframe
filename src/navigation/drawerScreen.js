@@ -10,12 +10,17 @@ import TopNavigator from '../screen/Common/TopTabNavigator'
 
 import Home from '../screen/HomeScreen/Container'
 import Events from '../screen/EventListScreen/Container'
+import Calendars from '../screen/Calendars/Container'
 import SlideShow from '../screen/SlideShowScreen/Container'
 import Setting from '../screen/SettingScreen/Container'
 import Support from '../screen/SupportScreen/Container'
 import Share from '../screen/ShareScreen/Container'
 import CreateEvent from '../screen/CreateEvent/Container'
 import EventDetail from '../screen/EventDetail/Container'
+import EventSetting from '../screen/EventSetting/Container'
+import CalendarSetting from '../screen/CalenderSetting/Container'
+
+import EditEvent from '../screen/EditEvent/Container'
 import AsyncStorage from '@react-native-community/async-storage'
 import { get } from 'lodash'
 import { AppFonts, AppSizes, AppColors } from '../theme'
@@ -474,6 +479,9 @@ export default DrawerNavigator = createDrawerNavigator({
 	Events: {
      	screen: EventsComponent
 	},
+	Calendars: {
+		screen: Calendars
+    },
 	SlideShow: {
 		screen: SlideShowScreen
 	},
@@ -481,17 +489,26 @@ export default DrawerNavigator = createDrawerNavigator({
 		screen: SettingScreen
    },
    Support: {
-		 screen: SupportScreen
+		screen: SupportScreen
    },
    Share: {
-	screen: ShareScreen
+	  screen: ShareScreen
   },
    CreateEvent:{
-	screen: CreateEvent
+	  screen: CreateEvent
    },
    EventDetail:{
-	screen: EventDetail
+	   screen: EventDetail
    },
+   EditEvent:{
+	   screen: EditEvent
+   },
+   EventSetting:{
+	   screen: EventSetting
+   },
+   CalendarSetting:{
+	screen: CalendarSetting
+},
 	Logout: {
 		screen: Logout,
 		navigationOptions: {

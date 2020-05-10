@@ -2,34 +2,32 @@ import React from 'react'
 import { Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get } from 'lodash'
-import AwesomeButton from 'react-native-really-awesome-button'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
-import AsyncStorage from '@react-native-community/async-storage'
 
 const settingArray = [
-	{
+	{ route:'Color',
 	  title: 'Frame Color Settings',
 	  icon: require('../../assets/icons/Arrow.png')
 	},
-	{
+	{ route:'Import',
 	  title: 'Import Settings',
 	  icon: require('../../assets/icons/Arrow.png')
 	},
-	{
+	{ route:'Export',
 	  title: 'Export Settings',
 	  icon: require('../../assets/icons/Arrow.png')
 	},
-	{
+	{ route:'SlideShow',
 	  title: 'Slideshow Settings',
 	  icon: require('../../assets/icons/Arrow.png')
 	},
-	{
-	  title: 'Calendra Settings',
+	{ route:'CalendarSetting',
+	  title: 'Calender Settings',
 	  icon: require('../../assets/icons/Arrow.png')
   },
-  {
+  { route:'EventSetting',
 	  title: 'Events Settings',
 	  icon: require('../../assets/icons/Arrow.png')
 	},
@@ -41,12 +39,7 @@ export default class Setting extends React.Component {
     this.state = {
     }
   }
-  // componentDidMount(){
-  //   console.log('callll')
-  // }
-
   render() {
-    const { getUserData } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'Setting' ? 'SETTINGS' : ''
     return (
@@ -60,11 +53,11 @@ export default class Setting extends React.Component {
         <View style={styles.container}>
           <View style={styles.container2}>
             {settingArray.map((item, ind)=>{
-                return(
-              <View style={styles.settingListView} key={ind}>
+              return(              
+                <TouchableOpacity onPress={()=>this.props.navigation.navigate(item.route)} style={styles.settingListView} key={ind}>
                   <Text style={styles.settingText}>{item.title}</Text>
                   <Image  source={item.icon} style={styles.arrowIconStyle}/>
-              </View>
+                </TouchableOpacity>
               )})
             }  
           </View>

@@ -2,11 +2,9 @@ import React from 'react'
 import { Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get } from 'lodash'
-import AwesomeButton from 'react-native-really-awesome-button'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
-import AsyncStorage from '@react-native-community/async-storage'
 
 const supportArray = [
 	{

@@ -68,9 +68,9 @@ export default class Home extends React.Component {
               />
             </View>
             </View>
-            <View style={styles.editView}>
-              <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
-            </View>
+            <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent')}>
+                <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
+              </TouchableOpacity>
             <View style={styles.shareView}>
               <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
             </View>
@@ -100,9 +100,9 @@ export default class Home extends React.Component {
               />
             </View>
             </View>
-            <View style={styles.editView}>
+            <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent')}>
               <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
-            </View>
+            </TouchableOpacity>
             <View style={styles.shareView}>
               <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
             </View>
@@ -135,9 +135,9 @@ export default class Home extends React.Component {
               />
             </View>
             </View>
-            <View style={styles.editView}>
+            <TouchableOpacity  style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent')}>
               <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
-            </View>
+            </TouchableOpacity>
             <View style={styles.shareView}>
               <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
             </View>
@@ -168,9 +168,9 @@ export default class Home extends React.Component {
               />
             </View>
             </View>
-            <View style={styles.editView}>
-              <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
-            </View>
+              <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent')}>
+                <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
+              </TouchableOpacity>
             <View style={styles.shareView}>
               <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
             </View>

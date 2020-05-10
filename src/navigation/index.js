@@ -10,6 +10,8 @@ import HomePage from '../screen/HomeScreen/Container'
 import CreateEvent from '../screen/CreateEvent/Container'
 import EventDetail from '../screen/EventDetail/Container'
 import EditEvent from '../screen/EditEvent/Container'
+import EventSetting from '../screen/EventSetting/Container'
+import CalendarSetting from '../screen/CalenderSetting/Container'
 import Signup from '../screen/Signup/Container'
 import Forgot from '../screen/Forgot/Container'
 import Tour from '../screen/Tour/Container'
@@ -60,6 +62,15 @@ const AppStack = createStackNavigator({
 	},
 	CreateEvent:{
 		screen: CreateEvent
+	},
+	EditEvent:{
+		screen: EditEvent
+	},
+	EventSetting:{
+		screen: EventSetting
+	},
+	CalendarSetting:{
+		screen: CalendarSetting
 	},
 },{
 	initialRoute: 'HomePage',

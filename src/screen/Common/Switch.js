@@ -1,34 +1,31 @@
 import React, { Component } from 'react'
-import {StyleSheet, View, Text } from 'react-native'
+import {StyleSheet, View, Text, Switch } from 'react-native'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 
-export default class Switch extends Component {
+export default class SwitchComponent extends Component {
 	constructor(props) {
 	super(props);
 	this.state = {
-		text: ''
 	};
 	}
 	render() {
 	   return (
-			<View style={{flex:1}}>
-				<Switch
-					// onValueChange = {() => this.toggleSwitch(item, index)}
-					// onValueChange = {(value) => this.toggleSwitch(value ,'switch4')}
-					// value = {this.state.switch4Value}
-					disabled={false}
-					thumbColor={this.state.switch4Value ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
-					trackColor={{ true: '#939393', false : Platform.OS == 'android' ? '#A2a2a2': 'gray' }}
-					trackWidth={10}
-					style={
-					Platform.OS === 'android'
-							? { transform: [{ scaleX: 1 }, { scaleY: 1 }] }
-							: { transform: [{ scaleX: .6 }, { scaleY: .6 }] }
-					}
-					ios_backgroundColor={'#EBECF0'}
-			  />
-			</View>
-	);
+			<Switch
+				// onValueChange = {() => this.toggleSwitch(item, index)}
+				onValueChange = {(value) => this.props.OnChange(value)}
+				value = {this.props.value}
+				disabled={false}
+				thumbColor={this.state.switch4Value ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
+				trackColor={{ true: '#939393', false : Platform.OS == 'android' ? '#A2a2a2': 'gray' }}
+				trackWidth={10}
+				style={
+				Platform.OS === 'android'
+					? { transform: [{ scaleX: 1 }, { scaleY: 1 }] }
+					: { transform: [{ scaleX: .6 }, { scaleY: .6 }] }
+				}
+				ios_backgroundColor={'#EBECF0'}
+		  />
+	   );
 	}	
 }
 

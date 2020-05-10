@@ -12,7 +12,7 @@ import {
 import AwesomeButton from 'react-native-really-awesome-button'
 import { DrawerActions } from 'react-navigation-drawer'
 import { get } from 'lodash'
-import Icon from 'react-native-vector-icons/Ionicons';
+// import Icon from 'react-native-vector-icons/Ionicons';
 import { AppFonts, AppSizes, AppColors } from '../../theme'
 
 export default class Navbar extends React.Component {
@@ -21,9 +21,9 @@ export default class Navbar extends React.Component {
     }
 		
     back(){
-        setTimeout(() => {
-          this.props.navigation.goBack()
-        }, 100)
+		setTimeout(() => {
+			this.props.navigation.goBack()
+		}, 100)
     }
 
     render() {
@@ -50,12 +50,6 @@ export default class Navbar extends React.Component {
 							<TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 23 }}>
 									<Image source={require('../../assets/Home_assets/Menu.png')} />
 							</TouchableOpacity>
-							{/* <Animated.Image source={require('../../assets/welcome/logo.png')} style={{ height: 60, width: 160, resizeMode: 'contain' }} />                    */}
-							{/* {this.props.routeKey === 'Home' &&
-									<TouchableOpacity onPress={() => this.props.onFilter()} style={{ position: 'absolute', right: 5, width: 70, justifyContent:'center',alignItems:'center'}}>
-										<Image source={require('../../assets/sidemenu/filter.png')} style={{ height: 28, resizeMode: 'contain'}} />
-									</TouchableOpacity>
-							}          */}						  
 							<View style={styles.appTitleView}>
 								<Text style={styles.appTitleText}>
 									Notice Frame
@@ -70,7 +64,7 @@ export default class Navbar extends React.Component {
 					</Animated.View>
 	            }
 
-			  { (this.props.routeKey === 'SlideShow' || this.props.routeKey === 'Support' || this.props.routeKey === 'Share') &&
+			  { (get(this.props,'routeKey','') === 'SlideShow' || get(this.props,'routeKey','') === 'Support' || get(this.props,'routeKey','') === 'Share' || get(this.props,'routeKey','') === 'EventDetail' || get(this.props,'routeKey','') === 'CreateEvent' || get(this.props,'routeKey','') === 'EditEvent' || get(this.props,'routeKey','') === 'EventSetting' || get(this.props,'routeKey','') === 'CalendarSetting') &&
 			    <SafeAreaView style={styles.slideShowcontainer}>
 					<Animated.View style={styles.mainContainer}>
 						<TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 23 }}>
@@ -108,13 +102,11 @@ export default class Navbar extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-        height: Platform.OS === 'android' ? 68 : 75,
+      height: Platform.OS === 'android' ? 60 : 62,
 		backgroundColor: '#3b5261',
 	 },
 	 slideShowcontainer: {
-		height: Platform.OS === 'android' ? 60 : 70,
-		// backgroundColor: 'transparent',
-		// backgroundColor: 'rgba(52, 52, 52, .8)'
+		height: Platform.OS === 'android' ? 45 : 55,
    },
     mainContainer: {
         flexDirection: 'row', 
@@ -140,7 +132,7 @@ const styles = StyleSheet.create({
         // alignSelf: 'flex-end',
         // paddingRight: 15
     },
-        logoutText: {
+    logoutText: {
         fontSize: 20,
         fontWeight: '600'
     },
@@ -166,8 +158,7 @@ const styles = StyleSheet.create({
         fontFamily: AppFonts.NRegular
     },
     homeIconStyle: {
-        height: Platform.OS === 'android' ? AppSizes.verticalScale(24) : AppSizes.verticalScale(22),
-        width: 26,
-        // backgroundColor:'red'
+        height: Platform.OS === 'android' ? AppSizes.verticalScale(24) : AppSizes.verticalScale(20),
+        width: 22,
     }
 })
