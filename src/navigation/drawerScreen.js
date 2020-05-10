@@ -368,24 +368,83 @@ const TabNavigator = createMaterialTopTabNavigator(
 	{
 	  Daily: {
 		screen: DailyScreen,
+		navigationOptions: {
+			tabBarIcon: ({ tintColor }) => (
+			  //Your icon component for example => 
+			  <Image source={require('../assets/Home_assets/Daily_select.png')} />
+			)
+		  },	
+		  navigationOptions: ({navigation}) => ({
+			tabBarIcon:({tintColor, focused})=>(  
+			  focused ?
+			  <Image source={require('../assets/Home_assets/Daily_select.png')} />
+			  :
+			  <Image source={require('../assets/Home_assets/Daily.png')} />
+			),
+		})	
 	  },
 	  Weekly: {
 		screen: WeeklyScreen,
+		navigationOptions: () => ({
+			tabBarIcon:({tintColor, focused})=>(  
+			  focused ?
+			  <Image source={require('../assets/Home_assets/Weekly_select.png')} />
+			  :
+			  <Image source={require('../assets/Home_assets/Weekly.png')} />
+			)  
+		})	
 	  },
 	  Monthly: {
 		screen: MonthlyScreen,
-	  },
-	  SlideShow: {
-		screen: SlideShow,
+		navigationOptions: () => ({
+			tabBarIcon:({tintColor, focused})=>(  
+			  focused ?
+			  <Image source={require('../assets/Home_assets/Monthly_select.png')} />
+			  :
+			  <Image source={require('../assets/Home_assets/Monthly.png')} />  
+			)  
+		})	
 	  },
 	  Events: {
 		screen: EventsComponent,
+		navigationOptions: () => ({
+			tabBarIcon:({tintColor, focused})=>(  
+			  focused ?
+			  <Image source={require('../assets/Home_assets/event_select.png')} />
+			  :
+			  <Image source={require('../assets/Home_assets/event.png')} /> 
+		  )  
+		})  
 	  },
 	  ListView: {
 		screen: ListViewScreen,
+		navigationOptions: (navigation) => ({
+			tabBarIcon:({tintColor, focused})=>(  
+			  focused ?
+			  <Image source={require('../assets/Home_assets/list_select.png')} />
+			  :
+			  <Image source={require('../assets/Home_assets/list.png')} /> 
+			)  
+		})	
 	  },
 	},
-	{
+	{  	
+		tabBarOptions: {
+			showLabel:false,
+			showIcon:true,
+			activeTintColor: 'orange',
+            inactiveTintColor: 'grey',
+            style: {
+                backgroundColor: '#fff',
+                borderTopWidth: 0.5,
+				borderTopColor: 'grey',
+				paddingBottom:15,
+			},
+			indicatorStyle: {
+                height: 0
+            },
+		},
+
 		navigationOptions: ({ navigation }) => {
 		  const { routeName } = navigation.state.routes[navigation.state.index];
 		  return {
@@ -397,75 +456,7 @@ const TabNavigator = createMaterialTopTabNavigator(
 		   />,		
 		  }		  
 		},	
-		tabBarOptions: {
-			activeTintColor: 'blue',
-	        inactiveTintColor: 'grey',
-	    style: {
-		    backgroundColor: 'red',
-		 },
-		labelStyle: {
-		   fontSize: 11,
-	    },
-	   },
-
-	//    tabBarIcon: ({ focused, horizontal, tintColor }) => {
-    //     const { routeName } = navigation.state;
-    //     if (routeName === 'Daily') {
-    //       return (
-    //         <Image
-    //           source={
-    //             focused
-    //               ? require('../assets/Home_assets/Daily_select.png')
-    //               : require('../assets/Home_assets/Daily_select.png')
-    //           }
-    //           style={{
-    //             width: 20,
-    //             height: 20,
-    //             borderRadius: 40 / 2,
-    //           }}
-    //         />
-    //       );
-    //     } else if (routeName === 'Settings') {
-    //       return (
-    //         <Image
-    //           source={
-    //             focused
-    //               ? require('../assets/Home_assets/Daily_select.png')
-    //               : require('../assets/Home_assets/Daily_select.png')
-    //           }
-    //           style={{
-    //             width: 20,
-    //             height: 20,
-    //             borderRadius: 40 / 2,
-    //           }}
-    //         />
-    //       );
-    //     }
-    //   },
 	},
-
-	// {
-	//   defaultNavigationOptions: ({navigation}) => ({
-	// 	tabBarIcon: ({horizontal, tintColor}) => {
-	// 	  const {routeName} = navigation.state;
-	// 	  let iconName;
-	// 	  if (routeName === 'DAILY') {
-	// 		iconName = 'ios-home';
-	// 	  } else if (routeName === 'Chat') {
-	// 		iconName = 'ios-chatboxes';
-	// 	  } else if (routeName === 'Settings') {
-	// 		iconName = 'ios-settings';
-	// 	  }
-	// 	  return (
-	// 		<Ionicons
-	// 		  name={iconName}
-	// 		  size={horizontal ? 20 : 25}
-	// 		  color={tintColor}
-	// 		/>
-	// 	  );
-	// 	},
-	//   }),
-	// },
 )
 
 const HomeStackNavigator = createStackNavigator({
@@ -477,7 +468,7 @@ export default DrawerNavigator = createDrawerNavigator({
 	 	screen: HomeStackNavigator
 	},
 	Events: {
-     	screen: EventsComponent
+     	screen: ListViewScreen
 	},
 	Calendars: {
 		screen: Calendars

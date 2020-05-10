@@ -152,7 +152,6 @@ export default class CreateEvent extends React.Component {
             style={{ height: this.state.height }}
             routeKey={'CreateEvent'} 
           />        
-          <SwitchComponent />
             <View style={styles.topContainer}>
               {this.state.avatarSource === null ?
                 <TouchableOpacity

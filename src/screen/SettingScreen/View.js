@@ -44,6 +44,7 @@ export default class Setting extends React.Component {
     const route = get(state, 'routeName', '')  === 'Setting' ? 'SETTINGS' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
+        <ScrollView>
         <Navbar 
           navigation={this.props.navigation} 
           navTitle={route} 
@@ -62,6 +63,7 @@ export default class Setting extends React.Component {
             }  
           </View>
         </View>
+        </ScrollView>
       </SafeAreaView>
     )
   }

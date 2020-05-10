@@ -56,6 +56,7 @@ export default class Share extends React.Component {
     const route = get(state, 'routeName', '')  === 'Share' ? 'Share' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
+        <ScrollView>
         <Navbar 
           navigation={this.props.navigation} 
           navTitle={route} 
@@ -78,6 +79,7 @@ export default class Share extends React.Component {
             )})
           }
         </View>
+        </ScrollView>
       </SafeAreaView>
     )
   }

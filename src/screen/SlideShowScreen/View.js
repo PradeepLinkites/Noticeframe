@@ -25,6 +25,7 @@ export default class SlideShow extends React.Component {
     const route = get(state, 'routeName', '')  === 'SlideShow' ? 'NOTICE FRAME' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
+        <ScrollView>
         <Navbar 
           navigation={this.props.navigation} 
           navTitle={route} 
@@ -89,6 +90,7 @@ export default class SlideShow extends React.Component {
             <View style={styles.box3} />
           </View> */}
         </View>
+        </ScrollView>
       </SafeAreaView>
     )
   }
@@ -97,17 +99,17 @@ export default class SlideShow extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor:'transparent'
   },
   wrapper: {},
   backgroundImage:{
-    width: deviceWidth,
+    width: '100%',
     height: deviceHeight,
   },
   BigEventContainer: {
     position: 'absolute',
     top: 220,
     width: '100%',
+    height: deviceHeight,
     // backgroundColor: 'transparent',
     backgroundColor: 'rgba(248, 247, 216, 0.2)',
   },

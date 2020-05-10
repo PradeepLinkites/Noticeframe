@@ -45,6 +45,7 @@ export default class Support extends React.Component {
     const route = get(state, 'routeName', '')  === 'Support' ? 'Support' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
+        <ScrollView>
         <Navbar 
           navigation={this.props.navigation} 
           navTitle={route} 
@@ -69,6 +70,7 @@ export default class Support extends React.Component {
             } 
           </View>
         </View>
+        </ScrollView>
       </SafeAreaView>
     )
   }
