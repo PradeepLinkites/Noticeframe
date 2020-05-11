@@ -29,11 +29,11 @@ export default class CreateEvent extends React.Component {
       groupName: 'Type Group name or select from list',
       contactName: '',
       selectedColor: 'Orange',
-      startTime: moment().utcOffset('+05:30').format('hh:mm a'),
+      startTime: moment().add(1, 'hours').format('hh:mm a'),
       isStartPickerVisible: false,
-      endTime: '',
+      endTime: moment().add(3, 'hours').format('hh:mm a'),
       isEndPickerVisible: false,
-      eventDate: moment().utcOffset('+05:30').format('DD MMMM, YYYY'),
+      eventDate: moment().format('DD MMMM, YYYY'),
       isDatePickerVisible: false,
       selectValue:'GROUP'
     }
@@ -204,7 +204,7 @@ export default class CreateEvent extends React.Component {
                   />
                 </View>
               }
-             {this.state.selectValue === 'PERSONAL' &&
+             {/* {this.state.selectValue === 'PERSONAL' &&
                 <View style={styles.selectGroupView}>
                   <Text style={styles.listTitle}>Select Contact</Text>
                   <TextInput
@@ -216,34 +216,26 @@ export default class CreateEvent extends React.Component {
                     value={this.state.contactName}
                   />
                 </View>
-              }
+              } */}
 
             <View style={styles.colorContainer}>
-              <View style={{flexDirection:'row'}}>
+              <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <View>
                   <Text style={[styles.listTitle,{fontWeight:'700',top: 10,marginLeft: 10 }]}>Default Fill colour</Text>
                 </View>
+                <View style={{flexDirection:'row'}}>
                   <View style={ [styles.roundColorView, {backgroundColor : selectedColor === 'Red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
-                  {/* <Picker
-                      selectedValue={selectedColor}
-                      style={{ width: 120 ,marginLeft: 5 }}
-                      onValueChange={(item, itemIndex) => this.setState({selectedColor : item})}
-                    >
-                    <Picker.Item label="Orange" value="Orange" />
-                    <Picker.Item label="Blue" value="Blue" />
-                    <Picker.Item label="Green" value="Green" />
-                    <Picker.Item label="red" value="red" />
-                  </Picker> */}
                   <ModalSelector
                     initValueTextStyle={[styles.listTitle,{color: "#3293ed"}]}
                     selectStyle={{borderColor: "transparent"}}
-                    style={{marginTop: 2}}
+                    style={{marginTop: 2, marginRight: 25}}
                     // selectTextStyle={{color: "blue"}}
                     data={colorData}
                     initValue={selectedColor}
                     onChange={(option)=>this.setState({ selectedColor: option.label })} 
                   />
                  <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.colorDropdownStyle}/>
+                </View>
               </View>
             </View>
             <View style={[styles.selectGroupView,{marginTop: 10, borderBottomWidth:.3 }]}>
@@ -262,8 +254,8 @@ export default class CreateEvent extends React.Component {
             <View style={styles.eventContainer}>
                <Text style={styles.listTitle}>Event Time</Text>
               <View style={{flexDirection:'row',marginTop:8,justifyContent:'space-between'}}>
-                <View style={{flexDirection:'row'}}>               
-                  <Text style={styles.timeText} onPress={()=>this.setState({isStartPickerVisible : true})}>START TIME</Text>
+                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.setState({isStartPickerVisible : true})}>               
+                  <Text style={styles.timeText} >START TIME</Text>
                   {/* <Button title="Show Date Picker" onPress={this.showDatePicker} color='#fff'/> */}
                     <DateTimePickerModal
                       isVisible={isStartPickerVisible}
@@ -274,9 +266,9 @@ export default class CreateEvent extends React.Component {
                       locale="es-ES"
                     />
                   <Text style={styles.selectedText}>{get(this.state,'startTime','')}</Text>
-                </View>
-                <View style={{flexDirection:'row'}}> 
-                   <Text style={styles.timeText} onPress={()=>this.setState({isEndPickerVisible : true})}>END TIME</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.setState({isEndPickerVisible : true})}> 
+                   <Text style={styles.timeText}>END TIME</Text>
                    <DateTimePickerModal
                       isVisible={isEndPickerVisible}
                       mode="time"
@@ -286,7 +278,7 @@ export default class CreateEvent extends React.Component {
                       locale="es-ES"
                     />
                   <Text style={styles.selectedText}>{get(this.state,'endTime','')}</Text>
-                </View>
+                </TouchableOpacity>
               </View>
               <View style={styles.checkBoxContainer}>
                 <CheckBox
@@ -306,14 +298,15 @@ export default class CreateEvent extends React.Component {
                 <Text style={AppStyles.buttonText}>Set Reminder Alarm</Text>
               </TouchableOpacity>
             </View>
-            <View style={[styles.eventContainer,{borderBottomWidth: .3}]}>
+            <View style={styles.eventContainer}>
                <Text style={styles.listTitle} >Every Recurrence</Text>
               <View style={{flexDirection:'row',marginTop:10,justifyContent:'space-between'}}>
                 <View>
                   <Text style={styles.repeatText}>Repeat</Text>
                 </View>
-                <View>
-                   <Text style={styles.selectedText}>Everyday</Text>
+                <View style={{flexDirection:'row'}}>
+                   <Text style={[styles.selectedText,{marginLeft:0}]}>Everyday</Text>
+                   <Image source={require('../../assets/icons/Arrow.png')} style={{height: 10,width: 10, marginTop: 6}}/>
                 </View>
               </View>
             </View>
@@ -344,7 +337,7 @@ export default class CreateEvent extends React.Component {
                 </View> */}
                   <TextInput
                     multiline
-                    style={styles.inputBox}
+                    style={[styles.inputBox,{borderBottomWidth:0}]}
                     maxLength={40}
                     placeholderTextColor="red"
                     onChangeText={text => this.onLocationChange(text)}
@@ -500,7 +493,7 @@ const styles = StyleSheet.create({
     marginRight: 30,
     paddingTop: 10,
     borderColor: 'gray', 
-    borderBottomWidth: 1.8,
+    borderBottomWidth: .8,
     color: '#000',
 	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14),
     letterSpacing: 1,
@@ -524,7 +517,7 @@ const styles = StyleSheet.create({
     height: 12, 
     width: 12, 
     marginTop: Platform.OS === 'android' ? 18 : 16 ,
-    position:'absolute', 
+    // position:'absolute', 
     right: Platform.OS === 'android' ? 35 : 28 ,
   },
   selectGroupView :{
@@ -598,7 +591,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     borderColor: 'gray', 
-    borderBottomWidth: 1.8,
+    borderBottomWidth: .8,
     color: '#000',
 	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14),
     letterSpacing: 1,

@@ -28,11 +28,11 @@ export default class CreateEvent extends React.Component {
       eventName: 'Board Meeting',
       groupName: 'Type Group name or select from list',
       selectedColor: 'Orange',
-      startTime: moment().utcOffset('+05:30').format('hh:mm a'),
+      startTime: moment().add(1, 'hours').format('hh:mm a'),
       isStartPickerVisible: false,
-      endTime: '',
+      endTime: moment().add(3, 'hours').format('hh:mm a'),
       isEndPickerVisible: false,
-      eventDate: moment().utcOffset('+05:30').format('DD MMMM, YYYY'),
+      eventDate: moment().format('DD MMMM, YYYY'),
       isDatePickerVisible: false,
       selectValue:'GROUP'
     }
@@ -102,6 +102,7 @@ export default class CreateEvent extends React.Component {
       maxHeight: 500,
       storageOptions: {
         skipBackup: true,
+        // maxWidth: 1200, maxHeight: 800, quality: 0.9, noData: true,
       },
     };
 
@@ -115,11 +116,7 @@ export default class CreateEvent extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        let source = {uri: response.uri};
-
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
-
+        let source = {uri: response.uri}
         this.setState({
           avatarSource: source,
         });
@@ -201,10 +198,11 @@ export default class CreateEvent extends React.Component {
                 </View>
               }
             <View style={styles.colorContainer}>
-              <View style={{flexDirection:'row'}}>
+              <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <View>
-                  <Text style={[styles.listTitle,{fontWeight:'700',top: 10,marginLeft: 10 }]}>Default Fill colour</Text>
+                  <Text style={[styles.listTitle,{fontWeight:'600',top: 10,marginLeft: 10 }]}>Default Fill colour</Text>
                 </View>
+                <View style={{flexDirection:'row'}}>
                   <View style={ [styles.roundColorView, {backgroundColor : selectedColor === 'Red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
                   {/* <Picker
                       selectedValue={selectedColor}
@@ -219,13 +217,14 @@ export default class CreateEvent extends React.Component {
                   <ModalSelector
                     initValueTextStyle={[styles.listTitle,{color: "#3293ed"}]}
                     selectStyle={{borderColor: "transparent"}}
-                    style={{marginTop: 2}}
+                    style={{marginTop: 2,marginRight: 25}}
                     // selectTextStyle={{color: "blue"}}
                     data={colorData}
                     initValue={selectedColor}
                     onChange={(option)=>this.setState({ selectedColor: option.label })} 
                   />
                  <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.colorDropdownStyle}/>
+                </View>
               </View>
             </View>
             <View style={[styles.selectGroupView,{marginTop: 10, borderBottomWidth:.3 }]}>
@@ -244,8 +243,8 @@ export default class CreateEvent extends React.Component {
             <View style={styles.eventContainer}>
                <Text style={styles.listTitle}>Event Time</Text>
               <View style={{flexDirection:'row',marginTop:8,justifyContent:'space-between'}}>
-                <View style={{flexDirection:'row'}}>               
-                  <Text style={styles.timeText} onPress={()=>this.setState({isStartPickerVisible : true})}>START TIME</Text>
+                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.setState({isStartPickerVisible : true})}>               
+                  <Text style={styles.timeText} >START TIME</Text>
                   {/* <Button title="Show Date Picker" onPress={this.showDatePicker} color='#fff'/> */}
                     <DateTimePickerModal
                       isVisible={isStartPickerVisible}
@@ -256,9 +255,9 @@ export default class CreateEvent extends React.Component {
                       locale="es-ES"
                     />
                   <Text style={styles.selectedText}>{get(this.state,'startTime','')}</Text>
-                </View>
-                <View style={{flexDirection:'row'}}> 
-                   <Text style={styles.timeText} onPress={()=>this.setState({isEndPickerVisible : true})}>END TIME</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.setState({isEndPickerVisible : true})}> 
+                   <Text style={styles.timeText}>END TIME</Text>
                    <DateTimePickerModal
                       isVisible={isEndPickerVisible}
                       mode="time"
@@ -268,7 +267,7 @@ export default class CreateEvent extends React.Component {
                       locale="es-ES"
                     />
                   <Text style={styles.selectedText}>{get(this.state,'endTime','')}</Text>
-                </View>
+                </TouchableOpacity>
               </View>
               <View style={styles.checkBoxContainer}>
                 <CheckBox
@@ -288,20 +287,21 @@ export default class CreateEvent extends React.Component {
                 <Text style={AppStyles.buttonText}>Set Reminder Alarm</Text>
               </TouchableOpacity>
             </View>
-            <View style={[styles.eventContainer,{borderBottomWidth: .3}]}>
+            <View style={styles.eventContainer}>
                <Text style={styles.listTitle} >Every Recurrence</Text>
               <View style={{flexDirection:'row',marginTop:10,justifyContent:'space-between'}}>
                 <View>
                   <Text style={styles.repeatText}>Repeat</Text>
                 </View>
-                <View>
-                   <Text style={styles.selectedText}>Everyday</Text>
+                <View style={{flexDirection:'row'}}>
+                   <Text style={[styles.selectedText,{marginLeft:0}]}>Everyday</Text>
+                   <Image source={require('../../assets/icons/Arrow.png')} style={{height: 10,width: 10, marginTop: 6}}/>
                 </View>
               </View>
             </View>
             <View style={styles.selectGroupView}>
                <Text style={styles.listTitle}>Note</Text>
-              <View style={{flexDirection:'row',marginTop:8,justifyContent:'space-between'}}>
+              <View style={{flexDirection:'row',marginTop:8, justifyContent:'space-between'}}>
                 {/* <View>
                   <Text style={styles.selectedText}>Metting is regarding the latest project deadline</Text>
                   <View style={styles.selectGroupBottomLine} />
@@ -326,7 +326,7 @@ export default class CreateEvent extends React.Component {
                 </View> */}
                   <TextInput
                     multiline
-                    style={styles.inputBox}
+                    style={[styles.inputBox,{borderBottomWidth:0}]}
                     maxLength={40}
                     placeholderTextColor="red"
                     onChangeText={text => this.onLocationChange(text)}
@@ -456,14 +456,14 @@ const styles = StyleSheet.create({
   },
   listTitle: {
 	  color: '#A2a2a2',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(12),
     // fontFamily: AppFonts.NRegular,
     letterSpacing: .5,
     fontWeight: '500'
   },
   selectedText: {
 	  color: '#000',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14),
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
     // fontFamily: AppFonts.NBlack,
     letterSpacing: 1,
     fontWeight: Platform.OS === 'android' ? '600' : '500'
@@ -481,9 +481,9 @@ const styles = StyleSheet.create({
     marginRight: 30,
     paddingTop: 10,
     borderColor: 'gray', 
-    borderBottomWidth: 1.8,
+    borderBottomWidth: .8,
     color: '#000',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14),
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
     letterSpacing: 1,
     fontWeight: Platform.OS === 'android' ? '600' : '500'
 
@@ -505,8 +505,8 @@ const styles = StyleSheet.create({
     height: 12, 
     width: 12, 
     marginTop: Platform.OS === 'android' ? 18 : 16 ,
-    position:'absolute', 
-    right: Platform.OS === 'android' ? 35 : 28 ,
+    // position:'absolute', 
+    right: Platform.OS === 'android' ? 28 : 28 ,
   },
   selectGroupView :{
     paddingLeft: 25,
@@ -526,8 +526,10 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 15,
     paddingLeft: 15,
+    paddingRight: 15,
     backgroundColor:'#fff',
-    borderBottomWidth: .3
+    borderBottomWidth: .3,
+    justifyContent:'center'
   },
   roundColorView: {
     marginTop: 15, 
@@ -540,7 +542,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     marginTop: 4,
     color: '#939393',
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(10) : AppSizes.verticalScale(8),
     fontFamily: AppFonts.NRegular,
     letterSpacing: .2,
     fontWeight: '700'
@@ -568,7 +570,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: '#fff',
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(20) : AppSizes.verticalScale(16),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
     // fontFamily: AppFonts.NBlack,
     fontWeight: '900',
     letterSpacing:.2
@@ -579,16 +581,16 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     borderColor: 'gray', 
-    borderBottomWidth: 1.8,
+    borderBottomWidth: .8,
     color: '#000',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14),
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
     letterSpacing: 1,
     fontWeight: Platform.OS === 'android' ? '600' : '500'
   },
 
   slideShowText: {
 	  color: '#A2a2a2',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(12),
     // fontFamily: AppFonts.NRegular,
     letterSpacing: .5,
     fontWeight: '600',
@@ -608,7 +610,7 @@ const styles = StyleSheet.create({
   },
   statusButtonText: {
 	  color: '#fff',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(17) : AppSizes.verticalScale(13),
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(15) : AppSizes.verticalScale(11),
     // fontFamily: AppFonts.NRegular,
     letterSpacing: .5,
     fontWeight: '600',
@@ -632,7 +634,7 @@ const styles = StyleSheet.create({
   },
   repeatText: {
     color: '#939393',
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
     fontFamily: AppFonts.NRegular,
     fontWeight: '700'
   },
@@ -640,11 +642,11 @@ const styles = StyleSheet.create({
     color: '#939393',
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
     fontFamily: AppFonts.NRegular,
-    fontWeight: '700'
+    fontWeight: '600'
   },
   cancelText: {
     color: '#fff',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(22) : AppSizes.verticalScale(16),
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(20) : AppSizes.verticalScale(14),
     // fontFamily: AppFonts.NRegular,
     letterSpacing: .5,
     fontWeight: '600',

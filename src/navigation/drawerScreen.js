@@ -4,10 +4,13 @@ import { createStackNavigator } from 'react-navigation-stack'
 import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer'
 import { StackActions, NavigationActions } from 'react-navigation'
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
+import { LoginManager } from 'react-native-fbsdk'
+
+//TabsNavar
 import Navbar from '../screen/Common/TabNavbar'
-import TopNavigator from '../screen/Common/TopTabNavigator'
+// import TopNavigator from '../screen/Common/TopTabNavigator'
 
-
+//Drawer Screens
 import Home from '../screen/HomeScreen/Container'
 import Events from '../screen/EventListScreen/Container'
 import Calendars from '../screen/Calendars/Container'
@@ -19,23 +22,18 @@ import CreateEvent from '../screen/CreateEvent/Container'
 import EventDetail from '../screen/EventDetail/Container'
 import EventSetting from '../screen/EventSetting/Container'
 import CalendarSetting from '../screen/CalenderSetting/Container'
-
 import EditEvent from '../screen/EditEvent/Container'
 import AsyncStorage from '@react-native-community/async-storage'
 import { get } from 'lodash'
 import { AppFonts, AppSizes, AppColors } from '../theme'
-// import { LoginManager } from 'react-native-fbsdk'
-// import Calender from '../screen/Common/Calender';
-// import CheckBox from 'react-native-checkbox';
-// import Icon from 'react-native-vector-icons/Ionicons';
 
 //Tabs Screens
 import DailyScreen from '../screen/DailyScreen/Container'
 import WeeklyScreen from '../screen/WeeklyScreen/Container' 
 import MonthlyScreen from '../screen/MonthlyScreen/Container' 
-// import SlideShowScreen from '../SlideShowScreen/Container' 
 import EventsComponent from '../screen/EventsScreen/Container' 
 import ListViewScreen from '../screen/EventListScreen/Container'
+// import SlideShowScreen from '../SlideShowScreen/Container' 
 
 const data = ['Daily', 'Weekly','Monthly', 'Calender List']
 
@@ -304,10 +302,11 @@ class Logout extends React.Component {
 	}
 
 	componentDidMount() {
-		AsyncStorage.removeItem('@user');
-		this.props.screenProps.updateUser({})
-		LoginManager.logOut()
-		this.props.navigation.navigate('AuthStack')
+		alert('logout Successfully')
+		// AsyncStorage.removeItem('@user');
+		// this.props.screenProps.updateUser({})
+		// LoginManager.logOut()
+		// this.props.navigation.navigate('AuthStack')
 	}
 
 	render() {

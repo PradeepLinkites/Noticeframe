@@ -46,8 +46,10 @@ export default class CreateEvent extends React.Component {
             </View>
             <View style={styles.colorContainer}>
               <Text style={[styles.titleText,{marginTop:9}]}>Default Fill colour </Text>
-              <View style={ [styles.roundColorView, {backgroundColor : selectedColor === 'red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
-              <Text style={[styles.subTitleText,{marginTop: 12}]}>Orange</Text>
+              <View style={{flexDirection:'row'}}> 
+                <View style={ [styles.roundColorView, {marginRight:15, backgroundColor : selectedColor === 'red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
+                <Text style={[styles.subTitleText,{marginTop: 12}]}>Orange</Text>
+              </View>
             </View>
             <View style={styles.reminderContainer}>
               <Text style={styles.titleText}>Reminder</Text>
