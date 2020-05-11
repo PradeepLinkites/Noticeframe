@@ -84,7 +84,7 @@ export default class CreateEvent extends React.Component {
                 <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
               </TouchableOpacity>
               <TouchableOpacity onPress={()=>alert('Notes deleted successfully')}> 
-                <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
+                <Image source={require('../../assets/icons/Delete.png')} style={styles.imageStyle}/>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     borderBottomWidth:.3,
   },
   imageStyle: {
-    width: wp(8),
+    width: wp(9),
     height: hp(6)
   },
   bottomContainer: {
