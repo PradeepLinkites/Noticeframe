@@ -23,6 +23,7 @@ import EventDetail from '../screen/EventDetail/Container'
 import EventSetting from '../screen/EventSetting/Container'
 import CalendarSetting from '../screen/CalenderSetting/Container'
 import EditEvent from '../screen/EditEvent/Container'
+import CreateGroup from '../screen/CreateGroup/Container'
 import AsyncStorage from '@react-native-community/async-storage'
 import { get } from 'lodash'
 import { AppFonts, AppSizes, AppColors } from '../theme'
@@ -51,37 +52,43 @@ const drawerStacks = [
 	  icon: require('../assets/sidemenuAssets/Event.png')
 	},
 	{
-	  key: 3,
+		key: 3,
+		route: 'CreateGroup',
+		title: 'CreateGroup',
+		icon: require('../assets/sidemenuAssets/Calender.png')
+	},
+	{
+	  key: 4,
 	  route: 'Calendars',
 	  title: 'Calendars',
 	  icon: require('../assets/sidemenuAssets/Calender.png')
 	},
 	{
-	  key: 4,
+	  key: 5,
 	  route: 'SlideShow',
 	  title: 'SlideShow',
 	  icon: require('../assets/sidemenuAssets/Slideshow.png')
 	},
 	{
-	  key: 5,
+	  key: 6,
 	  route: 'Setting',
 	  title: 'Setting',
 	  icon: require('../assets/sidemenuAssets/Setting.png')
 	},
 	{
-		key: 6,
+		key: 7,
 		route: 'Support',
 		title: 'Support',
 		icon: require('../assets/sidemenuAssets/Support.png')
 	},
 	{
-		key: 7,
+		key: 8,
 		route: 'Share',
 		title: 'Share the app',
 		icon: require('../assets/sidemenuAssets/Share.png')
 	},
 	{
-		key: 8,
+		key: 9,
 		route: 'Logout',
 		title: 'Logout',
 		icon: require('../assets/sidemenuAssets/Logout.png')
@@ -330,6 +337,14 @@ const EventsScreen = createStackNavigator({
 	  })
 	}
 })
+const CreateGroupScreen = createStackNavigator({
+	CreateGroup: {
+	  screen: CreateGroup,
+	  navigationOptions: () => ({
+		headerShown: false
+	  })
+	}
+})
 const SlideShowScreen = createStackNavigator({
 	SlideShow: {
 	  screen: SlideShow,
@@ -469,6 +484,9 @@ export default DrawerNavigator = createDrawerNavigator({
 	Events: {
      	screen: ListViewScreen
 	},
+	CreateGroup: {
+		screen: CreateGroupScreen
+   },
 	Calendars: {
 		screen: Calendars
     },

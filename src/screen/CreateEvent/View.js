@@ -23,7 +23,7 @@ export default class CreateEvent extends React.Component {
       switch2Value: false,
       location: 'Str. I Gualdariya, 9, 47890, italy',
       notes: 'Metting is regarding the latest project deadline',
-      avatarSource: null,
+      avatarSource: '',
       selectedValue: 'Group',
       eventName: 'Board Meeting',
       groupName: 'Type Group name or select from list',
@@ -150,7 +150,7 @@ export default class CreateEvent extends React.Component {
             routeKey={'CreateEvent'} 
           />        
             <View style={styles.topContainer}>
-              {this.state.avatarSource === null ?
+              {get(this.state, 'avatarSource','') === '' ?
                 <TouchableOpacity
                   style={styles.addPictureButton}
                   onPress={this.selectPhotoTapped.bind(this)}

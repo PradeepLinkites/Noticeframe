@@ -8,6 +8,7 @@ import SignIn from '../screen/SignIn/Container'
 import ForgotPassword from '../screen/ForgotScreen/Container'	
 import HomePage from '../screen/HomeScreen/Container'
 import CreateEvent from '../screen/CreateEvent/Container'
+import CreateGroup from '../screen/CreateGroup/Container'
 import EventDetail from '../screen/EventDetail/Container'
 import EditEvent from '../screen/EditEvent/Container'
 import EventSetting from '../screen/EventSetting/Container'
@@ -72,6 +73,9 @@ const AppStack = createStackNavigator({
 	CalendarSetting:{
 		screen: CalendarSetting
 	},
+	CreateGroup:{
+		screen: CreateGroup
+	}
 },{
 	initialRoute: 'HomePage',
     headerMode: 'none',

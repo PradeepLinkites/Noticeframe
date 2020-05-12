@@ -64,7 +64,9 @@ export default class Navbar extends React.Component {
 					</Animated.View>
 	            }
 
-			  { (get(this.props,'routeKey','') === 'SlideShow' || get(this.props,'routeKey','') === 'Support' || get(this.props,'routeKey','') === 'Share' || get(this.props,'routeKey','') === 'EventDetail' || get(this.props,'routeKey','') === 'CreateEvent' || get(this.props,'routeKey','') === 'EditEvent' || get(this.props,'routeKey','') === 'EventSetting' || get(this.props,'routeKey','') === 'CalendarSetting') &&
+              { (get(this.props,'routeKey','') === 'SlideShow' || get(this.props,'routeKey','') === 'Support' || get(this.props,'routeKey','') === 'Share' || 
+                get(this.props,'routeKey','') === 'EventDetail' || get(this.props,'routeKey','') === 'CreateEvent' || get(this.props,'routeKey','') === 'EditEvent' || 
+                get(this.props,'routeKey','') === 'EventSetting' || get(this.props,'routeKey','') === 'CalendarSetting' || get(this.props,'routeKey','') === 'CreateGroup') &&
 			    <SafeAreaView style={styles.slideShowcontainer}>
 					<Animated.View style={styles.mainContainer}>
 						<TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 23 }}>
