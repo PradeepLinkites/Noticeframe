@@ -66,7 +66,8 @@ export default class Navbar extends React.Component {
 
               { (get(this.props,'routeKey','') === 'SlideShow' || get(this.props,'routeKey','') === 'Support' || get(this.props,'routeKey','') === 'Share' || 
                 get(this.props,'routeKey','') === 'EventDetail' || get(this.props,'routeKey','') === 'CreateEvent' || get(this.props,'routeKey','') === 'EditEvent' || 
-                get(this.props,'routeKey','') === 'EventSetting' || get(this.props,'routeKey','') === 'CalendarSetting' || get(this.props,'routeKey','') === 'CreateGroup') &&
+                get(this.props,'routeKey','') === 'EventSetting' || get(this.props,'routeKey','') === 'CalendarSetting' || get(this.props,'routeKey','') === 'CreateGroup' || 
+                get(this.props,'routeKey','') === 'SlideShowSetting') &&
 			    <SafeAreaView style={styles.slideShowcontainer}>
 					<Animated.View style={styles.mainContainer}>
 						<TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 23 }}>
@@ -83,7 +84,7 @@ export default class Navbar extends React.Component {
 					</Animated.View>      
 				</SafeAreaView>
 	            }
-				{this.props.routeKey === 'Setting' &&
+				{(get(this.props,'routeKey','') === 'Setting' || get(this.props,'routeKey','') === 'FrameColorSetting' ) &&
 			    <SafeAreaView style={styles.slideShowcontainer}>
 					<Animated.View style={styles.mainContainer}>
 						<TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={{ position: 'absolute', left: 25 }}>

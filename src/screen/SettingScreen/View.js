@@ -7,7 +7,7 @@ const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 
 const settingArray = [
-	{ route:'Color',
+	{ route:'FrameColorSetting',
 	  title: 'Frame Color Settings',
 	  icon: require('../../assets/icons/Arrow.png')
 	},
@@ -19,7 +19,7 @@ const settingArray = [
 	  title: 'Export Settings',
 	  icon: require('../../assets/icons/Arrow.png')
 	},
-	{ route:'SlideShow',
+	{ route:'SlideShowSetting',
 	  title: 'Slideshow Settings',
 	  icon: require('../../assets/icons/Arrow.png')
 	},

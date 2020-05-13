@@ -22,6 +22,9 @@ import CreateEvent from '../screen/CreateEvent/Container'
 import EventDetail from '../screen/EventDetail/Container'
 import EventSetting from '../screen/EventSetting/Container'
 import CalendarSetting from '../screen/CalenderSetting/Container'
+import SlideShowSetting from '../screen/SlideShowSetting/Container'
+import FrameColorSetting from '../screen/FrameColorSetting/Container'
+
 import EditEvent from '../screen/EditEvent/Container'
 import CreateGroup from '../screen/CreateGroup/Container'
 import AsyncStorage from '@react-native-community/async-storage'
@@ -516,7 +519,13 @@ export default DrawerNavigator = createDrawerNavigator({
    },
    CalendarSetting:{
 	screen: CalendarSetting
-},
+	},
+	SlideShowSetting:{
+		screen: SlideShowSetting
+	},
+	FrameColorSetting:{
+		screen: FrameColorSetting
+	},
 	Logout: {
 		screen: Logout,
 		navigationOptions: {
