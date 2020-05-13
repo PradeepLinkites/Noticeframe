@@ -24,6 +24,8 @@ import EventSetting from '../screen/EventSetting/Container'
 import CalendarSetting from '../screen/CalenderSetting/Container'
 import SlideShowSetting from '../screen/SlideShowSetting/Container'
 import FrameColorSetting from '../screen/FrameColorSetting/Container'
+import ImportSetting from '../screen/ImportSetting/Container'
+import ExportSetting from '../screen/ExportSetting//Container'
 
 import EditEvent from '../screen/EditEvent/Container'
 import CreateGroup from '../screen/CreateGroup/Container'
@@ -58,7 +60,7 @@ const drawerStacks = [
 		key: 3,
 		route: 'CreateGroup',
 		title: 'CreateGroup',
-		icon: require('../assets/sidemenuAssets/Calender.png')
+		icon: require('../assets/sidemenuAssets/plus.png')
 	},
 	{
 	  key: 4,
@@ -525,6 +527,12 @@ export default DrawerNavigator = createDrawerNavigator({
 	},
 	FrameColorSetting:{
 		screen: FrameColorSetting
+	},
+	ImportSetting:{
+		screen: ImportSetting
+	},
+	ExportSetting:{
+		screen: ExportSetting
 	},
 	Logout: {
 		screen: Logout,

@@ -84,7 +84,7 @@ export default class Navbar extends React.Component {
 					</Animated.View>      
 				</SafeAreaView>
 	            }
-				{(get(this.props,'routeKey','') === 'Setting' || get(this.props,'routeKey','') === 'FrameColorSetting' ) &&
+				{(get(this.props,'routeKey','') === 'Setting' || get(this.props,'routeKey','') === 'FrameColorSetting' || get(this.props,'routeKey','') === 'ImportSetting' || get(this.props,'routeKey','') === 'ExportSetting' ) &&
 			    <SafeAreaView style={styles.slideShowcontainer}>
 					<Animated.View style={styles.mainContainer}>
 						<TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={{ position: 'absolute', left: 25 }}>

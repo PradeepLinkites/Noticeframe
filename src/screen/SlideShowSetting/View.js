@@ -72,9 +72,12 @@ export default class SlideShowSetting extends React.Component {
             <View style={styles.transitionView}>
               <View style={{flex:1,paddingRight:50}}><Text style={styles.transitionText}>No.of events in slideShow</Text></View>
               <View style={styles.buttonView}>
-                <TouchableOpacity onPress={this.onChangeMinus} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
+                {/* <TouchableOpacity onPress={this.onChangeMinus} style={styles.slideShowBox}> */}
+               <TouchableOpacity onPress={this.onChangeMinus}><Image source={require('../../assets/icons/-.png')} style={styles.image} /></TouchableOpacity>
+                {/* </TouchableOpacity> */}
                 <View style={{justifyContent:'center'}}><Text style={styles.number}>{slideValue}</Text></View>
-                <TouchableOpacity onPress={this.onChangePlus} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
+                <TouchableOpacity onPress={this.onChangePlus}><Image source={require('../../assets/icons/+.png')} style={styles.image} /></TouchableOpacity>
+                {/* <TouchableOpacity onPress={this.onChangePlus} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity> */}
               </View>
             </View>
             <View style={styles.topContainer}>
@@ -200,5 +203,9 @@ const styles = StyleSheet.create({
     fontSize: Platform.OS === 'android' ? 16 : 18,
     fontWeight:'600',
 
+  },
+  image: {
+    height: Platform.OS === 'android' ? 56 : 60,
+    width: Platform.OS === 'android' ? 56 : 60,
   }
 })

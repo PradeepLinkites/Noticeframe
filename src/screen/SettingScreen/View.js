@@ -11,11 +11,11 @@ const settingArray = [
 	  title: 'Frame Color Settings',
 	  icon: require('../../assets/icons/Arrow.png')
 	},
-	{ route:'Import',
+	{ route:'ImportSetting',
 	  title: 'Import Settings',
 	  icon: require('../../assets/icons/Arrow.png')
 	},
-	{ route:'Export',
+	{ route:'ExportSetting',
 	  title: 'Export Settings',
 	  icon: require('../../assets/icons/Arrow.png')
 	},
