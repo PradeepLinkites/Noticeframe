@@ -28,47 +28,7 @@ import AwesomeButton from 'react-native-really-awesome-button'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import { ActivityIndicator } from 'react-native-paper'
 import { FlatGrid } from 'react-native-super-grid';
-import { FloatingAction } from "react-native-floating-action";
-
 import TopTabBar from '../Common/TopTabNavigator'
-// import CustomTabBar from '../Common/CustomTabBar'
-// import TabView from '../Common/TabView'
-
-//Tabs Screens
-// import DailyScreen from '../DailyScreen/Container'
-// import WeeklyScreen from '../WeeklyScreen/Container' 
-// import MonthlyScreen from '../MonthlyScreen/Container' 
-// import SlideShowScreen from '../SlideShowScreen/Container' 
-// import EventsScreen from '../EventsScreen/Container' 
-import ListViewScreen from '../EventListScreen/Container'
-
-
-const actions = [
-  {
-    text: "Accessibility",
-    // icon: require("./images/ic_accessibility_white.png"),
-    name: "bt_accessibility",
-    position: 2
-  },
-  {
-    text: "Language",
-    // icon: require("./images/ic_language_white.png"),
-    name: "bt_language",
-    position: 1
-  },
-  {
-    text: "Location",
-    // icon: require("./images/ic_room_white.png"),
-    name: "bt_room",
-    position: 3
-  },
-  {
-    text: "Video",
-    // icon: require("./images/ic_videocam_white.png"),
-    name: "bt_videocam",
-    position: 4
-  }
-];
 
 const items = [
   { name: 'TURQUOISE', code: '#1abc9c' }, { name: 'EMERALD', code: '#2ecc71' },
@@ -107,8 +67,7 @@ render() {
         routeKey={'Home'}
       />
       <TopTabBar />
-      {/* <CustomTabBar changeTab={this.changeTabHandler} tabIndex={this.state.tabIndex} routeName={this.state.routeName}/> */}
-        {/* <Text style={styles.text}>Recent Events</Text>
+        <Text style={styles.text}>Recent Events</Text>
           <FlatGrid
             items={items}
             style={styles.gridView}
@@ -119,45 +78,6 @@ render() {
               </View>
             )}
           />
-          <FloatingAction
-            color={'#ff6600'}
-            animated={false}
-            actions={actions}
-            onPressItem={name => {
-              console.log(`selected button: ${name}`);
-            }}
-            
-          /> */}
-      {/* {this.state.routeName === 'Daily' &&
-        <View style={{flex:1, backgroundColor:'pink'}}>
-          <Text style={styles.text}>Daily</Text>
-        </View>
-      }
-      {this.state.routeName === 'Weekly' &&
-        <View style={{flex:1, backgroundColor:'pink'}}>
-          <Text style={styles.text}>Weekly</Text>
-        </View>
-      }
-      {this.state.routeName === 'Monthly' &&
-        <View style={{flex:1, backgroundColor:'pink'}}>
-          <Text style={styles.text}>Monthly</Text>
-        </View>
-      }
-      {this.state.routeName === 'slideshow' &&
-        <View style={{flex:1, backgroundColor:'pink'}}>
-          <Text style={styles.text}>slideshow</Text>
-        </View>
-      }
-      {this.state.routeName === 'Events' &&
-        <View style={{flex:1, backgroundColor:'pink'}}>
-          <Text style={styles.text}>Events</Text>
-        </View>
-      } */}
-      {/* {this.state.routeName === 'ListView' &&
-        <View style={{flex:1, backgroundColor:'pink'}}>
-          <Text style={styles.text}>ListView</Text>
-        </View>
-      } */}
     </SafeAreaView>
   )
   }

@@ -56,14 +56,13 @@ export default class Share extends React.Component {
     const route = get(state, 'routeName', '')  === 'Share' ? 'Share' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
-        <ScrollView>
+        <ScrollView style={styles.container}>
         <Navbar 
           navigation={this.props.navigation} 
           navTitle={route} 
           style={{ height: this.state.height }}
           routeKey={'Share'} 
         />
-        <View style={styles.container}>
           <Text style={styles.text}>Join us on</Text>
           {socialArray.map((item, ind)=>{
             return(
@@ -78,7 +77,6 @@ export default class Share extends React.Component {
               </View>  
             )})
           }
-        </View>
         </ScrollView>
       </SafeAreaView>
     )
@@ -88,6 +86,7 @@ export default class Share extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'#fff'
   },
   text: {
     marginLeft : 25, 

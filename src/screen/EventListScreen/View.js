@@ -176,6 +176,9 @@ export default class Home extends React.Component {
             </View>
           </View>
         </ScrollView>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
+            <Image source={require('../../assets/icons/Add.png')} style={{height: 56,width: 56}}/>
+          </TouchableOpacity>
       </SafeAreaView>
     )
   }
@@ -183,7 +186,8 @@ export default class Home extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor:'#fff'
   },
   dateView1: {
     backgroundColor: '#fff',
@@ -245,5 +249,13 @@ const styles = StyleSheet.create({
   shareView: {
     marginTop:4,
     marginRight:8
+  },
+  plusButtonStyle: {
+    width:  Platform.OS === 'android' ? AppSizes.verticalScale(50) : AppSizes.verticalScale(50), 
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(50) : AppSizes.verticalScale(50),  
+    borderRadius: Platform.OS === 'android' ?  25 : 25 ,                                             
+    position: 'absolute',                                          
+    bottom: Platform.OS === 'android' ? 26 : 26,                                                    
+    right: Platform.OS === 'android' ? 26 : 26,  
   }
 })

@@ -22,7 +22,7 @@ export default class Home extends React.Component {
     const route = get(state, 'routeName', '')  === 'Setting' ? 'KIKO KIDS' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
-        <View style={{ flex:1,justifyContent:'center',alignItems:'center' }}>
+        <View style={{ flex:1,justifyContent:'center',alignItems:'center',backgroundColor:'#fff' }}>
           <Text>DailyScreen1</Text>
         </View>
       </SafeAreaView>

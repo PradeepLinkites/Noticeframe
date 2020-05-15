@@ -13,7 +13,7 @@ import Navbar from '../screen/Common/TabNavbar'
 //Drawer Screens
 import Home from '../screen/HomeScreen/Container'
 import Events from '../screen/EventListScreen/Container'
-import Calendars from '../screen/Calendars/Container'
+import Calendar from '../screen/Calendars/Container'
 import SlideShow from '../screen/SlideShowScreen/Container'
 import Setting from '../screen/SettingScreen/Container'
 import Support from '../screen/SupportScreen/Container'
@@ -39,7 +39,6 @@ import WeeklyScreen from '../screen/WeeklyScreen/Container'
 import MonthlyScreen from '../screen/MonthlyScreen/Container' 
 import EventsComponent from '../screen/EventsScreen/Container' 
 import ListViewScreen from '../screen/EventListScreen/Container'
-// import SlideShowScreen from '../SlideShowScreen/Container' 
 
 const data = ['Daily', 'Weekly','Monthly', 'Calender List']
 
@@ -122,8 +121,7 @@ const drawerStacks = [
       flexDirection: 'row',
 	  backgroundColor: '#3b5261',
 	  paddingTop: Platform.OS === 'android' ? 30 : 65,
-	  paddingBottom: Platform.OS === 'android' ? 30 : 48,
-	  paddingLeft: 15
+	  paddingBottom: Platform.OS === 'android' ? 30 : 40,
 	},
 	drawerIcon: {
 	  resizeMode: 'contain',
@@ -137,22 +135,21 @@ const drawerStacks = [
 	},
 	userView: {
 		flexDirection:'column', 
-		marginLeft: 8 ,
-		marginTop: 10
+		marginTop: Platform.OS === 'android' ? 15 : 20,
 	},
 	userName: {
 	  color: '#fff',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
 	  fontFamily: AppFonts.NBlack
 	},
 	drawerEmailText: {
 	  color: '#fff',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
 	  fontFamily: AppFonts.NRegular
 	},
 	drawerText: {
 	  color: '#000',
-	  fontSize: AppSizes.verticalScale(16),
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14),
 	  fontFamily: AppFonts.NRegular
 	},
 	calenderListView: {
@@ -174,20 +171,20 @@ const drawerStacks = [
 	  height: 2
 	},
 	drawerContentContainer: {
-	  backgroundColor: '#FFF',
-	  paddingTop: 15,
+	  backgroundColor: '#fff',
+	  paddingTop: 18,
 	  paddingBottom: 100 //AppSizes.verticalScale(100)
 	},
 	drawerContentItem: {
 	  flexDirection: 'row',
 	  alignItems: 'center',
 	  paddingLeft: 41,
-	  height: AppSizes.verticalScale(60)
+	  height: AppSizes.verticalScale(55)
 	},
 	drawerContentItemIcon: {
 	  marginRight: 20,
-	  width: AppSizes.verticalScale(40),
-	  height: AppSizes.verticalScale(40),
+	  width: AppSizes.verticalScale(18),
+	  height: AppSizes.verticalScale(18),
 	  resizeMode: 'contain'
 	},
 	trackDetailHeader: {
@@ -239,7 +236,7 @@ const drawerStacks = [
 						style={styles.drawerContentItem}
 						onPress={() => {
 						props.navigation.navigate(item.route)
-						props.navigation.dispatch(DrawerActions.closeDrawer())
+						// props.navigation.dispatch(DrawerActions.closeDrawer())
 						}}
 					>
 					<Image
@@ -250,26 +247,37 @@ const drawerStacks = [
 					/>
 					   <Text style={styles.drawerText}>{item.title}</Text>
 					</TouchableOpacity>				
-					<TouchableOpacity style={{right: 15, position:'absolute'}} onPress={handleToggleValue}>
+					<TouchableOpacity style={{right: 25, position:'absolute'}} onPress={handleToggleValue}>
 						{!value ?
-						<Image source={require('../assets/sidemenuAssets/Arrow_down.png')} style={{ height: 20, width: 20, resizeMode: 'contain' }} />                   
+						<Image source={require('../assets/sidemenuAssets/Arrow_down.png')} style={{ height: 12, width: 12, resizeMode: 'contain' }} />                   
 						:
-						<Image source={require('../assets/sidemenuAssets/Arrow_up.png')} style={{ height: 20, width: 20, resizeMode: 'contain' }} /> 
+						<Image source={require('../assets/sidemenuAssets/Arrow_up.png')} style={{ height: 12, width: 12, resizeMode: 'contain' }} /> 
 						}
 					</TouchableOpacity>
 			   </View>
 				{value &&
 					<View style={styles.calenderListView}>
 						{data.map((item, ind) => {
+							console.log('==>>',item)
 							return(
-							<TouchableOpacity key={ind} 
-							   style={{justifyContent:'center', width:'100%',marginBottom:.5}}
-                               onPress={()=>props.navigation.navigate(item)}
-							>
-								<Text style={styles.calenderListText}>{item}</Text>
-							    {props.navigation.state.routes[props.navigation.state.index] === item && <Image source={require('../assets/sidemenuAssets/Tick.png')} style={{right: 15, position:'absolute', height: 20, width: 20, resizeMode: 'contain' }} />} 
-							</TouchableOpacity>
-						)})
+								item === 'Calender List' 
+								?							
+								<TouchableOpacity key={ind} 
+									style={{justifyContent:'center', width:'100%',marginBottom:.5}}
+									onPress={()=>props.navigation.navigate('Calendar')}
+								>
+									<Text style={styles.calenderListText}>{item}</Text>
+									{props.navigation.state.routes[props.navigation.state.index] === item && <Image source={require('../assets/sidemenuAssets/Tick.png')} style={{right: 15, position:'absolute', height: 20, width: 20, resizeMode: 'contain' }} />} 
+								</TouchableOpacity>
+								:
+								<TouchableOpacity key={ind} 
+									style={{justifyContent:'center', width:'100%',marginBottom:.5}}
+									onPress={()=>props.navigation.navigate(item)}
+							    >
+								  <Text style={styles.calenderListText}>{item}</Text>
+								  {props.navigation.state.routes[props.navigation.state.index] === item && <Image source={require('../assets/sidemenuAssets/Tick.png')} style={{right: 15, position:'absolute', height: 20, width: 20, resizeMode: 'contain' }} />} 
+							    </TouchableOpacity>
+						   )})
 						}
 					</View>
 				}
@@ -279,7 +287,7 @@ const drawerStacks = [
 				key={item.key}
 				style={styles.drawerContentItem}
 				onPress={() => {
-				  props.navigation.navigate(item.route)
+				  props.navigation.navigate(item.route,{ from: 'drawer'})
 				  props.navigation.dispatch(DrawerActions.closeDrawer())
 				}}
 			  >
@@ -424,6 +432,17 @@ const TabNavigator = createMaterialTopTabNavigator(
 			)  
 		})	
 	  },
+	  SlideShow: {
+		screen: SlideShowScreen,
+		navigationOptions: () => ({
+			tabBarIcon:({tintColor, focused})=>(  
+			  focused ?
+			  <Image source={require('../assets/Home_assets/slideshow_select.png')} />
+			  :
+			  <Image source={require('../assets/Home_assets/slideshow.png')} /> 
+		  )  
+		})  
+	  },
 	  Events: {
 		screen: EventsComponent,
 		navigationOptions: () => ({
@@ -487,13 +506,13 @@ export default DrawerNavigator = createDrawerNavigator({
 	 	screen: HomeStackNavigator
 	},
 	Events: {
-     	screen: ListViewScreen
+     	screen: EventsScreen
 	},
 	CreateGroup: {
 		screen: CreateGroupScreen
    },
-	Calendars: {
-		screen: Calendars
+	Calendar: {
+		screen: Calendar
     },
 	SlideShow: {
 		screen: SlideShowScreen

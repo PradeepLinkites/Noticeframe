@@ -29,7 +29,7 @@ export default class Navbar extends React.Component {
     render() {
         const from = get(this.props,'type','') === 'register' || get(this.props,'type','') === 'forgot' ? true : false
         const sty = get(this.props,'stylee','') ? this.props.stylee : {}
-        const headerTitle = get(this.props, 'routeKey','') === 'Events' ? 'Events List' : get(this.props, 'routeKey','') === 'ListView' ? 'Active Events List' : 'Calendar'
+        const headerTitle = get(this.props, 'routeKey','') === 'Events' ? 'Events List' : get(this.props, 'routeKey','') === 'ListView' ? 'Active Events List' : get(this.props, 'routeKey','') === 'SlideShow' ? 'NOTICE FRAME': 'Calendar'
         return ( 
             <SafeAreaView style={styles.container}>
                    <Animated.View style={styles.tabContainer}> 

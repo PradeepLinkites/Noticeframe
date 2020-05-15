@@ -44,24 +44,22 @@ export default class Setting extends React.Component {
     const route = get(state, 'routeName', '')  === 'Setting' ? 'SETTINGS' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
-        <ScrollView>
+        <ScrollView style={styles.container}>
         <Navbar 
           navigation={this.props.navigation} 
           navTitle={route} 
           style={{ height: this.state.height }}
           routeKey={'Setting'} 
         />
-        <View style={styles.container}>
-          <View style={styles.container2}>
+          <View style={styles.mainView}>
             {settingArray.map((item, ind)=>{
               return(              
-                <TouchableOpacity onPress={()=>this.props.navigation.navigate(item.route)} style={styles.settingListView} key={ind}>
+                <TouchableOpacity onPress={()=>this.props.navigation.navigate(item.route)} style={item.route !== 'EventSetting' ? styles.settingListView : [styles.settingListView,{borderBottomWidth : 0 }]} key={ind}>
                   <Text style={styles.settingText}>{item.title}</Text>
                   <Image  source={item.icon} style={styles.arrowIconStyle}/>
                 </TouchableOpacity>
               )})
             }  
-          </View>
         </View>
         </ScrollView>
       </SafeAreaView>
@@ -72,15 +70,14 @@ export default class Setting extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'#fff'
+  },
+  mainView: {
+    flex: 1,
     paddingLeft: 18,
     paddingRight: 18,
-    // backgroundColor:'red'
-  },
-  container2: {
-    flex: 1,
   },
   settingListView :{
-    height: Platform.OS === 'android' ? 70 : 110,
     flexDirection: 'row',
     justifyContent:'space-between',
     alignItems: 'center',

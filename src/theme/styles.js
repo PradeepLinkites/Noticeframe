@@ -85,6 +85,7 @@ export default {
 
   container: {
     flex: 1,
+    // backgroundColor:'#3b5261'
  },
  top:{
    height: hp(45), 

@@ -7,7 +7,8 @@ const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import AsyncStorage from '@react-native-community/async-storage'
-
+import Calendar from 'react-native-calendar-datepicker'
+import Moment from 'moment'
 
 export default class Home extends React.Component {
   constructor(props) {
@@ -19,13 +20,18 @@ export default class Home extends React.Component {
   render() {
     const { getUserData } = this.state
     const { state } = this.props.navigation
-    const route = get(state, 'routeName', '')  === 'Setting' ? 'KIKO KIDS' : ''
+    const route = get(state, 'routeName', '')  === 'Setting' ? '' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
-        <Navbar navigation={this.props.navigation} navTitle={route} stylee={{ height: this.state.height }} />
-        <View style={{ flex:1,backgroundColor:'pink',justifyContent:'center',alignItems:'center' }}>
-          <Text>Monthly Screen</Text>
-        </View>
+        <ScrollView style={styles.container}>
+          <Calendar
+            onChange={(date) => this.setState({date})}
+            selected={this.state.date}
+            // We use Moment.js to give the minimum and maximum dates.
+            minDate={Moment().startOf('day')}
+            maxDate={Moment().add(10, 'years').startOf('day')}
+          />
+        </ScrollView>
       </SafeAreaView>
     )
   }
@@ -33,11 +39,8 @@ export default class Home extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    padding: 15,
+    height: 500
   },
-  planContainerView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20
-  }
 })

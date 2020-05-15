@@ -8,6 +8,7 @@ const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import AsyncStorage from '@react-native-community/async-storage'
 import { FlatGrid } from 'react-native-super-grid';
+import {NavigationEvents} from 'react-navigation';
 
 const items = [[
   { name: 'Healty Sport', time: '07:30 AM to 08:30 AM', source: require('../../assets/images/image1.jpeg') }, 
@@ -31,10 +32,11 @@ export default class Event extends React.Component {
   render() {
     const { getUserData } = this.state
     const { state } = this.props.navigation
-    const route = get(state, 'routeName', '')  === 'Events' ? 'KIKO KIDS' : ''
+    const route = get(state, 'routeName', '')  === 'Events' ? '' : ''
     return (
-      <SafeAreaView style={styles.container}>       
-        <ScrollView style={AppStyles.container}>
+      <SafeAreaView style={styles.container}>  
+      <NavigationEvents onDidFocus={() => console.log('I am triggered')} />     
+        <ScrollView style={styles.container}>
           {items.map( data => {
             return(
             <View style={styles.gridView}>
@@ -70,7 +72,8 @@ export default class Event extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor:'#fff'
   },
   gridView: {
     paddingLeft: 25,

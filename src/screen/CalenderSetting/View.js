@@ -27,7 +27,7 @@ export default class CreateEvent extends React.Component {
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'CalendarSetting' ? 'Calendar Settings' : ''
     return (
-      <SafeAreaView style={[styles.container,{backgroundColor: '#3b5261'}]}>
+      <SafeAreaView style={AppStyles.container}>
         <ScrollView style={styles.container}>
           <Navbar 
             navigation={this.props.navigation} 

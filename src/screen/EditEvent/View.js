@@ -264,6 +264,10 @@ export default class CreateEvent extends React.Component {
                       onCancel={()=>this.setState({isStartPickerVisible : false})}
                       showIcon={false}
                       locale="es-ES"
+                      headerTextIOS="START TIME"
+                      confirmTextIOS="DONE"
+                      cancelTextIOS="CANCEL"
+
                     />
                   <Text style={styles.selectedText}>{get(this.state,'startTime','')}</Text>
                 </TouchableOpacity>
@@ -276,6 +280,10 @@ export default class CreateEvent extends React.Component {
                       onCancel={()=>this.setState({isEndPickerVisible : false})}
                       showIcon={false}
                       locale="es-ES"
+                      headerTextIOS="END TIME"
+                      confirmTextIOS="DONE"
+                      cancelTextIOS="CANCEL"
+
                     />
                   <Text style={styles.selectedText}>{get(this.state,'endTime','')}</Text>
                 </TouchableOpacity>

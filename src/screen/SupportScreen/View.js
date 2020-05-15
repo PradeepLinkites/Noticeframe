@@ -45,7 +45,7 @@ export default class Support extends React.Component {
     const route = get(state, 'routeName', '')  === 'Support' ? 'Support' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
-        <ScrollView>
+        <ScrollView style={styles.container}>
         <Navbar 
           navigation={this.props.navigation} 
           navTitle={route} 
@@ -53,7 +53,7 @@ export default class Support extends React.Component {
           routeKey={'Support'} 
         />
         <View style={styles.container}>
-          <View style={styles.container2}>
+          <View style={styles.mainView}>
             <TouchableOpacity
               style={AppStyles.button}
               onPress={()=>alert('call')}
@@ -79,32 +79,16 @@ export default class Support extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'#fff'
+  },
+  mainView: {
+    flex: 1,  
     paddingLeft: 18,
     paddingRight: 18,
   },
-  container2: {
-    flex: 1,  
-  },
-  // button: {
-  //   marginTop: 45, 
-  //   backgroundColor:'#ff6600',
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  //   paddingTop: Platform.OS === 'android' ? 10 : 12,
-  //   paddingBottom: Platform.OS === 'android' ? 10 : 12,
-  //   marginLeft: 5,
-  //   marginRight: 5
-  // },
-  // buttonText: {
-  //   color: '#fff',
-  //   fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
-  //   fontFamily: AppFonts.NRegular,
-  //   fontWeight: '500',
-  //   letterSpacing:.5
-  // },
   settingListView :{
     marginTop: 2,
-    height: Platform.OS === 'android' ? 70 : 110,
+    // height: Platform.OS === 'android' ? 70 : 110,
     flexDirection: 'row',
     justifyContent:'space-between',
     alignItems: 'center',

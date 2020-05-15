@@ -59,12 +59,12 @@ export default class SlideShow extends React.Component {
     return (
       <SafeAreaView style={AppStyles.container}>
         {/* <ScrollView> */}
-        <Navbar 
+        {/* <Navbar 
           navigation={this.props.navigation} 
           navTitle={route} 
           stylee={{ height: this.state.height }}
           routeKey={'SlideShow'} 
-        />
+        /> */}
         <View style={styles.container}>
           <Swiper
             style={styles.wrapper}

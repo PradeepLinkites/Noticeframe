@@ -2,14 +2,26 @@ import React from 'react'
 import { Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/Navbar'
 import { get } from 'lodash'
-import AwesomeButton from 'react-native-really-awesome-button'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
-import AsyncStorage from '@react-native-community/async-storage'
+import WeeklyCalendar from 'react-native-weekly-calendar';
 
 
-export default class Home extends React.Component {
+const sampleEvents = [
+  { 'start': '2020-03-23 09:00:00', 'duration': '00:20:00', 'note': 'Walk my dog' },
+  { 'start': '2020-03-24 14:00:00', 'duration': '01:00:00', 'note': 'Doctor\'s appointment' },
+  { 'start': '2020-03-25 08:00:00', 'duration': '00:30:00', 'note': 'Morning exercise' },
+  { 'start': '2020-03-25 14:00:00', 'duration': '02:00:00', 'note': 'Meeting with client' },
+  { 'start': '2020-03-25 19:00:00', 'duration': '01:00:00', 'note': 'Dinner with family' },
+  { 'start': '2020-03-26 09:30:00', 'duration': '01:00:00', 'note': 'Schedule 1' },
+  { 'start': '2020-03-26 11:00:00', 'duration': '02:00:00', 'note': 'Schedule 2' },
+  { 'start': '2020-03-26 15:00:00', 'duration': '01:30:00', 'note': 'Schedule 3' },
+  { 'start': '2020-03-26 18:00:00', 'duration': '02:00:00', 'note': 'Schedule 4' },
+  { 'start': '2020-03-26 22:00:00', 'duration': '01:00:00', 'note': 'Schedule 5' }
+]
+
+export default class Weekly extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -19,12 +31,20 @@ export default class Home extends React.Component {
   render() {
     const { getUserData } = this.state
     const { state } = this.props.navigation
-    const route = get(state, 'routeName', '')  === 'Setting' ? 'KIKO KIDS' : ''
+    const route = get(state, 'routeName', '')  === 'Setting' ? '' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
-        <View style={{ flex:1,justifyContent:'center',alignItems:'center' }}>
-          <Text>Weekly Screen</Text>
-        </View>
+        <ScrollView style={styles.container}>
+          <WeeklyCalendar 
+            events={sampleEvents}
+            selected='2020-03-23'
+            style={{ height: 400 }} 
+            // themeColor='#ff6600'
+            style={{ height: 500, width:'100%' }}
+            titleStyle={{ color: '#000' }}
+            dayLabelStyle={{ color: '#A2a2a2' }}        
+          />
+        </ScrollView>
       </SafeAreaView>
     )
   }
@@ -32,11 +52,6 @@ export default class Home extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-  },
-  planContainerView: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 20
-  }
-})
+    flex: 1,
+    backgroundColor: '#fff',  }
+});
