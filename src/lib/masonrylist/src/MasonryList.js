@@ -92,104 +92,104 @@ export default class MasonryList extends React.PureComponent {
 		});
 	}
 
-	UNSAFE_componentWillReceiveProps = (nextProps) => {
-		if (nextProps.layoutDimensions.width && nextProps.layoutDimensions.height &&
-			nextProps.layoutDimensions.columnWidth && nextProps.layoutDimensions.gutterSize &&
-			nextProps.layoutDimensions.width !== this.props.layoutDimensions.width &&
-			nextProps.layoutDimensions.height !== this.props.layoutDimensions.height &&
-			!this.props.containerWidth) {
-				this.unsortedIndex = 0;
-				this.renderIndex = 0;
-				this.columnHeightTotals = [];
-				this.columnCounting = 1;
-				this.columnHighestHeight = null;
-				this.resolveImages(
-					nextProps.itemSource,
-					nextProps.images,
-					nextProps.layoutDimensions,
-					nextProps.columns,
-					nextProps.sorted
-				);
-		}
-		else if (nextProps.orientation !== this.props.orientation ||
-			nextProps.columns !== this.props.columns ||
-			nextProps.spacing !== this.props.spacing ||
-			nextProps.sorted !== this.props.sorted ||
-			nextProps.containerWidth !== this.props.containerWidth) {
-				this.unsortedIndex = 0;
-				this.renderIndex = 0;
-				this.columnHeightTotals = [];
-				this.columnCounting = 1;
-				this.columnHighestHeight = null;
-				this.resolveImages(
-					nextProps.itemSource,
-					this._calculatedData,
-					nextProps.layoutDimensions,
-					nextProps.columns,
-					nextProps.sorted
-				);
-		}
-		// else if (nextProps.images !== this.props.images) {
-		// 	this.unsortedIndex = 0;
-		// 	this.renderIndex = 0;
-		// 	this.columnHeightTotals = [];
-		// 	this.columnCounting = 1;
-		// 	this.columnHighestHeight = null;
-		// 	this.resolveImages(
-		// 		nextProps.itemSource,
-		// 		nextProps.images,
-		// 		nextProps.layoutDimensions,
-		// 		nextProps.columns,
-		// 		nextProps.sorted
-		// 	);
-		// }
+	// UNSAFE_componentWillReceiveProps = (nextProps) => {
+	// 	if (nextProps.layoutDimensions.width && nextProps.layoutDimensions.height &&
+	// 		nextProps.layoutDimensions.columnWidth && nextProps.layoutDimensions.gutterSize &&
+	// 		nextProps.layoutDimensions.width !== this.props.layoutDimensions.width &&
+	// 		nextProps.layoutDimensions.height !== this.props.layoutDimensions.height &&
+	// 		!this.props.containerWidth) {
+	// 			this.unsortedIndex = 0;
+	// 			this.renderIndex = 0;
+	// 			this.columnHeightTotals = [];
+	// 			this.columnCounting = 1;
+	// 			this.columnHighestHeight = null;
+	// 			this.resolveImages(
+	// 				nextProps.itemSource,
+	// 				nextProps.images,
+	// 				nextProps.layoutDimensions,
+	// 				nextProps.columns,
+	// 				nextProps.sorted
+	// 			);
+	// 	}
+	// 	else if (nextProps.orientation !== this.props.orientation ||
+	// 		nextProps.columns !== this.props.columns ||
+	// 		nextProps.spacing !== this.props.spacing ||
+	// 		nextProps.sorted !== this.props.sorted ||
+	// 		nextProps.containerWidth !== this.props.containerWidth) {
+	// 			this.unsortedIndex = 0;
+	// 			this.renderIndex = 0;
+	// 			this.columnHeightTotals = [];
+	// 			this.columnCounting = 1;
+	// 			this.columnHighestHeight = null;
+	// 			this.resolveImages(
+	// 				nextProps.itemSource,
+	// 				this._calculatedData,
+	// 				nextProps.layoutDimensions,
+	// 				nextProps.columns,
+	// 				nextProps.sorted
+	// 			);
+	// 	}
+	// 	// else if (nextProps.images !== this.props.images) {
+	// 	// 	this.unsortedIndex = 0;
+	// 	// 	this.renderIndex = 0;
+	// 	// 	this.columnHeightTotals = [];
+	// 	// 	this.columnCounting = 1;
+	// 	// 	this.columnHighestHeight = null;
+	// 	// 	this.resolveImages(
+	// 	// 		nextProps.itemSource,
+	// 	// 		nextProps.images,
+	// 	// 		nextProps.layoutDimensions,
+	// 	// 		nextProps.columns,
+	// 	// 		nextProps.sorted
+	// 	// 	);
+	// 	// }
 
-		if (!this.props.rerender) {
-			// load more add datasource
-			if (nextProps.images.length > this.props.images.length) {
-				let newImages = nextProps.images.concat().splice(this.props.images.length, nextProps.images.length); // nextProps.images
-				this.resolveImages(
-					nextProps.itemSource,
-					newImages,
-					nextProps.layoutDimensions,
-					nextProps.columns,
-					nextProps.sorted
-				);
-			}
+	// 	if (!this.props.rerender) {
+	// 		// load more add datasource
+	// 		if (nextProps.images.length > this.props.images.length) {
+	// 			let newImages = nextProps.images.concat().splice(this.props.images.length, nextProps.images.length); // nextProps.images
+	// 			this.resolveImages(
+	// 				nextProps.itemSource,
+	// 				newImages,
+	// 				nextProps.layoutDimensions,
+	// 				nextProps.columns,
+	// 				nextProps.sorted
+	// 			);
+	// 		}
 
-			// pull refresh reset datasource
-			if (nextProps.images.length < this.props.images.length) {
-					this.unsortedIndex = 0;
-					this.renderIndex = 0;
-					this.columnHeightTotals = [];
-					this.columnCounting = 1;
-					this.columnHighestHeight = null;
-				// this.renderIndex = 0;
-				this.resolveImages(
-					nextProps.itemSource,
-					nextProps.images,
-					nextProps.layoutDimensions,
-					nextProps.columns,
-					nextProps.sorted
-				);
-			}
-		} else {
-			if (nextProps.images !== this.props.images) {
-				this.unsortedIndex = 0;
-				this.renderIndex = 0;
-				this.columnHeightTotals = [];
-				this.columnCounting = 1;
-				this.columnHighestHeight = null;
-				this.resolveImages(
-					nextProps.itemSource,
-					nextProps.images,
-					nextProps.layoutDimensions,
-					nextProps.columns,
-					nextProps.sorted
-				);
-			}
-		}
-	}
+	// 		// pull refresh reset datasource
+	// 		if (nextProps.images.length < this.props.images.length) {
+	// 				this.unsortedIndex = 0;
+	// 				this.renderIndex = 0;
+	// 				this.columnHeightTotals = [];
+	// 				this.columnCounting = 1;
+	// 				this.columnHighestHeight = null;
+	// 			// this.renderIndex = 0;
+	// 			this.resolveImages(
+	// 				nextProps.itemSource,
+	// 				nextProps.images,
+	// 				nextProps.layoutDimensions,
+	// 				nextProps.columns,
+	// 				nextProps.sorted
+	// 			);
+	// 		}
+	// 	} else {
+	// 		if (nextProps.images !== this.props.images) {
+	// 			this.unsortedIndex = 0;
+	// 			this.renderIndex = 0;
+	// 			this.columnHeightTotals = [];
+	// 			this.columnCounting = 1;
+	// 			this.columnHighestHeight = null;
+	// 			this.resolveImages(
+	// 				nextProps.itemSource,
+	// 				nextProps.images,
+	// 				nextProps.layoutDimensions,
+	// 				nextProps.columns,
+	// 				nextProps.sorted
+	// 			);
+	// 		}
+	// 	}
+	// }
 
 	_getCalculatedDimensions(imgDimensions = { width: 0, height: 0 }, columnWidth = 0, gutterSize = 0) {
 		const countDecimals = function (value) {

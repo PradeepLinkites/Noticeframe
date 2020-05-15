@@ -76,38 +76,30 @@ export default class CreateEvent extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'#e6e1de'
+    backgroundColor:'#fff'
   },
   topContainer:{
     backgroundColor:'#fff',
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingHorizontal: 20,
     paddingTop: 30,
-    paddingBottom: 30,
-    borderBottomWidth: .3,
-    borderBottomColor: '#A2a2a2'
   },
   firstView : {
-    height: 30,
     flexDirection:'row',
     justifyContent:'space-between'
   },
   secondView : {
-    height: 30,
     flexDirection:'row',
     justifyContent:'space-between',
     marginTop: 20
   },
   text: {
     color:'#A2a2a2',
-    fontSize: 16,
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
     top: 5
   },
   bottomContainer:{
     backgroundColor:'#fff',
-    paddingLeft: 20,
-    paddingRight: 20,
-    // paddingTop: 20,
+    paddingHorizontal: 20,
     paddingBottom: 80
   },
 })

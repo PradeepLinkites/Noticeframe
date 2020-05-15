@@ -168,17 +168,16 @@ button: {
   backgroundColor:'#ff6600',
   alignItems: 'center',
   justifyContent: 'center',
-  paddingTop: Platform.OS === 'android' ? 10 : 12,
-  paddingBottom: Platform.OS === 'android' ? 10 : 12,
+  paddingTop: Platform.OS === 'android' ? 5 : 6,
+  paddingBottom: Platform.OS === 'android' ? 5 : 6,
   marginLeft: 5,
   marginRight: 5
 },
 buttonText: {
   color: '#fff',
-  fontSize: Platform.OS === 'android' ? Sizes.verticalScale(18) : Sizes.verticalScale(14),
+  fontSize: Platform.OS === 'android' ? Sizes.verticalScale(12) : Sizes.verticalScale(10),
   fontFamily: Fonts.NRegular,
-  fontWeight: '500',
-  letterSpacing:.5
+  letterSpacing:.2
 },
 
 };

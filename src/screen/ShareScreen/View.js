@@ -71,7 +71,7 @@ export default class Share extends React.Component {
                   style={{flexDirection:'row'}}
                   onPress={() => alert('call')}
                 >
-                  <Image source={item.icon} style={{height: 34, width: 34 }}/>
+                  <Image source={item.icon} style={{height: 25, width: 25 }}/>
                   <Text style={styles.socialText}>{item.title}</Text>
                 </TouchableOpacity>
               </View>  
@@ -89,26 +89,24 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff'
   },
   text: {
-    marginLeft : 25, 
+    marginLeft : 20, 
     marginTop: 30,
     letterSpacing: .2,
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(16),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
     fontFamily: AppFonts.NRegular,
-    fontWeight:'500',
     color: '#A2a2a2',
-    marginBottom: 20
+    marginBottom: Platform.OS === 'android' ? 20 : 18
   },
   socialContainer: {
-    height: Platform.OS === 'android' ? 52 : 65,
+    paddingVertical: Platform.OS === 'android' ? 12 : 14	,
     justifyContent: 'center',
-    paddingLeft: Platform.OS === 'android' ? 40 : 45	,
-    // backgroundColor:'red',
-    marginBottom:4
+    paddingLeft: Platform.OS === 'android' ? 35 : 40	,
+    marginBottom: 2
   },
   socialText: {
     marginLeft: 15,
 	  color: '#A2a2a2',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(16),
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
     fontFamily: AppFonts.NRegular,
     fontWeight:'600',
     letterSpacing: .2

@@ -113,10 +113,10 @@ class VideoPlayer extends Component {
     Dimensions.addEventListener('change', this.getOrientation)
   }
 
-  componentWillUnmount() {
-    Orientation.lockToPortrait()
-    Dimensions.removeEventListener('change', this.getOrientation)
-  }
+  // componentWillUnmount() {
+  //   Orientation.lockToPortrait()
+  //   Dimensions.removeEventListener('change', this.getOrientation)
+  // }
 
   getOrientation = () => {
     if (Dimensions.get('window').width < Dimensions.get('window').height) {

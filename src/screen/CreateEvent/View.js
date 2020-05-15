@@ -189,7 +189,7 @@ export default class CreateEvent extends React.Component {
                   <Text style={styles.listTitle}>Select Group</Text>
                   <TextInput
                     multiline
-                    style={styles.inputBox}
+                    style={[styles.inputBox,{borderBottomWidth:0}]}
                     maxLength={40}
                     placeholderTextColor="red"
                     onChangeText={text => this.onGroupNameChange(text)}
@@ -215,7 +215,7 @@ export default class CreateEvent extends React.Component {
                     <Picker.Item label="red" value="red" />
                   </Picker> */}
                   <ModalSelector
-                    initValueTextStyle={[styles.listTitle,{color: "#3293ed"}]}
+                    initValueTextStyle={[styles.listTitle,{color: "#000"}]}
                     selectStyle={{borderColor: "transparent"}}
                     style={{marginTop: 2,marginRight: 25}}
                     // selectTextStyle={{color: "blue"}}
@@ -227,16 +227,16 @@ export default class CreateEvent extends React.Component {
                 </View>
               </View>
             </View>
-            <View style={[styles.selectGroupView,{marginTop: 10, borderBottomWidth:.3 }]}>
+            <View style={[styles.selectGroupView,{marginTop: 10}]}>
                <Text style={styles.listTitle}>Event Date</Text>
                <DateTimePickerModal
-                      isVisible={isDatePickerVisible}
-                      mode="date"
-                      onConfirm={this.handleDate}
-                      onCancel={()=>this.setState({isDatePickerVisible : false})}
-                      showIcon={false}
-                      // locale="es-ES"
-                    />
+                  isVisible={isDatePickerVisible}
+                  mode="date"
+                  onConfirm={this.handleDate}
+                  onCancel={()=>this.setState({isDatePickerVisible : false})}
+                  showIcon={false}
+                  // locale="es-ES"
+                />
                <Text onPress={()=>this.setState({isDatePickerVisible : true})} style={[styles.selectedText,{marginTop: 8}]}>{get(this.state,'eventDate','')}</Text>
             </View>
 
@@ -293,7 +293,7 @@ export default class CreateEvent extends React.Component {
                 <Text style={AppStyles.buttonText}>Set Reminder Alarm</Text>
               </TouchableOpacity>
             </View>
-            <View style={styles.eventContainer}>
+            <View style={[styles.eventContainer,{borderBottomWidth : 0}]}>
                <Text style={styles.listTitle} >Every Recurrence</Text>
               <View style={{flexDirection:'row',marginTop:10,justifyContent:'space-between'}}>
                 <View>
@@ -344,7 +344,7 @@ export default class CreateEvent extends React.Component {
             <View style={[styles.eventContainer,{marginTop:15}]}>
               <View style={{flexDirection:'row',marginTop:10,justifyContent:'space-between'}}>
               <View style={{justifyContent:'center'}}>
-                  <Text style={[styles.slideShowText,{marginBottom:18}]}>Show Notes in SlideShow</Text>
+                  <Text style={[styles.slideShowText,{marginBottom:20}]}>Show Notes in SlideShow</Text>
                 </View>
                 <View>
                   <Switch
@@ -462,36 +462,33 @@ const styles = StyleSheet.create({
   },
   listTitle: {
 	  color: '#A2a2a2',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(12),
-    // fontFamily: AppFonts.NRegular,
-    letterSpacing: .5,
-    fontWeight: '500'
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
+    fontFamily: AppFonts.NRegular,
+    letterSpacing: .3,
   },
   selectedText: {
 	  color: '#000',
 	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
-    // fontFamily: AppFonts.NBlack,
-    letterSpacing: 1,
-    fontWeight: Platform.OS === 'android' ? '600' : '500'
+    fontFamily: AppFonts.NRegular,
+    letterSpacing: .3,
+    // fontWeight: Platform.OS === 'android' ? '600' : '500'
   },
   eventContainer: {
-    paddingLeft: 25,
-    paddingRight: 25,
-    paddingTop: 25,
-    paddingBottom: 25,
+    paddingVertical: Platform.OS === 'android' ? 15 : 20,
+    paddingHorizontal: Platform.OS === 'android' ? 25 : 25,
     backgroundColor:'#fff',
-    // borderBottomWidth: .3
+    borderBottomWidth: .3
   },
   eventInputBox: {
     flex: 1,
     marginRight: 30,
-    paddingTop: 10,
+    paddingTop: 5,
     borderColor: 'gray', 
-    borderBottomWidth: .8,
+    borderBottomWidth: .6,
     color: '#000',
 	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
-    letterSpacing: 1,
-    fontWeight: Platform.OS === 'android' ? '600' : '500'
+    letterSpacing: .3,
+    // fontWeight: Platform.OS === 'android' ? '600' : '500'
 
   },
   // eventBottomLine: {
@@ -529,7 +526,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#A2a2a2'
   },
   colorContainer: {
-    paddingTop: 20,
     paddingBottom: 15,
     paddingLeft: 15,
     paddingRight: 15,
@@ -591,15 +587,15 @@ const styles = StyleSheet.create({
     color: '#000',
 	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
     letterSpacing: 1,
-    fontWeight: Platform.OS === 'android' ? '600' : '500'
+    // fontWeight: Platform.OS === 'android' ? '600' : '500'
   },
 
   slideShowText: {
 	  color: '#A2a2a2',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(12),
-    // fontFamily: AppFonts.NRegular,
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
+    fontFamily: AppFonts.NRegular,
     letterSpacing: .5,
-    fontWeight: '600',
+    // fontWeight: '600',
   },
   statusContainer: {
     padding: 20,
@@ -611,15 +607,14 @@ const styles = StyleSheet.create({
     backgroundColor:'#ff6600',
     alignItems:'center',
     justifyContent:'center',
-    paddingTop: 15,
-    paddingBottom: 15,
+    paddingVertical: Platform.OS === 'android' ? 3 : 6
   },
   statusButtonText: {
 	  color: '#fff',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(15) : AppSizes.verticalScale(11),
-    // fontFamily: AppFonts.NRegular,
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
+    fontFamily: AppFonts.NRegular,
     letterSpacing: .5,
-    fontWeight: '600',
+    // fontWeight: '600',
   },
   bottomContainer: {
     paddingLeft: 40,
@@ -632,29 +627,28 @@ const styles = StyleSheet.create({
     backgroundColor:'#ff6600',
     alignItems:'center',
     justifyContent:'center',
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingVertical: Platform.OS === 'android' ? 6 : 8,
     paddingLeft: 35,
     paddingRight: 35,
     borderRadius: 24
   },
   repeatText: {
-    color: '#939393',
+    color: '#A2a2a2',
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
     fontFamily: AppFonts.NRegular,
     fontWeight: '700'
   },
   checkboxText: {
-    color: '#939393',
+    color: '#A2a2a2',
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
     fontFamily: AppFonts.NRegular,
     fontWeight: '600'
   },
   cancelText: {
     color: '#fff',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(20) : AppSizes.verticalScale(14),
-    // fontFamily: AppFonts.NRegular,
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14),
+    fontFamily: AppFonts.NRegular,
     letterSpacing: .5,
-    fontWeight: '600',
+    // fontWeight: '600',
   }
 })

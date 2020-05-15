@@ -204,17 +204,17 @@ class ComponentView extends Component {
     };
   }
 
-  componentWillMount = () => {
+  // componentWillMount = () => {
 
-  }
+  // }
 
-  componentDidMount = () => {
+  // componentDidMount = () => {
     
-  }
+  // }
 
-  componentWillReceiveProps(props) {
+  // componentWillReceiveProps(props) {
    
-  }
+  // }
 
   renderStepView = (position, stepStatus) => {
     <View style={{flex: 1, backgroundColor: '#000'}}>

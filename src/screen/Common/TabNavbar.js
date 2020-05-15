@@ -33,10 +33,10 @@ export default class Navbar extends React.Component {
         return ( 
             <SafeAreaView style={styles.container}>
                    <Animated.View style={styles.tabContainer}> 
-                        <TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 23 }}>
+                        <TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 20 }}>
                             <Image source={require('../../assets/Home_assets/Menu.png')} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={{ position: 'absolute', left: 60 }}>
+                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={{ position: 'absolute', left: 56 }}>
                             <Image source={require('../../assets/icons/Home_white.png')} style={styles.homeIconStyle}/>
                         </TouchableOpacity>					  
                         <View style={styles.appTitleView}>
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
      },
      tabContainer: {
         justifyContent:'center',
-        paddingTop: 60,
+        paddingTop: Platform.OS === 'android' ? 58 : 60,
 	 },
     appTitleView: {
         position: 'absolute',
@@ -68,14 +68,14 @@ const styles = StyleSheet.create({
         marginBottom:20,
         right: 0 ,
         color: '#fff',
-        fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(20) : AppSizes.verticalScale(18),
-        // fontFamily: AppFonts.NBlack,
-        fontWeight:'900',
-        letterSpacing: 1
+        fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(16),
+        fontFamily: AppFonts.NBlack,
+        letterSpacing: .5
     },
     homeIconStyle: {
-        height: Platform.OS === 'android' ? AppSizes.verticalScale(24) : AppSizes.verticalScale(22),
-        width: 26,
-        // backgroundColor:'red'
+        height: Platform.OS === 'android' ? AppSizes.verticalScale(20) : AppSizes.verticalScale(18),
+        width: 22,
+        resizeMode: 'contain', 
+        // background
     }
 })

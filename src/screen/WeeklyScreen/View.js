@@ -39,8 +39,8 @@ export default class Weekly extends React.Component {
             events={sampleEvents}
             selected='2020-03-23'
             style={{ height: 400 }} 
-            // themeColor='#ff6600'
-            style={{ height: 500, width:'100%' }}
+            themeColor='#ff6600'
+            style={{ height: 500, width:'100%' ,color:'red'}}
             titleStyle={{ color: '#000' }}
             dayLabelStyle={{ color: '#A2a2a2' }}        
           />

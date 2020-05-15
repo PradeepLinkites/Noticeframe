@@ -54,11 +54,11 @@ export default class SlideShowSetting extends React.Component {
             style={{ height: this.state.height }}
             routeKey={'SlideShowSetting'} 
           />
-            <View style={styles.transitionView}>
+            <View style={[styles.transitionView,{borderBottomWidth:.3}]}>
               <Text style={styles.transitionText}>Transition</Text>
               <View style={{flexDirection:'row'}}>
                 <ModalSelector
-                  initValueTextStyle={{color:'#000',fontSize:16,marginTop:2}}
+                  initValueTextStyle={{color:'#000',fontSize:14,marginTop:2}}
                   selectStyle={{borderColor: "transparent"}}
                   style={{right:20}}
                   // selectTextStyle={{color: "blue"}}
@@ -70,7 +70,7 @@ export default class SlideShowSetting extends React.Component {
               </View>
             </View>
             <View style={styles.transitionView}>
-              <View style={{flex:1,paddingRight:50}}><Text style={styles.transitionText}>No.of events in slideShow</Text></View>
+              <View style={{flex:1,paddingRight:50,marginTop:5}}><Text style={styles.transitionText}>No.of events in slideShow</Text></View>
               <View style={styles.buttonView}>
                 {/* <TouchableOpacity onPress={this.onChangeMinus} style={styles.slideShowBox}> */}
                <TouchableOpacity onPress={this.onChangeMinus}><Image source={require('../../assets/icons/-.png')} style={styles.image} /></TouchableOpacity>
@@ -98,12 +98,11 @@ export default class SlideShowSetting extends React.Component {
             <Text style={styles.settingText}>Event End Time</Text>
               <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
             </View>
-            <View style={[styles.mainView ,{paddingBottom: 40}]}>
+            <View style={[styles.mainView ,{paddingBottom: 20}]}>
               <Text style={styles.settingText}>Summary Event box</Text>
               <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
             </View>
           </View> 
-          <View style={{height:.4,width:'100%',backgroundColor:'#A2a2a2'}}/>
           <View style={styles.bottomView}>
             <Text style={styles.bottomText}>Allow Slideshow to act as screen saver when device is locked</Text>
             <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
@@ -117,7 +116,7 @@ export default class SlideShowSetting extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'#e6e1de'
+    backgroundColor:'#fff'
   },
   topContainer:{
     backgroundColor:'#fff',
@@ -128,14 +127,13 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff',
     flexDirection:'row',
     justifyContent:'space-between',
-    paddingVertical: Platform.OS === 'android' ? 20 : 20, 
-    borderBottomWidth: .3,
+    paddingVertical: Platform.OS === 'android' ? 5 : 10, 
     paddingHorizontal: 20
   },
   transitionText: {
     color:'#A2a2a2',
-    fontSize: Platform.OS === 'android' ? 16 : 18,
-    fontWeight:'600',
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
+    // fontWeight:'600',
     marginTop: 10
   },
   mainView : {
@@ -166,20 +164,18 @@ const styles = StyleSheet.create({
   },
   number: {
     justifyContent :'center',
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(22) : AppSizes.verticalScale(20),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(20) : AppSizes.verticalScale(18),
     // fontWeight: Platform.OS === 'android' ? '600' : '500'
   },
   headerText: {
-    marginTop: 28,
-    marginBottom: 15, 
+    marginBottom: 10, 
     color:'#A2a2a2',
-    fontSize: Platform.OS === 'android' ? 16 : 18,
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(12),
   },
   settingText: {
     color:'#A2a2a2',
-    fontSize: Platform.OS === 'android' ? 16 : 18,
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
     fontWeight:'600',
-    marginTop: 3
   },
   DropdownStyle: {
     height: 12, 
@@ -192,16 +188,15 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff',
     flexDirection:'row',
     justifyContent:'space-between',
-    paddingVertical: Platform.OS === 'android' ? 15 : 25,
-    paddingHorizontal: 25
+    paddingVertical: Platform.OS === 'android' ? 12 : 25,
+    paddingHorizontal: 25,
   },
   bottomText: {
     flex:1,
     paddingRight: 30,
     color:'#A2a2a2',
     marginTop: Platform.OS === 'android' ? 10 : 3,
-    fontSize: Platform.OS === 'android' ? 16 : 18,
-    fontWeight:'600',
+    fontSize: Platform.OS === 'android' ? 12 : 14,
 
   },
   image: {

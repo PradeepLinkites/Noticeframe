@@ -70,10 +70,10 @@ export default class Navbar extends React.Component {
                 get(this.props,'routeKey','') === 'SlideShowSetting') &&
 			    <SafeAreaView style={styles.slideShowcontainer}>
 					<Animated.View style={styles.mainContainer}>
-						<TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 23 }}>
+						<TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 20 }}>
 							<Image source={require('../../assets/Home_assets/Menu.png')} />
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={{ position: 'absolute', left: 60 }}>
+						<TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={{ position: 'absolute', left: 56 }}>
 							<Image source={require('../../assets/icons/Home_white.png')} style={styles.homeIconStyle}/>
 						</TouchableOpacity>					  
 						<View style={styles.appTitleView}>
@@ -87,7 +87,7 @@ export default class Navbar extends React.Component {
 				{(get(this.props,'routeKey','') === 'Setting' || get(this.props,'routeKey','') === 'FrameColorSetting' || get(this.props,'routeKey','') === 'ImportSetting' || get(this.props,'routeKey','') === 'ExportSetting' ) &&
 			    <SafeAreaView style={styles.slideShowcontainer}>
 					<Animated.View style={styles.mainContainer}>
-						<TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={{ position: 'absolute', left: 25 }}>
+						<TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={{ position: 'absolute', left: 20 }}>
 							<Image source={require('../../assets/icons/Home_white.png')} style={styles.homeIconStyle}/>
 						</TouchableOpacity>					  
 						<View style={styles.appTitleView}>
@@ -146,8 +146,9 @@ const styles = StyleSheet.create({
     appTitleText: {
         right: 0 ,
         color: '#fff',
-        fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(20) : AppSizes.verticalScale(18),
-        fontFamily: AppFonts.NBlack
+        fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14),
+        fontFamily: AppFonts.NBlack,
+        letterSpacing: .3
     },
     appDiscriptionView: {
 		top:  Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(16),
@@ -161,7 +162,8 @@ const styles = StyleSheet.create({
         fontFamily: AppFonts.NRegular
     },
     homeIconStyle: {
-        height: Platform.OS === 'android' ? AppSizes.verticalScale(24) : AppSizes.verticalScale(20),
+        height: Platform.OS === 'android' ? AppSizes.verticalScale(20) : AppSizes.verticalScale(18),
         width: 22,
+        resizeMode: 'contain', 
     }
 })

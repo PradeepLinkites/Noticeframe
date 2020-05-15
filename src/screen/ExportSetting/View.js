@@ -90,7 +90,7 @@ export default class ExportSetting extends React.Component {
           </View> 
 
             <View style={[styles.topContainer,{flexDirection:'row',justifyContent:'space-between'}]}>
-              <Text style={[styles.text,{marginTop: 5}]}>Select Event</Text>
+              <Text style={[styles.text,{marginTop: 10}]}>Select Event</Text>
               <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                 <View style={styles.multiSelectView}>
                  <MultiSelect
@@ -102,7 +102,45 @@ export default class ExportSetting extends React.Component {
                     onSelectedItemsChange={this.onSelectedItemsChange}
                     selectedItems={selectedItems}
                     selectText="Select multiple"
-                    fontSize={Platform.OS === 'android' ? 16 : 20}
+                    fontSize={Platform.OS === 'android' ? 12: 14}
+                    iconSearch={false}
+                    itemTextColor='green'
+                    searchInputPlaceholderText={'Select multiple'}
+                    onChangeInput={ (text)=> console.log(text)}
+                    // altFontFamily="ProximaNova-Light"
+                    // tagRemoveIconColor="#CCC"
+                    // tagBorderColor="#CCC"
+                    // tagTextColor="#CCC"
+                    itemFontSize={Platform.OS === 'android' ? 12 : 16}
+                    itemTextColor="green"
+                    selectedItemTextColor="#000"
+                    selectedItemIconColor="green"
+                    itemTextColor="#000"
+                    styleDropdownMenu={<View><Text>kk</Text></View>}
+                    // displayKey="name"
+                    // searchInputStyle={{ color: 'red',height:100 }}
+                    submitButtonColor="#A2a2a2"
+                    submitButtonText="Submit"
+                  />
+                </View> 
+              </View> 
+            </View>
+
+            <View style={styles.topContainer}>
+            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+              <Text style={[styles.text,{marginTop: 10}]}>Export</Text>
+              <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                <View style={styles.multiSelectView}>
+                 <MultiSelect
+                    hideTags={true}
+                    canAddItems={false}
+                    items={items}
+                    uniqueKey="id"
+                    // ref={(component) => { this.multiSelect = component }}
+                    onSelectedItemsChange={this.onSelectedItemsChange}
+                    selectedItems={selectedItems}
+                    selectText="Select multiple"
+                    fontSize={Platform.OS === 'android' ? 12: 14}
                     iconSearch={false}
                     itemTextColor='green'
                     searchInputPlaceholderText={'Select multiple'}
@@ -125,44 +163,8 @@ export default class ExportSetting extends React.Component {
                 </View> 
               </View> 
             </View>
-
-            <View style={[styles.topContainer,{flexDirection:'row',justifyContent:'space-between'}]}>
-              <Text style={[styles.text,{marginTop: 5}]}>Export</Text>
-              <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                <View style={styles.multiSelectView}>
-                 <MultiSelect
-                    hideTags={true}
-                    canAddItems={false}
-                    items={items}
-                    uniqueKey="id"
-                    // ref={(component) => { this.multiSelect = component }}
-                    onSelectedItemsChange={this.onSelectedItemsChange}
-                    selectedItems={selectedItems}
-                    selectText="Select multiple"
-                    fontSize={Platform.OS === 'android' ? 16 : 20}
-                    iconSearch={false}
-                    itemTextColor='green'
-                    searchInputPlaceholderText={'Select multiple'}
-                    onChangeInput={ (text)=> console.log(text)}
-                    // altFontFamily="ProximaNova-Light"
-                    // tagRemoveIconColor="#CCC"
-                    // tagBorderColor="#CCC"
-                    // tagTextColor="#CCC"
-                    itemFontSize={Platform.OS === 'android' ? 16 : 20}
-                    itemTextColor="green"
-                    selectedItemTextColor="#000"
-                    selectedItemIconColor="green"
-                    itemTextColor="#000"
-                    styleDropdownMenu={<View><Text>kk</Text></View>}
-                    // displayKey="name"
-                    // searchInputStyle={{ color: 'red',height:100 }}
-                    submitButtonColor="#A2a2a2"
-                    submitButtonText="Submit"
-                  />
-                </View> 
-              </View> 
+            <Text style={{marginTop: 25}}>Interval (Minutes)</Text>
             </View>
-
         </ScrollView>
       </SafeAreaView>
     )
@@ -172,14 +174,14 @@ export default class ExportSetting extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'#e6e1de'
+    backgroundColor:'#fff'
   },
   topContainer:{
     backgroundColor:'#fff',
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingVertical: Platform.OS === 'android' ? 16 : 20,
     borderBottomWidth: .3,
-    borderBottomColor: '#A2a2a2'
+    borderBottomColor: '#A2a2a2',
   },
   firstView : {
     flexDirection:'row',
@@ -187,7 +189,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color:'#A2a2a2',
-    fontSize: Platform.OS === 'android' ? 16 : 20,
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
   },
   DropdownStyle: {
     height: 12, 

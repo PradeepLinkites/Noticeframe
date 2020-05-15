@@ -90,7 +90,7 @@ export default class ImportSetting extends React.Component {
           </View> 
 
           <View style={[styles.topContainer,{flexDirection:'row',justifyContent:'space-between'}]}>
-              <Text style={[styles.text,{marginTop: 8}]}>Select Calender</Text>
+              <Text style={[styles.text,{marginTop: 10}]}>Select Calender</Text>
               <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                  <ModalSelector
                     initValueTextStyle={[styles.text,{color:'#000'}]}
@@ -105,8 +105,9 @@ export default class ImportSetting extends React.Component {
               </View>
             </View>
 
-            <View style={[styles.topContainer,{flexDirection:'row',justifyContent:'space-between'}]}>
-              <Text style={[styles.text,{marginTop: 5}]}>Import</Text>
+            <View style={styles.topContainer}>
+            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+              <Text style={[styles.text,{marginTop: 10}]}>Import</Text>
               <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                 <View style={styles.multiSelectView}>
                  <MultiSelect
@@ -118,7 +119,7 @@ export default class ImportSetting extends React.Component {
                     onSelectedItemsChange={this.onSelectedItemsChange}
                     selectedItems={selectedItems}
                     selectText="Select multiple"
-                    fontSize={Platform.OS === 'android' ? 16 : 20}
+                    fontSize={Platform.OS === 'android' ? 12: 14}
                     iconSearch={false}
                     itemTextColor='green'
                     searchInputPlaceholderText={'Select multiple'}
@@ -147,6 +148,8 @@ export default class ImportSetting extends React.Component {
                   </TouchableOpacity>
                  <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/> */}
               </View> 
+              </View>
+              <Text style={{marginTop: 25}}>Interval (Minutes)</Text>
             </View>
             {/* <Modal
               animationType="slide"
@@ -178,22 +181,23 @@ export default class ImportSetting extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'#e6e1de'
+    backgroundColor:'#fff'
   },
   topContainer:{
     backgroundColor:'#fff',
     paddingHorizontal: 20,
-    paddingVertical: 30,
+    paddingVertical: Platform.OS === 'android' ? 16 : 20,
     borderBottomWidth: .3,
-    borderBottomColor: '#A2a2a2'
+    borderBottomColor: '#A2a2a2',
   },
   firstView : {
     flexDirection:'row',
     justifyContent:'space-between'
   },
   text: {
+    marginTop: Platform.OS === 'android' ? 2 : 3 ,
     color:'#A2a2a2',
-    fontSize: Platform.OS === 'android' ? 16 : 20,
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
   },
   DropdownStyle: {
     height: 12, 

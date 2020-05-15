@@ -40,7 +40,7 @@ export default class FrameColorSetting extends React.Component {
             <Text style={styles.headerText}>Show frame color</Text>
             <View style={styles.mainView}>
               <View><Text style={styles.label}>URGENT</Text></View>
-              <View style={[styles.colorButton,{backgroundColor:'#ed1c24',marginLeft:48}]}></View>
+              <View style={[styles.colorButton,{backgroundColor:'#ed1c24',marginLeft: Platform.OS === 'android' ? 35: 40}]}></View>
               <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
             </View>
             <View style={styles.mainView}>
@@ -50,7 +50,7 @@ export default class FrameColorSetting extends React.Component {
             </View>
             <View style={styles.mainView}>
               <View><Text style={styles.label}>NOT URGENT</Text></View>
-              <View style={[styles.colorButton,{backgroundColor:'#00a651'}]}></View>
+              <View style={[styles.colorButton,{backgroundColor:'#00a651',marginLeft: Platform.OS === 'android' ? 5: 2}]}></View>
               <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
             </View>
           </View> 
@@ -104,7 +104,7 @@ export default class FrameColorSetting extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'#e6e1de'
+    backgroundColor:'#fff'
   },
   topContainer:{
     backgroundColor:'#fff',
@@ -114,20 +114,21 @@ const styles = StyleSheet.create({
   },
   headerText: {
     marginTop: 30,
-    marginBottom: 10, 
+    marginBottom: 30, 
     color:'#A2a2a2',
-    fontSize: Platform.OS === 'android' ? 16 : 18,
+    fontSize: Platform.OS === 'android' ? 12 : 14,
   },
   mainView : {
     backgroundColor:'#fff',
     flexDirection:'row',
     justifyContent: 'space-between',
-    paddingVertical: 25
+    paddingVertical: 15
   },
 
   colorButton: {
-     height: Platform.OS === 'android' ? AppSizes.verticalScale(22) : AppSizes.verticalScale(22),
-     width: Platform.OS === 'android' ? AppSizes.verticalScale(120) : AppSizes.verticalScale(110),
+     marginTop: 5,
+     height: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(16),
+     width: Platform.OS === 'android' ? AppSizes.verticalScale(100) : AppSizes.verticalScale(90),
      borderRadius: 30
   },
   colorButtonBottom: {
@@ -142,11 +143,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   },
   label: {
-    marginTop: 3,
+    marginTop: 5,
     marginBottom: 10, 
-    color:'#000',
-    fontSize: Platform.OS === 'android' ? 16 : 18,
-    fontWeight: '500'
+    color:'#A2a2a2',
+    fontWeight: '700',
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
+    fontFamily: AppFonts.NRegular,
+    letterSpacing: .6
+
   }
   // intervalContainer: {
   //   backgroundColor:'#fff',

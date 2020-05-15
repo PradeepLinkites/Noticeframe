@@ -36,10 +36,10 @@ export default class CreateEvent extends React.Component {
                   <Text style={styles.eventDateText}>09:30 to 12:30 </Text>
                 </View>
             </View>
-            <View style={styles.viewContainer}>
+            <View style={[styles.viewContainer,{borderBottomWidth: .3}]}>
                <Text style={styles.titleText}>PERSONAL</Text>
             </View>
-            <View style={[styles.viewContainer,{paddingBottom: 20}]}>
+            <View style={styles.viewContainer}>
                <Text style={styles.titleText}>Contacts</Text>
                <Text style={styles.nameText}>David Williams</Text>
                <Text style={styles.nameText}>Steve James</Text>
@@ -47,11 +47,11 @@ export default class CreateEvent extends React.Component {
             <View style={styles.colorContainer}>
               <Text style={[styles.titleText,{marginTop:9}]}>Default Fill colour </Text>
               <View style={{flexDirection:'row'}}> 
-                <View style={ [styles.roundColorView, {marginRight:15, backgroundColor : selectedColor === 'red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
+                <View style={ [styles.roundColorView, {marginRight:8, backgroundColor : selectedColor === 'red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
                 <Text style={[styles.subTitleText,{marginTop: 12}]}>Orange</Text>
               </View>
             </View>
-            <View style={styles.reminderContainer}>
+            <View style={[styles.reminderContainer,{marginTop: 5,borderBottomWidth: 0}]}>
               <Text style={styles.titleText}>Reminder</Text>
               <Text style={styles.subTitleText}>Everyday 8:00 PM</Text>
             </View>
@@ -67,11 +67,11 @@ export default class CreateEvent extends React.Component {
               <Text style={styles.titleText}>Location</Text>
               <Text style={[styles.subTitleText,{marginTop: 8}]}>Str. I Gualdariya, 9, 47890, italy</Text>
             </View>
-            <View style={[styles.reminderContainer,{marginTop:6}]}>
+            <View style={[styles.reminderContainer,{marginTop:5,borderBottomWidth:0}]}>
               <Text style={[styles.subTitleText,{marginTop:9}]}>Show Event in SlideShow</Text>
               <View style={ [styles.roundColorView, {backgroundColor : selectedColor === 'red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
             </View>
-            <View style={styles.reminderContainer}>
+            <View style={[styles.reminderContainer,{borderBottomWidth:0}]}>
               <Text style={styles.titleText}>Availability</Text>
               <Text style={styles.subTitleText}>BUSY</Text>
             </View>
@@ -79,7 +79,7 @@ export default class CreateEvent extends React.Component {
               <Text style={styles.titleText}>Privacy</Text>
               <Text style={styles.subTitleText}>PRIVATE</Text>
             </View>
-            <View style={[styles.bottomContainer,{marginTop:4}]}>
+            <View style={styles.bottomContainer}>
               <TouchableOpacity onPress={()=>this.props.navigation.navigate('EditEvent')}> 
                 <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
               </TouchableOpacity>
@@ -96,20 +96,20 @@ export default class CreateEvent extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'#e6e1de'
+    backgroundColor:'#e2e9f6'
   },
   topContainer:{
     height: deviceHeight *.25 ,
     width: '100%'
   },
   eventTitleText: {
-    fontSize: hp(3),
-    fontWeight:'800',
-    letterSpacing: 1,
+    fontSize: Platform.OS === 'android' ? hp(2.8) : hp(2.3),
+    fontWeight:'900',
+    letterSpacing: .7,
     color: '#fff',
   },
   eventDateText: {
-    fontSize: hp(2),
+    fontSize: hp(1.5),
 	  fontFamily: AppFonts.NRegular,
     marginTop: 5,
     letterSpacing: .8,
@@ -128,32 +128,31 @@ const styles = StyleSheet.create({
     paddingBottom: hp(2),
     backgroundColor:'#fff',
     borderBottomColor:'#A2a2a2',
-    borderBottomWidth: .3
   },
   titleText: {
-    fontSize: Platform.OS === 'android' ? hp(2.4) : hp(1.8),
+    fontSize: Platform.OS === 'android' ? hp(1.8) : hp(1.5),
 	  fontFamily: AppFonts.NRegular,
     letterSpacing: .2,
     fontWeight:'600'
   },
   nameText: {
-    fontSize: Platform.OS === 'android' ? hp(1.9) : hp(1.5),
+    fontSize: Platform.OS === 'android' ? hp(1.5) : hp(1.3),
 	  fontFamily: AppFonts.NRegular,
     letterSpacing: .3,
     marginTop: 8
   },
   subTitleText: {
-    fontSize: Platform.OS === 'android' ? hp(2.4) : hp(2),
+    fontSize: Platform.OS === 'android' ? hp(1.8) : hp(1.5),
 	  fontFamily: AppFonts.NRegular,
     letterSpacing: .2,
     fontWeight:'600',
     color:'#A2a2a2'
   },
   roundColorView: {
-    marginTop: 15, 
-    height:18, 
-    width:18, 
-    borderRadius:9, 
+    marginTop: 14, 
+    height:16, 
+    width:16, 
+    borderRadius:8, 
     marginLeft: 86 
   },
   colorContainer: {
@@ -163,7 +162,6 @@ const styles = StyleSheet.create({
     paddingBottom: hp(2),
     backgroundColor:'#fff',
     borderBottomColor:'#A2a2a2',
-    borderBottomWidth:.3,
     flexDirection:'row',
     justifyContent:'space-between'
   },
@@ -189,7 +187,7 @@ const styles = StyleSheet.create({
   },
   imageStyle: {
     width: wp(9),
-    height: hp(6)
+    height: hp(5)
   },
   bottomContainer: {
     paddingTop: hp(2),

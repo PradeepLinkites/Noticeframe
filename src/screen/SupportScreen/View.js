@@ -64,7 +64,7 @@ export default class Support extends React.Component {
               return(
                 <View style={styles.settingListView} key={ind}>
                   <Text style={styles.settingText}>{item.title}</Text>
-                  <Image  source={item.icon} style={{ height: 14,width: 6 }}/>
+                  <Image  source={item.icon} style={{ height: 8,width: 6 }}/>
                 </View>
               )})
             } 
@@ -92,15 +92,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent:'space-between',
     alignItems: 'center',
-    paddingLeft: Platform.OS === 'android' ? 22 : 24	,
-    paddingRight: Platform.OS === 'android' ? 22 : 24,
-    paddingTop: Platform.OS === 'android' ? 34 : 30,
-    paddingBottom: Platform.OS === 'android' ? 34 : 30,
+    paddingHorizontal: Platform.OS === 'android' ? 22 : 24,
+    paddingVertical : Platform.OS === 'android' ? 24 : 28,
     borderBottomWidth: .3,
     borderBottomColor: '#A2a2a2'
   },
   settingText: {
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
 	  fontFamily: AppFonts.NRegular,
   }
 })
