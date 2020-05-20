@@ -1,13 +1,12 @@
 import React from 'react'
 import {KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, Alert, StyleSheet, Text, View, Button, Image, SafeAreaView, TextInput, TouchableOpacity, Dimensions } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
-import Navbar from '../Common/Navbar'
 import { get, isEmpty , size} from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles } from '../../theme'
+// import AsyncStorage from '@react-native-community/async-storage'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
-import AsyncStorage from '@react-native-community/async-storage'
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 
 export default class Login extends React.Component {
@@ -77,11 +76,11 @@ export default class Login extends React.Component {
         </View>
         <View style={AppStyles.authContainer}>
             <TextInput style = {AppStyles.textinput}
-               underlineColorAndroid = "transparent"
-               placeholder = "Your Email here"
-               placeholderTextColor = "#A2a2a2"
-               autoCapitalize = "none"
-               placeholderStyle={{ fontSize: 16 ,fontWeight: '500'}}
+              underlineColorAndroid = "transparent"
+              placeholder = "Your Email here"
+              placeholderTextColor = "#A2a2a2"
+              autoCapitalize = "none"
+              placeholderStyle={{ fontSize: 16 ,fontWeight: '500'}}
               numberOfLines={1}
               autoCorrect={false}
               onChangeText={email => this.setState({ email })}
@@ -118,7 +117,7 @@ export default class Login extends React.Component {
             <View style={AppStyles.SignupView}>
               <Text style={AppStyles.signupText}>Not registered Yet? </Text>
               <TouchableOpacity onPress={() => this.props.navigation.navigate('Ragister')}>
-              <Text style={{ marginLeft: 5, textDecorationLine: 'underline', textDecorationColor: '#ff6227', fontFamily: AppFonts.NBlack, fontSize: AppSizes.verticalScale(16), color: AppColors.app.textHighlight }}>Sign Up</Text>
+              <Text style={AppStyles.signupStyle}>Sign Up</Text>
             </TouchableOpacity>
             </View>
           </View>

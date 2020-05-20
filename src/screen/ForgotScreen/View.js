@@ -9,7 +9,7 @@ const deviceHeight = Dimensions.get('window').height
 import AsyncStorage from '@react-native-community/async-storage'
 
 
-export default class Login extends React.Component {
+export default class ForgetScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -38,11 +38,10 @@ export default class Weekly extends React.Component {
           <WeeklyCalendar 
             events={sampleEvents}
             selected='2020-03-23'
-            style={{ height: 400 }} 
             themeColor='#ff6600'
-            style={{ height: 500, width:'100%' ,color:'red'}}
-            titleStyle={{ color: '#000' }}
-            dayLabelStyle={{ color: '#A2a2a2' }}        
+            style={{ height: deviceHeight, width:'100%'}}
+            titleStyle={{ color: '#000',fontSize: 18 ,fontWeight: '300',marginTop: 10}}
+            dayLabelStyle={{ color: '#A2a2a2',fontSize: 14, marginTop: 15, marginBottom: 10 }}      
           />
         </ScrollView>
       </SafeAreaView>

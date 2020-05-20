@@ -37,7 +37,7 @@ import { AppFonts, AppSizes, AppColors } from '../theme'
 import DailyScreen from '../screen/DailyScreen/Container'
 import WeeklyScreen from '../screen/WeeklyScreen/Container' 
 import MonthlyScreen from '../screen/MonthlyScreen/Container' 
-import EventsComponent from '../screen/EventsScreen/Container' 
+// import EventsComponent from '../screen/EventsScreen/Container' 
 import ListViewScreen from '../screen/EventListScreen/Container'
 
 const data = ['Daily', 'Weekly','Monthly', 'Calender List']
@@ -45,7 +45,7 @@ const data = ['Daily', 'Weekly','Monthly', 'Calender List']
 const drawerStacks = [
 	{
 	  key: 1,
-	  route: 'Home',
+	  route: 'HomePage',
 	  title: 'Home',
 	  icon: require('../assets/sidemenuAssets/Home.png')
 	},
@@ -393,14 +393,19 @@ const ShareScreen = createStackNavigator({
 
 const TabNavigator = createMaterialTopTabNavigator(
 	{
+		Home: {
+			screen: Home,
+			  navigationOptions: ({navigation}) => ({
+				tabBarIcon:({tintColor, focused})=>(  
+				  focused ?
+				  <Image source={require('../assets/Home_assets/Home_selected.png')} />
+				  :
+				  <Image source={require('../assets/Home_assets/Home.png')} />
+				),
+			})	
+		  },
 	  Daily: {
 		screen: DailyScreen,
-		navigationOptions: {
-			tabBarIcon: ({ tintColor }) => (
-			  //Your icon component for example => 
-			  <Image source={require('../assets/Home_assets/Daily_select.png')} />
-			)
-		  },	
 		  navigationOptions: ({navigation}) => ({
 			tabBarIcon:({tintColor, focused})=>(  
 			  focused ?
@@ -443,25 +448,25 @@ const TabNavigator = createMaterialTopTabNavigator(
 		  )  
 		})  
 	  },
+	//   Home: {
+	// 	screen: SlideShowScreen,
+	// 	navigationOptions: () => ({
+	// 		tabBarIcon:({tintColor, focused})=>(  
+	// 		  focused ?
+	// 		  <Image source={require('../assets/Home_assets/event_select.png')} />
+	// 		  :
+	// 		  <Image source={require('../assets/Home_assets/event.png')} /> 
+	// 	  )  
+	// 	})  
+	//   },
 	  Events: {
-		screen: EventsComponent,
-		navigationOptions: () => ({
+		screen: ListViewScreen,
+		navigationOptions: (navigation) => ({
 			tabBarIcon:({tintColor, focused})=>(  
 			  focused ?
 			  <Image source={require('../assets/Home_assets/event_select.png')} />
 			  :
 			  <Image source={require('../assets/Home_assets/event.png')} /> 
-		  )  
-		})  
-	  },
-	  ListView: {
-		screen: ListViewScreen,
-		navigationOptions: (navigation) => ({
-			tabBarIcon:({tintColor, focused})=>(  
-			  focused ?
-			  <Image source={require('../assets/Home_assets/list_select.png')} />
-			  :
-			  <Image source={require('../assets/Home_assets/list.png')} /> 
 			)  
 		})	
 	  },
@@ -505,8 +510,11 @@ export default DrawerNavigator = createDrawerNavigator({
 	Home: {
 	 	screen: HomeStackNavigator
 	},
+	HomePage: {
+        screen: HomeScreen
+	},
 	Events: {
-     	screen: EventsScreen
+     	screen: Events
 	},
 	CreateGroup: {
 		screen: CreateGroupScreen

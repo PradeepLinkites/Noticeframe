@@ -32,19 +32,31 @@ export default class Navbar extends React.Component {
         const headerTitle = get(this.props, 'routeKey','') === 'Events' ? 'Events List' : get(this.props, 'routeKey','') === 'ListView' ? 'Active Events List' : get(this.props, 'routeKey','') === 'SlideShow' ? 'NOTICE FRAME': 'Calendar'
         return ( 
             <SafeAreaView style={styles.container}>
-                   <Animated.View style={styles.tabContainer}> 
-                        <TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 20 }}>
-                            <Image source={require('../../assets/Home_assets/Menu.png')} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={{ position: 'absolute', left: 56 }}>
-                            <Image source={require('../../assets/icons/Home_white.png')} style={styles.homeIconStyle}/>
-                        </TouchableOpacity>					  
-                        <View style={styles.appTitleView}>
-                            <Text style={styles.appTitleText}>
-                                {headerTitle}
-                            </Text>
-                        </View>     
-                   </Animated.View> 
+					{  get(this.props, 'routeKey','') === 'Home' ?
+					   <Animated.View style={styles.tabContainer}> 
+							<TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 20 }}>
+								<Image source={require('../../assets/Home_assets/Menu.png')} />
+							</TouchableOpacity>
+							{/* <View style={styles.appTitleView}> */}
+								<Text style={styles.text1}>Notice Frame</Text>
+								<Text style={styles.text2}>Increasing productivity frame by frame</Text>
+							{/* </View>      */}
+						</Animated.View> 
+						:
+						<Animated.View style={styles.tabContainer}> 
+							<TouchableOpacity onPress={() => this.props.navigation.dispatch(DrawerActions.openDrawer())} style={{ position: 'absolute', left: 20 }}>
+								<Image source={require('../../assets/Home_assets/Menu.png')} />
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => this.props.navigation.navigate('Home')} style={{ position: 'absolute', left: 56 }}>
+								<Image source={require('../../assets/icons/Home_white.png')} style={styles.homeIconStyle}/>
+							</TouchableOpacity>					  
+							<View style={styles.appTitleView}>
+								<Text style={styles.appTitleText}>
+										{headerTitle}
+								</Text>
+							</View>     
+						</Animated.View> 
+               }
             </SafeAreaView>
         )
     }
@@ -71,7 +83,27 @@ const styles = StyleSheet.create({
         fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(16),
         fontFamily: AppFonts.NBlack,
         letterSpacing: .5
-    },
+	 },
+	 text1: {
+		position: 'absolute',
+		right: 20,
+		top: 15 , 
+		marginBottom:20,
+		color: '#fff',
+		fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(16),
+		fontFamily: AppFonts.NBlack,
+		letterSpacing: .2
+	 },
+	 text2: {
+		position: 'absolute',
+		top: Platform.OS === 'android' ? 38 : 40,
+		right: 20 ,
+		color: '#fff',
+		fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
+		fontFamily: AppFonts.NRegular,
+		fontWeight: '500',
+		letterSpacing: .2
+	},
     homeIconStyle: {
         height: Platform.OS === 'android' ? AppSizes.verticalScale(20) : AppSizes.verticalScale(18),
         width: 22,

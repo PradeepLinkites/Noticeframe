@@ -103,8 +103,8 @@ const mainStack = createStackNavigator({
 	initialRoute: 'AppStack',
 });
 
-// const AppContainer = createAppContainer(mainStack);
-const AppContainer = createAppContainer(AppStack);
+const AppContainer = createAppContainer(mainStack);
+// const AppContainer = createAppContainer(AppStack);
 const AppContainerHome = createAppContainer(AppStack);
 
 export default class App extends React.Component {

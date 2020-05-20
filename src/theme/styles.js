@@ -88,7 +88,7 @@ export default {
     // backgroundColor:'#3b5261'
  },
  top:{
-   height: hp(45), 
+   height: hp(35), 
    justifyContent: 'center', 
    alignItems: 'center',
   
@@ -99,14 +99,14 @@ export default {
   alignItems: 'center',
 },
  logoStyle:{
-  height: hp(14),
-  width: wp(24)
+  height: hp(12),
+  width: wp(20)
  },
  text:{
     marginTop: hp(3),
     color: '#939393',  
-    fontSize: Sizes.verticalScale(18),
-    fontWeight: '700',
+    fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
+    fontFamily: Fonts.NRegular,
     letterSpacing: 0.6
  },
  authContainer:{
@@ -114,35 +114,35 @@ export default {
   paddingRight: 30,
 },
  textinput: {
-   fontSize: Sizes.verticalScale(18),
-   color: 'black',
-   marginBottom: 15,
-   borderBottomColor: '#A2a2a2',
-   borderBottomWidth: 1.5,
-   height:hp(6.5)
+  fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
+  color: 'black',
+  marginBottom: 15,
+  borderBottomColor: '#A2a2a2',
+  borderBottomWidth: 1.5,
+  height:hp(6.5)
  },
  loginButton: {
     backgroundColor: '#ff6600',
     justifyContent:'center',
     alignItems:'center',
-    height: hp(7),
+    height: Platform.OS === 'android' ? hp(7): hp(5),
     marginTop: 30,
     marginBottom: 20,
     borderRadius: 30
  },
  submitButtonText:{
     color: 'white',
-    fontSize: Sizes.verticalScale(20),
-    fontWeight: '700',
+    fontSize: Platform.OS === 'android' ? Sizes.verticalScale(18) : Sizes.verticalScale(16),
+    fontWeight: '900',
     letterSpacing: 1
  },
  forgotText:{
    color: '#939393',  
-   fontSize: Sizes.verticalScale(18),
-   fontWeight: '700',
-   letterSpacing: 0.8,
+   fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
+   letterSpacing: 0.6,
    alignSelf: 'center',
-   marginTop: 20
+   marginTop: 20,
+   fontFamily: Fonts.NRegular
 },
  SignupView:{
    marginTop: 8,
@@ -152,13 +152,22 @@ export default {
  },
 signupText:{
  color: '#939393',  
- fontSize: Sizes.verticalScale(18),
- fontWeight: '700',
- letterSpacing: 0.8
+ fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
+ letterSpacing: 0.6,
+ fontFamily: Fonts.NRegular
+
+},
+signupStyle: {
+  marginLeft: 5, 
+  textDecorationLine: 'underline', 
+  textDecorationColor: '#ff6227', 
+  fontFamily: Fonts.NRegular,
+  fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
+  color: '#ff6600'
 },
 error: {
   color: 'red',
-  fontSize: Sizes.verticalScale(18),
+  fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
   marginLeft: 5,
   marginTop: 1,
   fontFamily: Fonts.NRegular
