@@ -44,7 +44,7 @@ const data = ['Daily', 'Weekly','Monthly', 'Calender List']
 const drawerStacks = [
 	{
 	  key: 1,
-	  route: 'HomePage',
+	  route: 'Home',
 	  title: 'Home',
 	  icon: require('../assets/sidemenuAssets/Home.png')
 	},
