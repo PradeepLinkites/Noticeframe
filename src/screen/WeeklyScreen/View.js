@@ -1,6 +1,5 @@
 import React from 'react'
 import { Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
-import Navbar from '../Common/Navbar'
 import { get } from 'lodash'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
@@ -39,9 +38,10 @@ export default class Weekly extends React.Component {
             events={sampleEvents}
             selected='2020-03-23'
             themeColor='#ff6600'
-            style={{ height: deviceHeight, width:'100%'}}
-            titleStyle={{ color: '#000',fontSize: 18 ,fontWeight: '300',marginTop: 10}}
-            dayLabelStyle={{ color: '#A2a2a2',fontSize: 14, marginTop: 15, marginBottom: 10 }}      
+            style={styles.weeklyCalendar}
+            titleStyle={styles.title}
+            dayLabelStyle={styles.dayLableStyle}
+            monthDateText={{ fontSize: 10 }}
           />
         </ScrollView>
       </SafeAreaView>
@@ -52,5 +52,20 @@ export default class Weekly extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',  }
+    backgroundColor: '#fff',  
+  },
+  weeklyCalendar: {
+    height: deviceHeight, width:'100%'
+  },
+  title: {
+    color: '#000',
+    fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14), 
+    fontWeight: '300',
+    marginTop: 8
+  },
+  dayLableStyle: {
+    color: '#A2a2a2',
+    fontSize: 14, 
+    marginTop: Platform.OS === 'android' ? 10 : 15
+}
 });

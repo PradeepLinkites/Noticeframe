@@ -49,13 +49,13 @@ export default class Monthly extends React.Component {
               monthTextColor: '#000',
               textDayFontWeight: '300',
               textMonthFontWeight: '300',
-              textDayFontSize: 18,
-              textMonthFontSize: 18,
+              fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(18), 
+              textMonthFontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14), 
               textDayHeaderFontSize: 14,
 
               'stylesheet.calendar.header': {
                 week: {
-                  marginTop: 10,
+                  marginTop: 6,
                   marginBottom: 10,
                   flexDirection: 'row',
                   justifyContent: 'space-between'

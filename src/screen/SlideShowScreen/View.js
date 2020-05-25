@@ -2,11 +2,10 @@ import React from 'react'
 import { Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get } from 'lodash'
-import AwesomeButton from 'react-native-really-awesome-button'
-const deviceWidth = Dimensions.get('window').width
-const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import Swiper from 'react-native-swiper'
+const deviceWidth = Dimensions.get('window').width
+const deviceHeight = Dimensions.get('window').height
 
 
 const data = [
@@ -123,6 +122,7 @@ export default class SlideShow extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#fff'
   },
   wrapper: {},
   backgroundImage:{
@@ -170,10 +170,8 @@ const styles = StyleSheet.create({
   smallEventView: {
     flexDirection:'row',
     justifyContent:'space-between',
-    paddingLeft: 8,
-    paddingRight: 8,
-    paddingTop: 5,
-    paddingBottom: 5
+    paddingHorizontal: 8,
+    paddingVertical: 5
   },
   smallEventTitleText: {
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(10) : AppSizes.verticalScale(8),

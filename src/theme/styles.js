@@ -82,46 +82,48 @@ export default {
 
 
   // Style for NoticeFrame
-
+  // Auth
   container: {
     flex: 1,
-    // backgroundColor:'#3b5261'
+    backgroundColor:'#3b5261'
+  },
+  scrollContainer: {
+    backgroundColor:'#fff'
+  },
+  top: {
+    height: hp(35), 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+  },
+  topRegister:{
+    height: hp(28), 
+    justifyContent: 'center', 
+    alignItems: 'center',
  },
- top:{
-   height: hp(35), 
-   justifyContent: 'center', 
-   alignItems: 'center',
-  
- },
- topRegister:{
-  height: hp(28), 
-  justifyContent: 'center', 
-  alignItems: 'center',
-},
- logoStyle:{
-  height: hp(12),
-  width: wp(20)
- },
- text:{
+  logoStyle:{
+    height: hp(12),
+    width: wp(20)
+  },
+  text:{
     marginTop: hp(3),
     color: '#939393',  
     fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
     fontFamily: Fonts.NRegular,
     letterSpacing: 0.6
- },
- authContainer:{
-  paddingLeft: 30,
-  paddingRight: 30,
-},
- textinput: {
-  fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
-  color: 'black',
-  marginBottom: 15,
-  borderBottomColor: '#A2a2a2',
-  borderBottomWidth: 1.5,
-  height:hp(6.5)
- },
- loginButton: {
+  },
+  authContainer:{
+    paddingLeft: 30,
+    paddingRight: 30,
+  },
+  textinput: {
+    fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
+    color: 'black',
+    marginBottom: 15,
+    borderBottomColor: '#A2a2a2',
+    borderBottomWidth: 1.5,
+    height:hp(6.5)
+  },
+  loginButton: {
     backgroundColor: '#ff6600',
     justifyContent:'center',
     alignItems:'center',
@@ -129,64 +131,62 @@ export default {
     marginTop: 30,
     marginBottom: 20,
     borderRadius: 30
- },
- submitButtonText:{
+  },
+  submitButtonText:{
     color: 'white',
     fontSize: Platform.OS === 'android' ? Sizes.verticalScale(18) : Sizes.verticalScale(16),
     fontWeight: '900',
     letterSpacing: 1
+  },
+  forgotText:{
+    color: '#939393',  
+    fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
+    letterSpacing: 0.6,
+    alignSelf: 'center',
+    marginTop: 20,
+    fontFamily: Fonts.NRegular
+  },
+  SignupView:{
+    marginTop: 8,
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems: 'center',
  },
- forgotText:{
-   color: '#939393',  
-   fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
-   letterSpacing: 0.6,
-   alignSelf: 'center',
-   marginTop: 20,
-   fontFamily: Fonts.NRegular
-},
- SignupView:{
-   marginTop: 8,
-   flexDirection:'row',
-   justifyContent:'center',
-   alignItems: 'center',
+  signupText:{
+    color: '#939393',  
+    fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
+    letterSpacing: 0.6,
+    fontFamily: Fonts.NRegular
+  },
+  signupStyle: {
+    marginLeft: 5, 
+    textDecorationLine: 'underline', 
+    textDecorationColor: '#ff6227', 
+    fontFamily: Fonts.NRegular,
+    fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
+    color: '#ff6600'
+  },
+  error: {
+    color: 'red',
+    fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
+    marginLeft: 5,
+    marginTop: 1,
+    fontFamily: Fonts.NRegular
+  },
+  button: {
+    marginTop: 45, 
+    backgroundColor:'#ff6600',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: Platform.OS === 'android' ? 5 : 6,
+    paddingBottom: Platform.OS === 'android' ? 5 : 6,
+    marginLeft: 5,
+    marginRight: 5
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: Platform.OS === 'android' ? Sizes.verticalScale(12) : Sizes.verticalScale(10),
+    fontFamily: Fonts.NRegular,
+    letterSpacing:.2
  },
-signupText:{
- color: '#939393',  
- fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
- letterSpacing: 0.6,
- fontFamily: Fonts.NRegular
-
-},
-signupStyle: {
-  marginLeft: 5, 
-  textDecorationLine: 'underline', 
-  textDecorationColor: '#ff6227', 
-  fontFamily: Fonts.NRegular,
-  fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
-  color: '#ff6600'
-},
-error: {
-  color: 'red',
-  fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
-  marginLeft: 5,
-  marginTop: 1,
-  fontFamily: Fonts.NRegular
-},
-button: {
-  marginTop: 45, 
-  backgroundColor:'#ff6600',
-  alignItems: 'center',
-  justifyContent: 'center',
-  paddingTop: Platform.OS === 'android' ? 5 : 6,
-  paddingBottom: Platform.OS === 'android' ? 5 : 6,
-  marginLeft: 5,
-  marginRight: 5
-},
-buttonText: {
-  color: '#fff',
-  fontSize: Platform.OS === 'android' ? Sizes.verticalScale(12) : Sizes.verticalScale(10),
-  fontFamily: Fonts.NRegular,
-  letterSpacing:.2
-},
-
 };

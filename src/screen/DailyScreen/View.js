@@ -2,6 +2,7 @@ import React from 'react'
 import { Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import { get } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import WeeklyCalendar from 'react-native-weekly-calendar';
 import styles from './styles'
 import moment from 'moment'
@@ -38,10 +39,9 @@ export default class Daily extends React.Component {
             selected='2020-03-23'
             startWeekday={7}
             weekdayFormat='ddd'
-            style={{ height: 500, backgroundColor:'green' }} 
             themeColor='#ff6600'
-            titleStyle={{ color: '#000',fontSize: 18 ,fontWeight: '300',marginTop: 10}}
-            dayLabelStyle={{ color: '#A2a2a2',fontSize: 14, marginTop: 15, marginBottom: 10 }}
+            titleStyle={styles.title}
+            dayLabelStyle={styles.dayLableStyle}
             titleFormat='DD MMM YYYY'
             locale='en'
             renderEvent={(event, j) => {
@@ -57,14 +57,14 @@ export default class Daily extends React.Component {
                         <View style={styles.durationDot} />
                         <Text style={styles.durationText}>{startTime}</Text>
                       </View>
-                      <View style={{ paddingTop: 10 }} />
+                      {/* <View style={{ paddingTop: 2 }} /> */}
                       <View style={styles.durationContainer}>
                         <View style={styles.durationDot} />
                         <Text style={styles.durationText}>{endTime}</Text>
                       </View>
                       <View style={styles.durationDotConnector} />
                     </View>
-                    <View style={styles.eventNote}>
+                    <View>
                       <Text numberOfLines={3} style={styles.eventText}>{event.note}</Text>
                     </View>
                   </View>
@@ -119,7 +119,7 @@ export default class Daily extends React.Component {
               )
             }}    
             onDayPress={(weekday, i) => {
-              console.log(weekday.format('ddd') + ' is selected! And it is day ' + (i+1) + ' of the week!')
+              // console.log(weekday.format('ddd') + ' is selected! And it is day ' + (i+1) + ' of the week!')
             }}
             style={{ height: deviceHeight, width:'100%'}}
           />        

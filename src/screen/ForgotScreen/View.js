@@ -71,7 +71,7 @@ export default class ForgetScreen extends React.Component {
           behavior={Platform.OS == "ios" ? "padding" : "height"}
           style={AppStyles.container}
         >
-        <ScrollView>
+        <ScrollView style={AppStyles.scrollContainer}>
         <Navbar navigation={this.props.navigation} navTitle={route} type={'forgot'} />
         <View style={AppStyles.top}>
           <Image source={require('../../assets/logo/Logo_NF.png')} style={AppStyles.logoStyle} /> 

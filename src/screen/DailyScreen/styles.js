@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
     },
     eventText: {
         color: '#000',
-        fontSize: 16
+        fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(12), 
     },
     plusIcon: {
         width:  Platform.OS === 'android' ? AppSizes.verticalScale(10) : AppSizes.verticalScale(8), 
@@ -26,8 +26,17 @@ const styles = StyleSheet.create({
         borderRightColor: 'grey',
         borderRightWidth: StyleSheet.hairlineWidth,
     },
+    title: {
+        color: '#000',
+        fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14), 
+        fontWeight: '300',
+        marginTop: 10
+    },
+    dayLableStyle: {
+        color: '#A2a2a2',fontSize: 14, marginTop: Platform.OS === 'android' ? 10 : 15
+    },
     monthDateText: {
-        fontSize: 16
+        fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12), 
     },
     allEvents: {
         width: '80%',

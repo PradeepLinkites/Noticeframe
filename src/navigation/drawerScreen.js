@@ -12,7 +12,7 @@ import Navbar from '../screen/Common/TabNavbar'
 
 //Drawer Screens
 import Home from '../screen/HomeScreen/Container'
-import Events from '../screen/EventListScreen/Container'
+import Events from '../screen/EventsScreen/Container'
 import Calendar from '../screen/Calendars/Container'
 import SlideShow from '../screen/SlideShowScreen/Container'
 import Setting from '../screen/SettingScreen/Container'
@@ -37,8 +37,7 @@ import { AppFonts, AppSizes, AppColors } from '../theme'
 import DailyScreen from '../screen/DailyScreen/Container'
 import WeeklyScreen from '../screen/WeeklyScreen/Container' 
 import MonthlyScreen from '../screen/MonthlyScreen/Container' 
-// import EventsComponent from '../screen/EventsScreen/Container' 
-import ListViewScreen from '../screen/EventListScreen/Container'
+import EventsView from '../screen/EventsScreen/Container'
 
 const data = ['Daily', 'Weekly','Monthly', 'Calender List']
 
@@ -448,19 +447,8 @@ const TabNavigator = createMaterialTopTabNavigator(
 		  )  
 		})  
 	  },
-	//   Home: {
-	// 	screen: SlideShowScreen,
-	// 	navigationOptions: () => ({
-	// 		tabBarIcon:({tintColor, focused})=>(  
-	// 		  focused ?
-	// 		  <Image source={require('../assets/Home_assets/event_select.png')} />
-	// 		  :
-	// 		  <Image source={require('../assets/Home_assets/event.png')} /> 
-	// 	  )  
-	// 	})  
-	//   },
 	  Events: {
-		screen: ListViewScreen,
+		screen: EventsView,
 		navigationOptions: (navigation) => ({
 			tabBarIcon:({tintColor, focused})=>(  
 			  focused ?

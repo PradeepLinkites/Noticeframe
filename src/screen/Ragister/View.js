@@ -138,7 +138,7 @@ export default class Login extends React.Component {
           behavior={Platform.OS == "ios" ? "padding" : "height"}
           style={AppStyles.container}
         >
-        <ScrollView>
+        <ScrollView style={AppStyles.scrollContainer}>
         <Navbar navigation={this.props.navigation} navTitle={route} type={'register'} />
         <View style={AppStyles.topRegister}>
           <Image source={require('../../assets/logo/Logo_NF.png')} style={AppStyles.logoStyle} /> 

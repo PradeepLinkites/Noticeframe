@@ -5,6 +5,7 @@ import { get, isEmpty , size} from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles } from '../../theme'
 // import AsyncStorage from '@react-native-community/async-storage'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import styles from '../../theme/styles'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -69,7 +70,7 @@ export default class Login extends React.Component {
           behavior={Platform.OS == "ios" ? "padding" : "height"}
           style={AppStyles.container}
         >
-        <ScrollView>
+        <ScrollView style={AppStyles.scrollContainer}>
         <View style={AppStyles.top}>
           <Image source={require('../../assets/logo/Logo_NF.png')} style={AppStyles.logoStyle} /> 
           <Text style={AppStyles.text}>Enter Your Details</Text>
@@ -108,7 +109,6 @@ export default class Login extends React.Component {
               //     () => this.login(this.state.email, this.state.password)
               //  }
             >
-              {/* <Text style = {AppStyles.submitButtonText} onPress={this.login}> LOGIN </Text> */}
               <Text style = {AppStyles.submitButtonText} onPress={() => this.props.navigation.navigate('Home')}> LOGIN </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassword')}>
