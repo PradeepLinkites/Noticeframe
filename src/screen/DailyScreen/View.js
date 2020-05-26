@@ -27,7 +27,12 @@ export default class Daily extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      date: '2020-03-23'
     }
+  }
+
+  showEvent =(day)=>{
+    this.setState({ date: day.format('yyyy-MM-DD') })
   }
 
   render() {
@@ -44,61 +49,35 @@ export default class Daily extends React.Component {
             dayLabelStyle={styles.dayLableStyle}
             titleFormat='DD MMM YYYY'
             locale='en'
-            renderEvent={(event, j) => {
+            renderEvent={(event, j, i) => {
+              // console.log('event', event)
+              // console.log('date', event.start.split(" ")[0])
+              let newDate = event.start.split(" ")[0]
               let startTime = moment(event.start).format('LT').toString()
               let duration = event.duration.split(':')
               let seconds = parseInt(duration[0]) * 3600 + parseInt(duration[1]) * 60 + parseInt(duration[2])
               let endTime = moment(event.start).add(seconds, 'seconds').format('LT').toString()
-              return (
-                <View key={j}>
-                  <View style={styles.event}>
-                    <View style={styles.eventDuration}>
-                      <View style={styles.durationContainer}>
-                        <View style={styles.durationDot} />
-                        <Text style={styles.durationText}>{startTime}</Text>
+                return (
+                  <View key={j}>
+                    <View style={styles.event}>
+                      <View style={styles.eventDuration}>
+                        <View style={styles.durationContainer}>
+                          <View style={styles.durationDot} />
+                          <Text style={styles.durationText}>{startTime}</Text>
+                        </View>
+                        <View style={styles.durationContainer}>
+                          <View style={styles.durationDot} />
+                          <Text style={styles.durationText}>{endTime}</Text>
+                        </View>
+                        <View style={styles.durationDotConnector} />
                       </View>
-                      {/* <View style={{ paddingTop: 2 }} /> */}
-                      <View style={styles.durationContainer}>
-                        <View style={styles.durationDot} />
-                        <Text style={styles.durationText}>{endTime}</Text>
+                      <View>
+                        <Text numberOfLines={3} style={styles.eventText}>{event.note}</Text>
                       </View>
-                      <View style={styles.durationDotConnector} />
-                    </View>
-                    <View>
-                      <Text numberOfLines={3} style={styles.eventText}>{event.note}</Text>
                     </View>
                   </View>
-                  <View style={styles.lineSeparator} />
-                </View>
-              )
+                )
             }}
-            // renderLastEvent={(event, j) => {
-            //   let startTime = moment(event.start).format('LT').toString()
-            //   let duration = event.duration.split(':')
-            //   let seconds = parseInt(duration[0]) * 3600 + parseInt(duration[1]) * 60 + parseInt(duration[2])
-            //   let endTime = moment(event.start).add(seconds, 'seconds').format('LT').toString()
-            //   return (
-            //     <View key={j}>
-            //       <View style={styles.event}>
-            //         <View style={styles.eventDuration}>
-            //           <View style={styles.durationContainer}>
-            //             <View style={styles.durationDot} />
-            //             <Text style={styles.durationText}>{startTime}</Text>
-            //           </View>
-            //           <View style={{ paddingTop: 10 }} />
-            //           <View style={styles.durationContainer}>
-            //             <View style={styles.durationDot} />
-            //             <Text style={styles.durationText}>{endTime}</Text>
-            //           </View>
-            //           <View style={styles.durationDotConnector} />
-            //         </View>
-            //         <View style={styles.eventNote}>
-            //           <Text style={styles.eventText}>{event.note}</Text>
-            //         </View>
-            //       </View>
-            //     </View>
-            //   )
-            // }}
             renderDay={(eventViews, weekdayToAdd, i) => {
               return(
                 <View key={i.toString()} style={styles.day}>
@@ -107,20 +86,19 @@ export default class Daily extends React.Component {
                     <Text style={[styles.dayText, { color: '#000' }]}>{weekdayToAdd.format('ddd').toString()}</Text>
                   </View>
                   {eventViews.length === 0 ?
-                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('CreateEvent')} style={{backgroundColor:'#3293ed', justifyContent:'center', alignItems: 'center', flex: 1,width:400}}>
+                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('CreateEvent')} style={{backgroundColor:'#3293ed', justifyContent:'center', alignItems: 'center', flex: 1,paddingVertical:22}}>
                       <Image source={require('../../assets/icons/Plus2.png')} style={styles.plusIcon}/>
                     </TouchableOpacity>
                     :
-                    <View style={[styles.allEvents,{backgroundColor:'#e2e9f6'}]}>
+                    <View style={styles.allEvents}>
                       {eventViews}
                     </View>
                   }
                 </View>
               )
             }}    
-            onDayPress={(weekday, i) => {
-              // console.log(weekday.format('ddd') + ' is selected! And it is day ' + (i+1) + ' of the week!')
-            }}
+            onDayPress={(weekday, i) => this.showEvent(weekday)}
+              // console.log(weekday.format('yyyy-MM-DD'))
             style={{ height: deviceHeight, width:'100%'}}
           />        
        </ScrollView>

@@ -1,6 +1,5 @@
 import React from 'react'
-import { Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
-import Navbar from '../Common/commonNavbar'
+import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions } from 'react-native'
 import { get } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import Swiper from 'react-native-swiper'
@@ -39,11 +38,7 @@ const data = [
    }
 ]
 
-
 export default class SlideShow extends React.Component {
-  static navigationOptions = {  
-};
-
   constructor(props) {
     super(props);
     this.state = {
@@ -57,13 +52,7 @@ export default class SlideShow extends React.Component {
     const route = get(state, 'routeName', '')  === 'SlideShow' ? 'NOTICE FRAME' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
-        {/* <ScrollView> */}
-        {/* <Navbar 
-          navigation={this.props.navigation} 
-          navTitle={route} 
-          stylee={{ height: this.state.height }}
-          routeKey={'SlideShow'} 
-        /> */}
+        <ScrollView>
         <View style={styles.container}>
           <Swiper
             style={styles.wrapper}
@@ -83,13 +72,14 @@ export default class SlideShow extends React.Component {
                   <Image source={require('../../assets/icons/Image_slideshow.png')} style={styles.backgroundImage}/>
                   <View style={styles.BigEventContainer}>
                     <View style={[styles.eventView,{backgroundColor:'rgba(248, 247, 216, 0.2)'}]}>
+                      {/* <Text style={styles.eventTitleText}>{Platform.OS === 'android' ? ind: ind}</Text> */}
                       <Text style={styles.eventTitleText}>{item.eventName}</Text>
                       <Text style={styles.eventDateText}>{item.fullDate}</Text>
                       <Text style={styles.eventDateText}>{item.timeDuration} </Text>
                     </View>
                 {data.map((item, ind)=>{
                  return(
-                  <View style={{top : 80 }}>
+                  <View style={{top : Platform.OS === 'android' ? 60 : 80 }}>
                   <View style={swiperIndex == ind ?  [styles.smallEventContainer,{borderRightWidth: 3,borderRightColor: '#ff9900'}] : styles.smallEventContainer}>
                     <View style={styles.smallEventView}>
                       <View style={{justifyContent:'flex-end'}}>
@@ -113,7 +103,7 @@ export default class SlideShow extends React.Component {
             <View style={styles.box3} />
           </View> */}
         </View>
-        {/* </ScrollView> */}
+        </ScrollView>
       </SafeAreaView>
     )
   }
@@ -132,31 +122,31 @@ const styles = StyleSheet.create({
   BigEventContainer: {
     flex:1,
     position: 'absolute',
-    top: 200,
+    top: Platform.OS === 'android' ? 150 : 200 ,
     width: '100%',
     height: deviceHeight,
     backgroundColor: 'transparent',
     // backgroundColor: 'rgba(248, 247, 216, 0.3)',
   },
   eventTitleText: {
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(28) : AppSizes.verticalScale(26),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(22) : AppSizes.verticalScale(18),
     fontFamily: AppFonts.NBlack,
     fontWeight:'900',
     letterSpacing: 1,
     color: '#fff',
-    marginBottom: 5
+    marginBottom: Platform.OS === 'android' ? 2 : 5
   },
   eventDateText: {
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
 	  fontFamily: AppFonts.NRegular,
-    marginTop: 5,
-    letterSpacing: .8,
+    marginTop: Platform.OS === 'android' ? 5 : 2,
+    letterSpacing: .6,
     color: '#fff'
   },
   eventView: {
     paddingLeft: 30,
-    paddingTop: 10,
-    paddingBottom: 15,
+    paddingTop: Platform.OS === 'android' ? 8 : 10,
+    paddingBottom: Platform.OS === 'android' ? 12 : 15 ,
   },
   smallEventContainer: {
     width: deviceWidth * .5,

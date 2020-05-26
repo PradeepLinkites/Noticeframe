@@ -16,7 +16,9 @@ export default class FrameColorSetting extends React.Component {
     this.state = {
       value: '',
       animationType : 'Fade-in',
-      slideValue: 20
+      slideValue1: 20,
+      slideValue2: 20,
+      slideValue3: 20
     }
   }
   OnChange=(value)=>{
@@ -24,7 +26,7 @@ export default class FrameColorSetting extends React.Component {
   }
 
   render() {
-    const { slideValue, animationType, selectedColor  } = this.state
+    const { slideValue1,slideValue2,slideValue3, animationType, selectedColor  } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'FrameColorSetting' ? 'Frame Color Settings' : ''
     return (
@@ -54,46 +56,46 @@ export default class FrameColorSetting extends React.Component {
               <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
             </View>
           </View> 
-
-          {/* <View style={{marginTop:10,backgroundColor:'pink',height:300}}>
+          {/* Frame color timing */}
+          <View style={{backgroundColor:'#e2e9f6',flex: 1}}>
             <View style={[styles.bottomView,{marginTop:10}]}>
               <Text style={[styles.headerText,{marginTop:15,flex:1}]}>Frame colors timing</Text>            
               <View style={[styles.mainView,{justifyContent:'space-around',flex:1}]}>
                 <TouchableOpacity style={styles.minitsButton}><Text style={[styles.timeText,{color:'#fff'}]}>MINUTES</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.hoursButton}><Text style={[styles.timeText,{color:'#A2a2a2'}]}>HOURS</Text></TouchableOpacity>
+                <TouchableOpacity style={[styles.minitsButton,{paddingHorizontal:15,backgroundColor:'#fff'}]}><Text style={[styles.timeText,{color:'#A2a2a2'}]}>HOURS</Text></TouchableOpacity>
               </View>
             </View> 
             <View style={styles.intervalContainer}>
               <View style={{justifyContent:'center'}}>
                 <View style={[styles.colorButtonBottom,{backgroundColor:'#ed1c24'}]}/>
               </View>
-              <View style={[styles.buttonView,{marginLeft:20}]}>
-                <TouchableOpacity onPress={()=>this.setState({ slideValue: this.state.slideValue - 1})} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
-                <View style={{justifyContent:'center'}}><Text style={styles.number}>{slideValue}</Text></View>
-                <TouchableOpacity onPress={()=>this.setState({ slideValue: this.state.slideValue + 1})} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
+              <View style={styles.buttonView}>
+                <TouchableOpacity onPress={()=>this.setState({ slideValue1: this.state.slideValue1 - 1})} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
+                <View style={{justifyContent:'center'}}><Text style={styles.number}>{slideValue1}</Text></View>
+                <TouchableOpacity onPress={()=>this.setState({ slideValue1: this.state.slideValue1 + 1})} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
               </View>
             </View> 
             <View style={styles.intervalContainer}>
               <View style={{justifyContent:'center'}}>
                 <View style={[styles.colorButtonBottom,{backgroundColor:'#ff9900'}]}/>
               </View>
-              <View style={[styles.buttonView,{marginLeft:20}]}>
-                <TouchableOpacity onPress={()=>this.setState({ slideValue: this.state.slideValue - 1})} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
-                <View style={{justifyContent:'center'}}><Text style={styles.number}>{slideValue}</Text></View>
-                <TouchableOpacity onPress={()=>this.setState({ slideValue: this.state.slideValue + 1})} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
+              <View style={styles.buttonView}>
+                <TouchableOpacity onPress={()=>this.setState({ slideValue2: this.state.slideValue2 - 1})} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
+                <View style={{justifyContent:'center'}}><Text style={styles.number}>{slideValue2}</Text></View>
+                <TouchableOpacity onPress={()=>this.setState({ slideValue2: this.state.slideValue2 + 1})} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
               </View>
             </View> 
             <View style={styles.intervalContainer}>
               <View style={{justifyContent:'center'}}>
                 <View style={[styles.colorButtonBottom,{backgroundColor:'#00a651'}]}/>
               </View>
-              <View style={[styles.buttonView,{marginLeft:20}]}>
-                <TouchableOpacity onPress={()=>this.setState({ slideValue: this.state.slideValue - 1})} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
-                <View style={{justifyContent:'center'}}><Text style={styles.number}>{slideValue}</Text></View>
-                <TouchableOpacity onPress={()=>this.setState({ slideValue: this.state.slideValue + 1})} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
+              <View style={styles.buttonView}>
+                <TouchableOpacity onPress={()=>this.setState({ slideValue3: this.state.slideValue3 - 1})} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
+                <View style={{justifyContent:'center'}}><Text style={styles.number}>{slideValue3}</Text></View>
+                <TouchableOpacity onPress={()=>this.setState({ slideValue3: this.state.slideValue3 + 1})} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
               </View>
             </View> 
-          </View> */}
+          </View>
 
         </ScrollView>
       </SafeAreaView>
@@ -113,10 +115,10 @@ const styles = StyleSheet.create({
 
   },
   headerText: {
-    marginTop: 30,
-    marginBottom: 30, 
+    marginTop: 20,
+    marginBottom: 20, 
     color:'#A2a2a2',
-    fontSize: Platform.OS === 'android' ? 12 : 14,
+    fontSize: Platform.OS === 'android' ? 14 : 14,
   },
   mainView : {
     backgroundColor:'#fff',
@@ -132,8 +134,8 @@ const styles = StyleSheet.create({
      borderRadius: 30
   },
   colorButtonBottom: {
-     height: Platform.OS === 'android' ? AppSizes.verticalScale(22) : AppSizes.verticalScale(22),
-     width: Platform.OS === 'android' ? AppSizes.verticalScale(120) : AppSizes.verticalScale(110),
+     height: Platform.OS === 'android' ? AppSizes.verticalScale(22) : AppSizes.verticalScale(16),
+     width: Platform.OS === 'android' ? AppSizes.verticalScale(120) : AppSizes.verticalScale(100),
      borderRadius: 30
   },
   bottomView: {
@@ -150,89 +152,78 @@ const styles = StyleSheet.create({
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
     fontFamily: AppFonts.NRegular,
     letterSpacing: .6
+  },
+  intervalContainer: {
+    backgroundColor:'#fff',
+    flexDirection:'row',
+    justifyContent:'space-between',
+    paddingVertical: Platform.OS === 'android' ? 5 : 16, 
+    paddingLeft: 20,
+    paddingRight: 25
+  },
+  minitsButton: {
+    backgroundColor:'#3b5261',
+    justifyContent:'center',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 7,
+    shadowOffset: {
+      width: 0,
+      height:2,
+    },
+    shadowOpacity: .5,
+    elevation: Platform.OS === 'android' ? 16 : 30,
+  },
+  timeText: {
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(11) : AppSizes.verticalScale(9),
+    fontWeight: '600'
+  },
+  slideShowBox: {
+    shadowOffset: {
+      width: 0,
+      height:2,
+    },
+    shadowOpacity: .5,
+    elevation: Platform.OS === 'android' ? 16 : 30,
+    height:40,
+    width:40,
+    borderRadius:10,
+    backgroundColor:'#fff',
+    justifyContent:'center',
+    alignItems:'center'    
+  },
+  buttonView: {
+    marginLeft: Platform.OS === 'android' ? 50 : 30,
+    marginVertical: 5,
+    flexDirection:'row',
+    justifyContent:'space-between',
+    flex:1
+  },
+  number: {
+    justifyContent :'center',
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(16),
+    // fontWeight: Platform.OS === 'android' ? '600' : '500'
+  },
+  settingText: {
+    color:'#A2a2a2',
+    fontSize: Platform.OS === 'android' ? 16 : 18,
+    fontWeight:'600',
+    marginTop: 3
+  },
+  DropdownStyle: {
+    height: 12, 
+    width: 12, 
+    marginTop: Platform.OS === 'android' ? 17 : 15 ,
+    position:'absolute', 
+    right: 8 
+  },
+  bottomText: {
+    flex:1,
+    paddingRight: 30,
+    color:'#A2a2a2',
+    marginTop: Platform.OS === 'android' ? 10 : 3,
+    fontSize: Platform.OS === 'android' ? 16 : 18,
+    fontWeight:'600',
 
   }
-  // intervalContainer: {
-  //   backgroundColor:'#fff',
-  //   flexDirection:'row',
-  //   justifyContent:'space-between',
-  //   paddingVertical: Platform.OS === 'android' ? 20 : 16, 
-  //   paddingLeft: 20,
-  //   paddingRight: 30
-  // },
-  // minitsButton: {
-  //   backgroundColor:'#3b5261',
-  //   paddingHorizontal: 10,
-  //   paddingVertical: 5,
-  //   borderRadius: 7,
-  //   shadowOffset: {
-  //     width: 0,
-  //     height:2,
-  //   },
-  //   shadowOpacity: .5,
-  //   elevation: Platform.OS === 'android' ? 16 : 30,
-  // },
-  // hoursButton:{
-  //   backgroundColor:'#fff',
-  //   paddingHorizontal: 15,
-  //   paddingVertical: 5,
-  //   borderRadius: 7,
-  //   shadowOffset: {
-  //     width: 0,
-  //     height:2,
-  //   },
-  //   shadowOpacity: .5,
-  //   elevation: Platform.OS === 'android' ? 16 : 30,
-  // },
-  // timeText: {
-  //   fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(13) : AppSizes.verticalScale(11),
-  //   fontWeight: '600'
-  // },
-  // slideShowBox: {
-  //   shadowOffset: {
-  //     width: 0,
-  //     height:2,
-  //   },
-  //   shadowOpacity: .5,
-  //   elevation: Platform.OS === 'android' ? 16 : 30,
-  //   height:40,
-  //   width:40,
-  //   borderRadius:10,
-  //   backgroundColor:'#fff',
-  //   justifyContent:'center',
-  //   alignItems:'center'    
-  // },
-  // buttonView: {
-  //   marginVertical: 5,
-  //   flexDirection:'row',
-  //   justifyContent:'space-between',
-  //   flex:1
-  // },
-  // number: {
-  //   justifyContent :'center',
-  //   fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(22) : AppSizes.verticalScale(20),
-  //   // fontWeight: Platform.OS === 'android' ? '600' : '500'
-  // },
-  // settingText: {
-  //   color:'#A2a2a2',
-  //   fontSize: Platform.OS === 'android' ? 16 : 18,
-  //   fontWeight:'600',
-  //   marginTop: 3
-  // },
-  // DropdownStyle: {
-  //   height: 12, 
-  //   width: 12, 
-  //   marginTop: Platform.OS === 'android' ? 17 : 15 ,
-  //   position:'absolute', 
-  //   right: 8 
-  // },
-  // bottomText: {
-  //   flex:1,
-  //   paddingRight: 30,
-  //   color:'#A2a2a2',
-  //   marginTop: Platform.OS === 'android' ? 10 : 3,
-  //   fontSize: Platform.OS === 'android' ? 16 : 18,
-  //   fontWeight:'600',
-
-  // }
 })

@@ -35,9 +35,6 @@ export default class Support extends React.Component {
     this.state = {
     }
   }
-  // componentDidMount(){
-  //   console.log('callll')
-  // }
 
   render() {
     const { getUserData } = this.state

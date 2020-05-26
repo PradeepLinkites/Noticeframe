@@ -257,7 +257,6 @@ const drawerStacks = [
 				{value &&
 					<View style={styles.calenderListView}>
 						{data.map((item, ind) => {
-							console.log('==>>',item)
 							return(
 								item === 'Calender List' 
 								?							

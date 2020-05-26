@@ -39,7 +39,8 @@ const styles = StyleSheet.create({
         fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12), 
     },
     allEvents: {
-        width: '80%',
+        width: '100%',
+        backgroundColor:'#e2e9f6'
     },
     event: {
         backgroundColor:'#e2e9f6',

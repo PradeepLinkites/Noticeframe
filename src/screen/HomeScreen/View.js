@@ -52,8 +52,11 @@ render() {
       <View style={styles.container}>
         <Text style={styles.text}>Recent Events</Text>
           <FlatGrid
-            itemDimension={130}
+            itemDimension={150}
             items={data}
+            fixed={true}
+            spacing={15}
+            // style={styles.gridView}
             renderItem={({ item, index }) => (
               <TouchableOpacity onPress={()=> this.props.navigation.navigate('EventDetail')}>
                 <Image source={item.source} style={[styles.itemContainer, { backgroundColor: item.code }]} key={index} />
@@ -72,12 +75,12 @@ render() {
             data={data}
             numColumns={2}
             renderItem={({item, index}) => (
-              // <View style={{flex:1/2,backgroundColor:'pink', margin:10 ,maxWidth: '50%'}}>
-              //   <Image source={item.source} style={{height:100,width:200,flex:1/2}}/>
-              // </View>
-              <ListItem style={{ flex: 1, margin: 5, backgroundColor: '#ddd', height: 130}} >
+              <View style={{flex:1/2,backgroundColor:'pink', margin:2 ,width: '40%'}}>
+                <Image source={item.source} style={{height:100,width:200,flex:1/2}}/>
+              </View>
+              // <ListItem style={{ flex: 1, margin: 5, backgroundColor: '#ddd', height: 130}} >
                 
-              </ListItem>
+              // </ListItem>
             )}
           /> */}
           {/* <View>
@@ -104,6 +107,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff'
+  },
+  gridView: {
+    marginTop: 20,
+    flex: 1,
   },
   text:{
     marginLeft:20,

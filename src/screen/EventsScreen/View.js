@@ -69,7 +69,7 @@ export default class Home extends React.Component {
           </View>
           {!isGridView ?
           <View>
-          <View style={styles.dateView1}>
+          <View style={styles.dateView}>
             <Text style={styles.dateText}>23 Feb 2020</Text>
           </View>
           <View style={[styles.eventListView,{backgroundColor:'#e2e9f6'}]}>
@@ -247,28 +247,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor:'#fff'
   },
-  dateView1: {
-    backgroundColor: '#fff',
-    paddingLeft: Platform.OS === 'android' ? 20 : 20 ,
-    paddingTop: Platform.OS === 'android' ? 25 : 25	,
-    paddingBottom: Platform.OS === 'android' ? 4 : 6 ,
-  },
   dateView: {
     backgroundColor: '#fff',
-    paddingLeft: Platform.OS === 'android' ? 20 : 20 ,
-    paddingTop: Platform.OS === 'android' ? 52 : 54	,
+    paddingLeft: Platform.OS === 'android' ? 15 : 15 ,
+    paddingTop: Platform.OS === 'android' ? 34 : 36	,
     paddingBottom: Platform.OS === 'android' ? 6 : 8 ,
   },
   dateText: {
-    fontSize: 20,
-    fontWeight: '400',
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
+    fontWeight: '500',
   },
   eventListView: {
-    paddingLeft: Platform.OS === 'android' ? 20 : 20 ,
-    paddingTop: Platform.OS === 'android' ? 14 : 18	,
-    paddingBottom: Platform.OS === 'android' ? 14 : 18 ,
+    paddingLeft: Platform.OS === 'android' ? 15 : 15 ,
+    paddingTop: Platform.OS === 'android' ? 8 : 12	,
+    paddingBottom: Platform.OS === 'android' ? 8 : 12 ,
     marginBottom: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   eventTitleText: {
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(12),
@@ -300,8 +294,8 @@ const styles = StyleSheet.create({
     marginRight:8
   },
   imageStyle :{
-    height: Platform.OS === 'android' ? AppSizes.verticalScale(35) : AppSizes.verticalScale(26),
-    width: 32,
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(28) : AppSizes.verticalScale(22),
+    width: 30,
     // backgroundColor:'red'
   },
   shareView: {
@@ -321,11 +315,6 @@ const styles = StyleSheet.create({
     paddingLeft: 25,
     borderBottomWidth: .3,
     borderBottomColor: '#A2a2a2'
-  },
-  dateText: {
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(16),
-    fontWeight: '500',
-    marginTop: 15
   },
   itemContainer: {
     justifyContent: 'flex-end',

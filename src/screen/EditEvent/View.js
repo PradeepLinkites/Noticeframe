@@ -219,7 +219,7 @@ export default class CreateEvent extends React.Component {
               } */}
 
             <View style={styles.colorContainer}>
-              <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+              <View style={{flexDirection:'row',justifyContent:'space-between',marginTop: 8}}>
                 <View>
                   <Text style={[styles.listTitle,{fontWeight:'700',top: 10,marginLeft: 10 }]}>Default Fill colour</Text>
                 </View>

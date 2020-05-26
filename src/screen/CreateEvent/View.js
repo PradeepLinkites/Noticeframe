@@ -198,22 +198,12 @@ export default class CreateEvent extends React.Component {
                 </View>
               }
             <View style={styles.colorContainer}>
-              <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+              <View style={{flexDirection:'row',justifyContent:'space-between',marginTop: 8}}>
                 <View>
                   <Text style={[styles.listTitle,{fontWeight:'600',top: 10,marginLeft: 10 }]}>Default Fill colour</Text>
                 </View>
                 <View style={{flexDirection:'row'}}>
                   <View style={ [styles.roundColorView, {backgroundColor : selectedColor === 'Red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
-                  {/* <Picker
-                      selectedValue={selectedColor}
-                      style={{ width: 120 ,marginLeft: 5 }}
-                      onValueChange={(item, itemIndex) => this.setState({selectedColor : item})}
-                    >
-                    <Picker.Item label="Orange" value="Orange" />
-                    <Picker.Item label="Blue" value="Blue" />
-                    <Picker.Item label="Green" value="Green" />
-                    <Picker.Item label="red" value="red" />
-                  </Picker> */}
                   <ModalSelector
                     initValueTextStyle={[styles.listTitle,{color: "#000"}]}
                     selectStyle={{borderColor: "transparent"}}
