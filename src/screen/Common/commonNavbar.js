@@ -105,7 +105,7 @@ export default class Navbar extends React.Component {
 
 const styles = StyleSheet.create({
     container: {
-      height: Platform.OS === 'android' ? 60 : 62,
+      height: Platform.OS === 'android' ? 58 : 62,
 		backgroundColor: '#3b5261',
 	 },
 	 slideShowcontainer: {

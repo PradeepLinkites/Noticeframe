@@ -10,12 +10,14 @@ import { styles } from 'react-native-really-awesome-button/src/styles';
 
 // What data from the store shall we send to the component?
 const mapStateToProps = state => ({
-  // singupFbData: state.user.singupFbData,
-  // singupGoogleData: state.user.singupGoogleData,
+  createUserPhase: state.user.createUserPhase,
+  createUserMessage: state.user.createUserMessage,
+  createUserData: state.user.createUserData,
 });
 
 // Any actions to map to the component?
 const mapDispatchToProps = {
+  createUser: createUser
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormRender);

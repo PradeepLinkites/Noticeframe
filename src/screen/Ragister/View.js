@@ -13,102 +13,113 @@ export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
-      emailRegister: '',
-      passwordRegister: '',
+      showPassword: true,
+      firstName: '',
+      lastName: '',
+      mobileNumber: '',
+      email: '',
+      password: '',
       confirmPassword: '',
+      firstNameError: false,
+      lastNameError: false,
       emailError: false,
       emailValidError: false,
-      passError: false,
-      regEmailError: false,
-      regEmailValidError: false,
-      regPassError: false,
-      RegCPassError: false,
-      RegCPassMatchError: false,
-      RegNameError: false,
-      loading: false
+      passwordError: false,
+      confirmPassError: false,
+      confirmPassMatchError: false,
+      icon: 'eye-off',
+      passDisplay: true,
+      isLoading: false,
+      createUserData: {},
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState){
+    return {  createUserData: nextProps.createUserData }
+ }
+
+ componentDidUpdate(prevProps){
+  if(this.props.createUserData !== prevProps.createUserData) {
+      if(this.props.createUserPhase) {
+        this.props.navigation.navigate('SignIn')
+        this.setState({ createUserData: this.props.createUserData, isLoading: false })
+      } else {
+        this.setState({ isLoading: false })
+        Alert.alert('NOTICEFRAME',this.props.createUserMessage)
+      }
     }
   }
 
   onFocus =(key)=>{
-    if(key === 'name'){
-      this.setState({ RegNameError: false })
+    if(key === 'firstName'){
+      this.setState({ firstNameError: false })
+    }
+    if(key === 'lastName'){
+      this.setState({ lastNameError: false })
     }
     if(key === 'email'){
-      this.setState({regEmailError: false, regEmailValidError: false })
+      this.setState({ emailError: false , emailValidError: false })
     }
     if(key === 'password'){
-      this.setState({ regPassError : false })
+      this.setState({ passwordError : false })
     }
     if(key === 'confirmPassword'){
-      this.setState({ RegCPassError: false , RegCPassMatchError: false })
+      this.setState({ confirmPassError: false , confirmPassMatchError: false })
     }
   }
 
   register = async () => {
     const {
-      name,
-      emailRegister,
-      passwordRegister,
+      firstName,
+      lastName,
+      email,
+      password,
       confirmPassword
     } = this.state
 
     var error = true
     var validateEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     this.setState({
-      regEmailError: false,
-      regEmailValidError: false,
-      regPassError: false,
-      RegCPassError: false,
-      RegNameError: false,
-      RegCPassMatchError: false
+      firstNameError: false,
+      lastNameError: false,
+      emailError: false,
+      emailValidError: false,
+      passwordError: false,
+      confirmPassError: false,
+      confirmPassMatchError: false,
     })
-    if (name.trim() === '') {
+    if (firstName.trim() === '') {
       error = false
-      this.setState({ RegNameError: true })
+      this.setState({ firstNameError: true })
     }
-
-    if (emailRegister.trim() === '') {
+    if (lastName.trim() === '') {
       error = false
-      this.setState({ regEmailError: true })
-    } else if (!validateEmail.test(emailRegister.trim())) {
-      error = false
-      this.setState({ regEmailValidError: true })
+      this.setState({ lastNameError: true })
     }
-
-    if (passwordRegister.trim() === '') {
+    if (email.trim() === '') {
       error = false
-      this.setState({ regPassError: true })
+      this.setState({ emailError: true })
+    } else if (!validateEmail.test(email.trim())) {
+      error = false
+      this.setState({ emailValidError: true })
+    }
+    if (password.trim() === '') {
+      error = false
+      this.setState({ passwordError: true })
     }
     if (confirmPassword.trim() === '') {
       error = false
-      this.setState({ RegCPassError: true })
+      this.setState({ confirmPassError: true })
     }
 
-    if (passwordRegister.trim() !== confirmPassword.trim()) {
+    if (password.trim() !== confirmPassword.trim()) {
       error = false
-      this.setState({ RegCPassMatchError: true })
+      this.setState({ confirmPassMatchError: true })
     }
 
     if (error) {
-      // try {
-      //   this.setState({ loading: true })
-      //   let result = await registerUser({name, email: emailRegister, password: passwordRegister})
-      //   if(result && result.success){
-      //     this.props.screenProps.updateUser(result.user)
-      //     const resetAction = StackActions.reset({
-      //       index: 0,
-      //       actions: [NavigationActions.navigate({ routeName: 'AppStack' })]
-      //     })
-      //     this.props.navigation.dispatch(resetAction)
-      //   } else {
-      //     alert(result.message)
-      //     this.setState({ loading: false })
-      //   }
-      // } catch (error) {
-      //   console.log('new user created err', JSON.stringify(error))
-      // }
-      this.props.navigation.navigate('SignIn')
+      this.setState({ isLoading: true })
+      this.props.createUser({ firstName, lastName, email, password, confirmPassword })
     }
   }
 
@@ -116,21 +127,21 @@ export default class Login extends React.Component {
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'Signup' ? 'SIGN UP' : ''
      const {
-      name,
-      emailRegister,
-      passwordRegister,
+      showPassword,
+      firstName,
+      lastName,
+      mobileNumber,
+      email,
+      password,
       confirmPassword,
+      firstNameError,
+      lastNameError,
       emailError,
       emailValidError,
-      passError,
-      regEmailError,
-      regEmailValidError,
-      regPassError,
-      RegCPassError,
-      RegCPassMatchError,
-      RegNameError,
-      loading
-
+      passwordError,
+      confirmPassError,
+      confirmPassMatchError,
+      isLoading
     } = this.state
     return (
       <SafeAreaView style={AppStyles.container}>
@@ -148,18 +159,46 @@ export default class Login extends React.Component {
           <TextInput
             style = {AppStyles.textinput}
             underlineColorAndroid = "transparent"
-            placeholder = "Your Name here"
+            placeholder = "Enter Your First Name"
             placeholderTextColor = "#A2a2a2"
             placeholderStyle={{ fontSize: 16 ,fontWeight: '500'}}
             numberOfLines={1}
             autoCapitalize="none"
             autoCorrect={false}
-            onChangeText={name => this.setState({ name })}
-            onFocus={this.onFocus.bind(this, 'name')}
-            value={name}
+            onChangeText={name => this.setState({ firstName: name })}
+            onFocus={this.onFocus.bind(this, 'firstName')}
+            value={firstName}
           />
-          {RegNameError && <Text style={AppStyles.error}>Please enter name</Text>} 
-
+          {firstNameError && <Text style={AppStyles.error}>Please enter first name</Text>} 
+          <TextInput
+            style = {AppStyles.textinput}
+            underlineColorAndroid = "transparent"
+            placeholder = "Enter Your Last Name"
+            placeholderTextColor = "#A2a2a2"
+            placeholderStyle={{ fontSize: 16 ,fontWeight: '500'}}
+            numberOfLines={1}
+            autoCapitalize="none"
+            autoCorrect={false}
+            onChangeText={name => this.setState({ lastName: name })}
+            onFocus={this.onFocus.bind(this, 'lastName')}
+            value={lastName}
+          />
+          {lastNameError && <Text style={AppStyles.error}>Please enter last name</Text>} 
+          <TextInput
+            style = {AppStyles.textinput}
+            underlineColorAndroid = "transparent"
+            placeholder = "Enter Your Mobile"
+            placeholderTextColor = "#A2a2a2"
+            placeholderStyle={{ fontSize: 16 ,fontWeight: '500'}}
+            numberOfLines={1}
+            textContentType='telephoneNumber' 
+            dataDetectorTypes='phoneNumber' 
+            keyboardType='phone-pad' 
+            onChangeText={number => this.setState({ mobileNumber: number })}
+            onFocus={this.onFocus.bind(this, 'mobileNumber')}
+            value={mobileNumber}
+          />
+          {/* {RegNameError && <Text style={AppStyles.error}>Please enter mobile</Text>}  */}
           <TextInput style = {AppStyles.textinput}
             underlineColorAndroid = "transparent"
             placeholder = "Your Email here"
@@ -168,54 +207,64 @@ export default class Login extends React.Component {
             placeholderStyle={{ fontSize: 16 ,fontWeight: '500'}}
             numberOfLines={1}
             autoCorrect={false}
-            onChangeText={emailRegister => this.setState({ emailRegister })}
+            onChangeText={email => this.setState({ email })}
             onFocus={this.onFocus.bind(this, 'email')}
-            value={emailRegister}
-          />
-           {regEmailError && (
-              <Text style={AppStyles.error}>Please enter email</Text>
+            value={email}
+            />
+          {emailError && <Text style={AppStyles.error}>Please enter email</Text>} 
+          {emailValidError && <Text style={AppStyles.error}>Please enter the valid email</Text>}
+          <View style={styles.passwordContainer}>
+            <TextInput style = {[AppStyles.textinput,{flex: 1}]}
+              secureTextEntry={showPassword}
+              underlineColorAndroid = "transparent"
+              placeholder = "Enter Your Password"
+              placeholderTextColor = "#A2a2a2"
+              autoCapitalize = "none"
+              placeholderStyle={{ fontSize: 16 ,fontWeight: '500'}}
+              numberOfLines={1}
+              autoCorrect={false}
+              onChangeText={password => this.setState({ password })}
+              onFocus={this.onFocus.bind(this, 'password')}
+              value={password}
+            />
+            <TouchableOpacity onPress={()=>this.setState({ showPassword: !showPassword })} style={styles.eyeContainer}>
+              <Image source={require('../../assets/icons/Eye.png')} style={styles.eyeImage} />
+            </TouchableOpacity>
+            </View>
+            {passwordError && (
+              <Text style={AppStyles.error}>Please enter password</Text>
             )}
-            {regEmailValidError && (
-              <Text style={AppStyles.error}>Please enter valid email</Text>
-            )} 
-          <TextInput style = {AppStyles.textinput}
-            underlineColorAndroid = "transparent"
-            placeholder = "Your Password here"
-            placeholderTextColor = "#A2a2a2"
-            autoCapitalize = "none"
-            placeholderStyle={{ fontSize: 16 ,fontWeight: '500'}}
-            numberOfLines={1}
-            autoCorrect={false}
-            onChangeText={passwordRegister => this.setState({ passwordRegister })}
-            onFocus={this.onFocus.bind(this, 'password')}
-            value={passwordRegister}
-          />
-          {regPassError && (
-            <Text style={AppStyles.error}>Please enter password</Text>
-          )}
-          <TextInput style = {AppStyles.textinput}
-            underlineColorAndroid = "transparent"
-            placeholder = "Your Confirm Password here"
-            placeholderTextColor = "#A2a2a2"
-            autoCapitalize = "none"
-            placeholderStyle={{ fontSize: 16 ,fontWeight: '500'}}
-            numberOfLines={1}
-            autoCorrect={false}
-            onChangeText={confirmPassword => this.setState({ confirmPassword })}
-            onFocus={this.onFocus.bind(this, 'confirmPassword')}
-            value={confirmPassword}
-          />
-          {RegCPassError && (
+            
+            {/*"Please enter at least 8 letters which should contain 1 UpperCase 1 LowerCase 1 Number and 1 Symbol"*/}
+
+            <TextInput style = {[AppStyles.textinput,{flex: 1}]}
+              secureTextEntry={showPassword}
+              underlineColorAndroid = "transparent"
+              placeholder = "Re-Enter Your Password"
+              placeholderTextColor = "#A2a2a2"
+              autoCapitalize = "none"
+              placeholderStyle={{ fontSize: 16 ,fontWeight: '500'}}
+              numberOfLines={1}
+              autoCorrect={false}
+              onChangeText={confirmPassword => this.setState({ confirmPassword })}
+              onFocus={this.onFocus.bind(this, 'confirmPassword')}
+              value={confirmPassword}
+            />
+          {confirmPassError && (
             <Text style={AppStyles.error}>Please enter confirm password</Text>
           )}
-          {RegCPassMatchError && (
+          {confirmPassMatchError && (
             <Text style={AppStyles.error}>Password not matched</Text>
           )}
           <TouchableOpacity
             style = {AppStyles.loginButton}
             onPress={this.register.bind(this)}
           >
-            <Text style = {AppStyles.submitButtonText}> SUBMIT </Text>
+          { isLoading ?
+              <ActivityIndicator size="small" color="#FFF" />
+            :
+            <Text style = {AppStyles.submitButtonText}> Sign up </Text>
+           }
           </TouchableOpacity>
         </View>
         </ScrollView>
@@ -225,10 +274,26 @@ export default class Login extends React.Component {
   }
 }
 
-// const styles = StyleSheet.create({
-//   container: {
-//      flex: 1,
-//   },
+const styles = StyleSheet.create({
+  passwordContainer: {
+    flexDirection: 'row',
+  },
+  eyeContainer: {
+    position: 'absolute',
+    marginTop: 15,
+    right:10,
+    height: 25,
+    width: 35,
+    // backgroundColor:'red'
+  },
+  eyeImage: {
+    position: 'absolute',
+    right: 2,
+    height: 20,
+    width: 30,
+    resizeMode : 'stretch',
+  },
+})
 //   logoContainer:{
 //     height: 250, 
 //     justifyContent: 'center', 

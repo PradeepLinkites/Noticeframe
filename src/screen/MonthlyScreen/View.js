@@ -13,13 +13,13 @@ const deviceHeight = Dimensions.get('window').height
 const array = ['2020-05-20', '2020-05-22', '2020-05-26']
 
 const sampleEvents = [
-  { 'date': '2020-05-23','startTime': '09:00:00', 'endTime': '09:20:00','duration': '00:20:00', 'note': 'Walk my dog' },
-  { 'date': '2020-05-24','startTime': '14:00:00', 'endTime': '15:00:00','duration': '01:00:00', 'note': 'Doctor\'s appointment' },
-  { 'date': '2020-05-25','startTime': '08:00:00', 'endTime': '08:30:00','duration': '00:30:00', 'note': 'Morning exercise' },
-  { 'date': '2020-05-25','startTime': '14:00:00', 'endTime': '16:00:00', 'duration': '02:00:00', 'note': 'Meeting with client' },
-  { 'date': '2020-05-25','startTime': '19:00:00', 'endTime': '20:00:00', 'duration': '01:00:00', 'note': 'Dinner with family' },
-  { 'date': '2020-05-26','startTime': '09:30:00', 'endTime': '10:30:00','duration':  '01:00:00', 'note': 'Schedule 1' },
-  { 'date': '2020-05-26','startTime': '11:00:00', 'endTime': '13:00:00', 'duration': '02:00:00', 'note': 'Schedule 2' },
+  { 'date': '2020-06-23','startTime': '09:00:00', 'endTime': '09:20:00','duration': '00:20:00', 'note': 'Walk my dog' },
+  { 'date': '2020-06-24','startTime': '14:00:00', 'endTime': '15:00:00','duration': '01:00:00', 'note': 'Doctor\'s appointment' },
+  { 'date': '2020-06-25','startTime': '08:00:00', 'endTime': '08:30:00','duration': '00:30:00', 'note': 'Morning exercise' },
+  { 'date': '2020-06-25','startTime': '14:00:00', 'endTime': '16:00:00', 'duration': '02:00:00', 'note': 'Meeting with client' },
+  { 'date': '2020-06-25','startTime': '19:00:00', 'endTime': '20:00:00', 'duration': '01:00:00', 'note': 'Dinner with family' },
+  { 'date': '2020-06-26','startTime': '09:30:00', 'endTime': '10:30:00','duration':  '01:00:00', 'note': 'Schedule 1' },
+  { 'date': '2020-06-26','startTime': '11:00:00', 'endTime': '13:00:00', 'duration': '02:00:00', 'note': 'Schedule 2' },
 ]
 
 export default class Monthly extends React.Component {

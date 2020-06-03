@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   playButton: {
     position:'absolute',
     top: Platform.OS === 'android' ? 4 : 6,
-    right: Platform.OS === 'android' ? 35 : 25,
+    right: Platform.OS === 'android' ? .5 : 4,
   },
   eventName:{
     position:'absolute',

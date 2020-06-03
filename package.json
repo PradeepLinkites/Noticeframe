@@ -34,6 +34,7 @@
     "react-native-gesture-handler": "^1.5.3",
     "react-native-grid-list": "^1.1.0",
     "react-native-gridview": "^0.1.2",
+    "react-native-hide-show-password-input": "^1.1.0",
     "react-native-image-picker": "1.1.0",
     "react-native-keyboard-spacer": "^0.4.1",
     "react-native-lightbox": "^0.8.1",

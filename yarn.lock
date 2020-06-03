@@ -5721,6 +5721,15 @@ react-native-gridview@^0.1.2:
   resolved "https://registry.yarnpkg.com/react-native-gridview/-/react-native-gridview-0.1.2.tgz#324a13189f3e06b77311fd924b23d548dff3b040"
   integrity sha512-YtlbXEJ19SI2dbgv04r67PQcKEKJvHws+qT5z0ndbu8W2jRnVEhVjmNnaPTKDflsuva0GyjXTR0PN+KoHXnhYA==
 
+react-native-hide-show-password-input@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-hide-show-password-input/-/react-native-hide-show-password-input-1.1.0.tgz#7dcc75785bf5cb0406e4fbd44c08e1e0f4f229ee"
+  integrity sha512-fkqcbX5KVaZ9ZhAUeudvmt+uU5MY7vfYszYpc0yJTe9G14PqjkhaucSYZdoXNhUvmYtyfulRKade/eEFbZB4eQ==
+  dependencies:
+    prop-types "^15.7.2"
+    react-native-material-textfield "^0.12.0"
+    react-native-vector-icons "^6.4.2"
+
 react-native-image-picker@1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-1.1.0.tgz#c2a0523886edb4cf2cdc008ad0a71433142a4d53"
@@ -5962,7 +5971,7 @@ react-native-timed-slideshow@^1.2.1:
   resolved "https://registry.yarnpkg.com/react-native-timed-slideshow/-/react-native-timed-slideshow-1.2.1.tgz#69b2a1d1bb163e0738d00a87533cf8c55dad803c"
   integrity sha512-o07kH/g85VhOk4IzjV0i5Y5sqcpvxqW9tSllnKhBspm5uIbrbpXvHECKSaRanCHNi3WZh7h7dFhufbMCokD5Mg==
 
-react-native-vector-icons@^6.6.0:
+react-native-vector-icons@^6.4.2, react-native-vector-icons@^6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-6.6.0.tgz#66cf004918eb05d90778d64bd42077c1800d481b"
   integrity sha512-MImKVx8JEvVVBnaShMr7/yTX4Y062JZMupht1T+IEgbqBj4aQeQ1z2SH4VHWKNtWtppk4kz9gYyUiMWqx6tNSw==

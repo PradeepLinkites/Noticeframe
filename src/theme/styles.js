@@ -96,12 +96,12 @@ export default {
     alignItems: 'center', 
   },
   topRegister:{
-    height: hp(28), 
+    height: hp(26), 
     justifyContent: 'center', 
     alignItems: 'center',
  },
   logoStyle:{
-    height: hp(12),
+    height: hp(10),
     width: wp(20)
   },
   text:{
@@ -118,7 +118,7 @@ export default {
   textinput: {
     fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
     color: 'black',
-    marginBottom: 15,
+    marginBottom: 11,
     borderBottomColor: '#A2a2a2',
     borderBottomWidth: 1.5,
     height:hp(6.5)
@@ -169,8 +169,7 @@ export default {
   error: {
     color: 'red',
     fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
-    marginLeft: 5,
-    marginTop: 1,
+    // marginLeft: 5,
     fontFamily: Fonts.NRegular
   },
   button: {
