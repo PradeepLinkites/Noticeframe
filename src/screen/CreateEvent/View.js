@@ -5,7 +5,7 @@ import { get } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import CheckBox from 'react-native-checkbox'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-
+import { Dropdown } from 'react-native-material-dropdown';
 import SwitchComponent from '../Common/Switch'
 import ImagePicker from 'react-native-image-picker'
 import DateTimePickerModal from "react-native-modal-datetime-picker"
@@ -14,6 +14,13 @@ import ModalSelector from 'react-native-modal-selector'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
+let index = 0
+const colorData = [
+  { key: index++, label: 'Orange' },
+  { key: index++, label: 'Red' },
+  { key: index++, label: 'Green' },
+  { key: index++, label: 'Blue' },
+]
 
 export default class CreateEvent extends React.Component {
   constructor(props) {
@@ -21,12 +28,12 @@ export default class CreateEvent extends React.Component {
     this.state = {
       switch1Value: false,
       switch2Value: false,
-      location: 'Str. I Gualdariya, 9, 47890, italy',
-      notes: 'Metting is regarding the latest project deadline',
+      location: '',
+      notes: '',
       avatarSource: '',
       selectedValue: 'Group',
-      eventName: 'Board Meeting',
-      groupName: 'Type Group name or select from list',
+      eventName: '',
+      groupName: '',
       selectedColor: 'Orange',
       startTime: moment().add(1, 'hours').format('hh:mm a'),
       isStartPickerVisible: false,
@@ -34,11 +41,21 @@ export default class CreateEvent extends React.Component {
       isEndPickerVisible: false,
       eventDate: moment().format('DD MMMM, YYYY'),
       isDatePickerVisible: false,
-      selectValue:'GROUP'
+      selectValue:'GROUP',
+      selectRecurrence: 'Everyday'
     }
-    this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
+    this.selectPhotoTapped = this.selectPhotoTapped.bind(this)
+    this.onSelectCategory = this.onSelectCategory.bind(this)
+    this.onSelectRecurrence = this.onSelectRecurrence.bind(this)
+    this.createEvent = this.createEvent.bind(this)
   }
 
+  onSelectCategory(text) {
+    this.setState({ selectValue : text })
+  }
+  onSelectRecurrence(item){
+    this.setState({ selectRecurrence : item })
+  }
   // onChange = (event, selectedDate) => {
   //   const currentDate = selectedDate || date;
   //   this.setState({ date : currentDate, show : Platform.OS === 'ios' })
@@ -102,7 +119,6 @@ export default class CreateEvent extends React.Component {
       maxHeight: 500,
       storageOptions: {
         skipBackup: true,
-        // maxWidth: 1200, maxHeight: 800, quality: 0.9, noData: true,
       },
     };
 
@@ -124,20 +140,45 @@ export default class CreateEvent extends React.Component {
     });
   }
 
+  createEvent(){
+    alert('call')
+    // const data = {}
+    //   data.eventPicture = this.state.eventPicture
+    //   data.eventName = this.state.eventName
+    //   data.selectContacts = this.state.memberList
+    //   data.defaultFillColor = this.state.defaultFillColor
+    //   data.frameBoundaryColor = defaultFrameColor
+    //   data.eventDateLocal = moment(eventDate).format("YYYY-MM-DD")
+    //   data.eventDate = this.state.eventDate
+    //   data.startTime = start_Time
+    //   data.endTime = end_Time
+    //   data.note = this.state.note
+    //   data.location = this.state.location
+    //   data.personal = this.state.personal
+    //   data.business = this.state.business
+    //   data.group = this.state.group
+    //   data.setReminderAlarm = this.state.setReminderAlarm
+    //   data.showNotesInSlideShow = this.state.showNotesInSlideShow
+    //   data.showEventInSlideShow = this.state.showEventInSlideShow
+    //   data.setTime = this.state.setTime
+    //   data.category = this.state.category
+    //   data.userEmail = this.state.userEmail
+    //   data.texts = this.state.texts
+    //   data.eventRecurrence = {
+    //     repeat: this.state.repeat,
+    //     duration: this.state.duration
+    //   }
+    //   data.count = 1
+    //hide privacy and available , repeat, duration code
+    // console.log(data,'data')
+    // const Details = {
+    //   data: data,
+    //   id: id
+    // }
+  }
+
   render() {
-    let index = 0
-    const data = [
-        { key: index++, label: 'GROUP' },
-        { key: index++, label: 'PERSONAL' },
-        { key: index++, label: 'BUSINESS' },
-    ]
-    const colorData = [
-      { key: index++, label: 'Orange' },
-      { key: index++, label: 'Red' },
-      { key: index++, label: 'Green' },
-      { key: index++, label: 'Blue' },
-  ]
-    const {selectValue, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, getUserData , selectedValue, selectedColor  } = this.state
+    const { selectRecurrence, selectValue, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, getUserData , selectedValue, selectedColor  } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'CreateEvent' ? 'Create Event' : ''
     return (
@@ -163,35 +204,37 @@ export default class CreateEvent extends React.Component {
             </View>
             <View style={styles.eventContainer}>
               <Text style={styles.listTitle}>Event Name</Text>
-              <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+              <View style={{ flexDirection:'row', justifyContent:'space-between'}}>
                 <TextInput
-                    multiline
                     style={styles.eventInputBox}
+                    placeholder = "Event Name"
+                    placeholderTextColor="#000"
                     maxLength={40}
-                    placeholderTextColor="red"
                     onChangeText={text => this.onEventChange(text)}
                     value={this.state.eventName}
                   />
-                 <ModalSelector
-                    initValueTextStyle={[styles.listTitle,{color: "#3293ed"}]}
-                    selectStyle={{borderColor: "transparent"}}
-                    style={{right:20}}
-                    // selectTextStyle={{color: "blue"}}
-                    data={data}
-                    initValue={selectValue}
-                    onChange={(option)=>this.setState({ selectValue: option.label })} 
+                <View style={{ width: 125, paddingHorizontal: 5}}>
+                  <Dropdown
+                    value={selectValue}
+                    selectedItemColor = '#000'
+                    textColor = '#3293ed'
+                    onChangeText={(item)=>this.onSelectCategory(item)}
+                    data={category}
+                    dropdownOffset={{ top: 10, left: 0 }}
                   />
-                 <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/>
+                </View>
+                 {/* <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/> */}
               </View>
             </View>
-              {this.state.selectValue === 'GROUP' &&
+              {selectValue === 'GROUP' &&
                 <View style={styles.selectGroupView}>
                   <Text style={styles.listTitle}>Select Group</Text>
                   <TextInput
                     multiline
                     style={[styles.inputBox,{borderBottomWidth:0}]}
+                    placeholder = "Type Group name or select from list"
                     maxLength={40}
-                    placeholderTextColor="red"
+                    placeholderTextColor="#000"
                     onChangeText={text => this.onGroupNameChange(text)}
                     value={this.state.groupName}
                   />
@@ -283,30 +326,36 @@ export default class CreateEvent extends React.Component {
                 <Text style={AppStyles.buttonText}>Set Reminder Alarm</Text>
               </TouchableOpacity>
             </View>
-            <View style={[styles.eventContainer,{borderBottomWidth : 0}]}>
+            <View style={[styles.eventContainer,{borderBottomWidth : 0 }]}>
                <Text style={styles.listTitle} >Every Recurrence</Text>
-              <View style={{flexDirection:'row',marginTop:10,justifyContent:'space-between'}}>
-                <View>
-                  <Text style={styles.repeatText}>Repeat</Text>
-                </View>
-                <View style={{flexDirection:'row'}}>
+              <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                <Text style={styles.repeatText}>Repeat</Text>
+                {/* <View style={{flexDirection:'row'}}>
                    <Text style={[styles.selectedText,{marginLeft:0}]}>Everyday</Text>
                    <Image source={require('../../assets/icons/Arrow.png')} style={{height: 10,width: 10, marginTop: 6}}/>
+                </View> */}
+                <View style={{ width: 125 }}>
+                  <Dropdown
+                    value={selectRecurrence}
+                    selectedItemColor = '#000'
+                    textColor = '#000'
+                    onChangeText={(item)=>this.onSelectRecurrence(item)}
+                    data={recurrence}
+                    fontSize={14}
+                    dropdownOffset={{ top: 0, left: 0 }}
+                  />
                 </View>
               </View>
             </View>
             <View style={styles.selectGroupView}>
                <Text style={styles.listTitle}>Note</Text>
               <View style={{flexDirection:'row',marginTop:8, justifyContent:'space-between'}}>
-                {/* <View>
-                  <Text style={styles.selectedText}>Metting is regarding the latest project deadline</Text>
-                  <View style={styles.selectGroupBottomLine} />
-                </View> */}
                  <TextInput
                     multiline
                     style={styles.inputBox}
+                    placeholder = "Notes"
+                    placeholderTextColor = "#000"
                     maxLength={40}
-                    placeholderTextColor="red"
                     onChangeText={text => this.onNotesChange(text)}
                     value={this.state.notes}
                   />
@@ -324,7 +373,8 @@ export default class CreateEvent extends React.Component {
                     multiline
                     style={[styles.inputBox,{borderBottomWidth:0}]}
                     maxLength={40}
-                    placeholderTextColor="red"
+                    placeholder = "Location"
+                    placeholderTextColor = "#000"
                     onChangeText={text => this.onLocationChange(text)}
                     value={this.state.location}
                   />
@@ -410,7 +460,7 @@ export default class CreateEvent extends React.Component {
                     <Text style={[styles.cancelText,{color:'#000'}]}>CANCEL</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={[styles.cancelButton, {backgroundColor:'#3b5261'}]}
-                    onPress={() => this.props.navigation.navigate('ListView')}
+                    onPress = {this.createEvent}
                   >
                     <Text style={[styles.cancelText,{color:'#fff'}]}>CREATE</Text>
                   </TouchableOpacity>
@@ -467,32 +517,22 @@ const styles = StyleSheet.create({
     paddingVertical: Platform.OS === 'android' ? 15 : 20,
     paddingHorizontal: Platform.OS === 'android' ? 25 : 25,
     backgroundColor:'#fff',
-    borderBottomWidth: .3
+    borderBottomWidth: .3,
   },
   eventInputBox: {
     flex: 1,
     marginRight: 30,
-    paddingTop: 5,
+    marginTop: Platform.OS === 'android' ? 1 : 5 ,
     borderColor: 'gray', 
     borderBottomWidth: .6,
-    color: '#000',
-	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
-    letterSpacing: .3,
-    // fontWeight: Platform.OS === 'android' ? '600' : '500'
-
+    height: 40,
   },
-  // eventBottomLine: {
-  //   marginTop: 8,
-  //   height: 1.8,
-  //   width: deviceWidth * .60,
-  //   backgroundColor: '#A2a2a2'
-  // },
   DropdownStyle: {
     height: 12, 
     width: 12, 
-    marginTop: Platform.OS === 'android' ? 17 : 15 ,
+    marginTop: Platform.OS === 'android' ? 15 : 15 ,
     position:'absolute', 
-    right: 8 
+    right: 13 
   },
   colorDropdownStyle: {
     height: 12, 
@@ -623,6 +663,7 @@ const styles = StyleSheet.create({
     borderRadius: 24
   },
   repeatText: {
+    marginTop: 5,
     color: '#A2a2a2',
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
     fontFamily: AppFonts.NRegular,
@@ -642,3 +683,14 @@ const styles = StyleSheet.create({
     // fontWeight: '600',
   }
 })
+
+const category = [
+  { value: 'GROUP' },
+  { value: 'PERSONAL' },
+  { value: 'BUSINESS' },
+]
+const recurrence = [
+  { value: 'Everyday' },
+  { value: 'Weekly' },
+  { value: 'Monthly' },
+]

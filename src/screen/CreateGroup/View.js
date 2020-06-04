@@ -15,7 +15,7 @@ export default class CreateEvent extends React.Component {
     super(props);
     this.state = {
       avatarSource: '',
-      groupName: 'Directors'
+      groupName: ''
     }
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
   }
@@ -33,7 +33,6 @@ export default class CreateEvent extends React.Component {
 
     ImagePicker.showImagePicker(options, response => {
       console.log('Response = ', response);
-
       if (response.didCancel) {
         console.log('User cancelled photo picker');
       } else if (response.error) {
@@ -50,7 +49,6 @@ export default class CreateEvent extends React.Component {
   }
 
   render() {
-    const {selectValue, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, getUserData , selectedValue, selectedColor  } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'CreateGroup' ? 'Create Group' : ''
     return (
@@ -79,8 +77,9 @@ export default class CreateEvent extends React.Component {
                 <TextInput
                   multiline
                   style={styles.inputBox}
+                  placeholder = "Group Name"
+                  placeholderTextColor = "#A2a2a2"
                   maxLength={40}
-                  placeholderTextColor="red"
                   onChangeText={text => this.setState({ groupName: text})}
                   value={this.state.groupName}
                 />
@@ -129,7 +128,9 @@ export default class CreateEvent extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'#e6e1de',
+    backgroundColor:'#fff',
+    // backgroundColor:'#e6e1de',
+
   },
   topContainer:{
     height: deviceHeight *.22 ,
@@ -159,11 +160,10 @@ const styles = StyleSheet.create({
     borderBottomWidth: .3,
   },
   listTitle: {
-	  color: '#A2a2a2',
+    color: '#000',
 	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(12),
-    // fontFamily: AppFonts.NRegular,
-    letterSpacing: .5,
-    fontWeight: '500'
+    fontFamily: AppFonts.NRegular,
+    letterSpacing: .2,
   },
   selectedText: {
 	  color: '#000',
@@ -178,11 +178,10 @@ const styles = StyleSheet.create({
     paddingTop: 7,
     paddingBottom: 7,
     borderColor: 'gray', 
-    borderBottomWidth: .8,
+    borderBottomWidth: .6,
     color: '#000',
 	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
-    letterSpacing: 1,
-    fontWeight: Platform.OS === 'android' ? '600' : '500'
+    letterSpacing: .2,
   },
   button: {
      width:'100%',
