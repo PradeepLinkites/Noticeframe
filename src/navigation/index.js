@@ -19,6 +19,7 @@ import Tour from '../screen/Tour/Container'
 import Home from '../screen/Home/Container'
 import VideoPlayer from '../screen/VideoPlayer/component'
 import { get, size } from 'lodash'
+import AsyncStorage from '@react-native-community/async-storage'
 
 const AuthStack = createStackNavigator({
 	Welcome: {
@@ -106,6 +107,10 @@ const mainStack = createStackNavigator({
 const AppContainer = createAppContainer(mainStack);
 // const AppContainer = createAppContainer(AppStack);
 const AppContainerHome = createAppContainer(AppStack);
+
+// const retrievedItem = AsyncStorage.getItem('@user')
+// const user = JSON.parse(JSON.stringify(retrievedItem))
+// console.log('user', user)
 
 export default class App extends React.Component {
 	render() {

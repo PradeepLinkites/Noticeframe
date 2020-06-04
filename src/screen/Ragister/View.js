@@ -60,9 +60,9 @@ export default class Login extends React.Component {
     if(key === 'email'){
       this.setState({ emailError: false , emailValidError: false })
     }
-    if(key === 'password'){
-      this.setState({ passwordError : false })
-    }
+    // if(key === 'password'){
+    //   this.setState({ passwordError : false })
+    // }
     if(key === 'confirmPassword'){
       this.setState({ confirmPassError: false , confirmPassMatchError: false })
     }
@@ -79,6 +79,7 @@ export default class Login extends React.Component {
 
     var error = true
     var validateEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    const validatePassword = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
     this.setState({
       firstNameError: false,
       lastNameError: false,
@@ -106,13 +107,15 @@ export default class Login extends React.Component {
     if (password.trim() === '') {
       error = false
       this.setState({ passwordError: true })
+    }else if (!validatePassword.test(password.trim())) {
+      error = false
+      this.setState({ passwordError: true })
     }
     if (confirmPassword.trim() === '') {
       error = false
       this.setState({ confirmPassError: true })
     }
-
-    if (password.trim() !== confirmPassword.trim()) {
+    if (password.trim() !== confirmPassword.trim() && confirmPassword.trim() !== '') {
       error = false
       this.setState({ confirmPassMatchError: true })
     }
@@ -232,13 +235,10 @@ export default class Login extends React.Component {
             </TouchableOpacity>
             </View>
             {passwordError && (
-              <Text style={AppStyles.error}>Please enter password</Text>
+              <Text style={AppStyles.error}>Please enter at least 8 letters which should contain 1 UpperCase, 1 LowerCase, 1 Number and 1 Symbol</Text>
             )}
-            
-            {/*"Please enter at least 8 letters which should contain 1 UpperCase 1 LowerCase 1 Number and 1 Symbol"*/}
-
             <TextInput style = {[AppStyles.textinput,{flex: 1}]}
-              secureTextEntry={showPassword}
+              secureTextEntry={true}
               underlineColorAndroid = "transparent"
               placeholder = "Re-Enter Your Password"
               placeholderTextColor = "#A2a2a2"
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   },
   eyeContainer: {
     position: 'absolute',
-    marginTop: 15,
+    marginTop: 25,
     right:10,
     height: 25,
     width: 35,

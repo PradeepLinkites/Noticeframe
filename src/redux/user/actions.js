@@ -11,7 +11,7 @@ export function createUser(user) {
         body: JSON.stringify(user)
       })
       .then((res) => {
-        return res.json();
+        return res.json()
       })
       .then((data) => {
          return dispatch({
@@ -25,6 +25,55 @@ export function createUser(user) {
     }
   }
  
+  export function loginUser(user) {
+    return dispatch => { fetch('https://notice-frame-backend.herokuapp.com/api/login', {
+      method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(user)
+        })
+        .then((res) => {
+          return res.json()
+        })
+        .then((data) => {
+           return dispatch({
+              type: 'LOGIN',
+              data
+            });
+          })
+          .catch((error) => {
+              throw error
+          })
+      }
+  }
+
+  export function forgotPassword(email) {
+    return dispatch => { fetch('https://notice-frame-backend.herokuapp.com/api/post/sendLink/ForUpdatePassword', {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email})
+      })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        console.log('data=>',data)
+          return dispatch({
+            type: 'FORGET_PASSWORD',
+            data
+          });
+        })
+        .catch((error) => {
+            throw error
+        })
+    }
+  }
+
   // export function getUser(userId) {
   //   return dispatch => {fetch(`http://169.56.143.172:5001/api/v1/accounts/detail/${userId}`, {
   //         method: 'GET',
@@ -63,54 +112,6 @@ export function createUser(user) {
   //       .then((data) => {
   //           return dispatch({
   //             type: 'UPDATE_USER',
-  //             data
-  //           });
-  //         })
-  //         .catch((error) => {
-  //             throw error
-  //         })
-  //     }
-  // }
-  
-  // export function loginUser(user) {
-  //   return dispatch => { fetch("http://169.56.143.172:5001/api/v1/accounts/login", {
-  //         method: 'POST',
-  //         headers: {
-  //           'Accept': 'application/json',
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify(user)
-  //       })
-  //       .then((res) => {
-  //         return res.json();
-  //       })
-  //       .then((data) => {
-  //          return dispatch({
-  //             type: 'LOGIN',
-  //             data
-  //           });
-  //         })
-  //         .catch((error) => {
-  //             throw error
-  //         })
-  //     }
-  // }
-
-  // export function forgotPassword(email) {
-  //   return dispatch => { fetch("http://169.56.143.172:5001/api/v1/accounts/forgotpassword", {
-  //         method: 'POST',
-  //         headers: {
-  //           'Accept': 'application/json',
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({email})
-  //       })
-  //       .then((res) => {
-  //         return res.json();
-  //       })
-  //       .then((data) => {
-  //          return dispatch({
-  //             type: 'FORGET_PASSWORD',
   //             data
   //           });
   //         })

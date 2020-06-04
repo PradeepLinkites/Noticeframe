@@ -3,7 +3,7 @@ import {KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, Alert, St
 import { StackActions, NavigationActions } from 'react-navigation'
 import { get, isEmpty , size} from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles } from '../../theme'
-// import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-community/async-storage'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import styles from '../../theme/styles'
 const deviceWidth = Dimensions.get('window').width
@@ -22,6 +22,35 @@ export default class Login extends React.Component {
       emailValidError: false,
       passError: false,
       loading: false,
+      loginUserData:{},
+    }
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState){
+    return { loginUserData: nextProps.loginUserData }
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.loginUserData !== prevProps.loginUserData) {
+      if(this.props.loginUserPhase) {
+        // this.props.resetPhase()
+        this.setState({ loginUserData: this.props.loginUserData, loading: false })
+        // this.props.screenProps.User(this.props.loginUserData)
+        AsyncStorage.setItem('@user',JSON.stringify(this.props.loginUserData))
+        this.props.navigation.navigate('Home')
+      } else {
+        this.setState({ loading: false })
+        Alert.alert('NOTICFRAME',this.props.loginUserMessage)
+      }
+    } 
+  }
+
+  onFocus =(key)=>{
+    if(key === 'email'){
+      this.setState({ emailError: false , emailValidError: false })
+    }
+    if(key === 'password'){
+      this.setState({ passwordError : false })
     }
   }
 
@@ -49,9 +78,8 @@ export default class Login extends React.Component {
     }
 
     if (error) {
-      // this.setState({ loading: true })
-      // this.props.loginUser({ email, password })
-      // alert('User login Successfully')
+      this.setState({ loading: true })
+      this.props.loginUser({ email, password })
     }
   }
 
@@ -75,7 +103,7 @@ export default class Login extends React.Component {
           <Image source={require('../../assets/logo/Logo_NF.png')} style={AppStyles.logoStyle} /> 
           <Text style={AppStyles.text}>Enter Your Details</Text>
         </View>
-        <View style={AppStyles.authContainer}>
+        <View style={[AppStyles.authContainer,{ marginTop: 5 }]}>
             <TextInput style = {AppStyles.textinput}
               underlineColorAndroid = "transparent"
               placeholder = "Your Email here"
@@ -85,7 +113,7 @@ export default class Login extends React.Component {
               numberOfLines={1}
               autoCorrect={false}
               onChangeText={email => this.setState({ email })}
-              // onFocus={this.onFocus.bind(this, 'email')}
+              onFocus={this.onFocus.bind(this, 'email')}
               value={email}
             />
             {emailError && <Text style={AppStyles.error}>Please enter email</Text>} 
@@ -99,17 +127,23 @@ export default class Login extends React.Component {
               numberOfLines={1}
               autoCorrect={false}
               onChangeText={password => this.setState({ password })}
-              // onFocus={this.onFocus.bind(this, 'email')}
+              onFocus={this.onFocus.bind(this, 'password')}
               value={password}
             />
             {passError && <Text style={AppStyles.error}>Please enter password</Text>}  
             <TouchableOpacity
                style = {AppStyles.loginButton}
-              //  onPress = {
-              //     () => this.login(this.state.email, this.state.password)
-              //  }
+               onPress = {
+                  () => this.login(this.state.email, this.state.password)
+               }
             >
-              <Text style = {AppStyles.submitButtonText} onPress={() => this.props.navigation.navigate('Home')}> LOGIN </Text>
+            {loading
+              ?
+              <ActivityIndicator size="small" color="#FFF" />
+              :
+              // <Text style = {AppStyles.submitButtonText} onPress={() => this.props.navigation.navigate('Home')}> LOGIN </Text>
+              <Text style = {AppStyles.submitButtonText}> LOGIN </Text>
+            }
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('ForgotPassword')}>
               <Text style={AppStyles.forgotText}>Forgot Password?</Text>

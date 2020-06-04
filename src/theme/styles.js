@@ -118,7 +118,7 @@ export default {
   textinput: {
     fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
     color: 'black',
-    marginBottom: 11,
+    marginTop: 12,
     borderBottomColor: '#A2a2a2',
     borderBottomWidth: 1.5,
     height:hp(6.5)
@@ -168,7 +168,7 @@ export default {
   },
   error: {
     color: 'red',
-    fontSize: Platform.OS === 'android' ? Sizes.verticalScale(16) : Sizes.verticalScale(14),
+    fontSize: Platform.OS === 'android' ? Sizes.verticalScale(15) : Sizes.verticalScale(14),
     // marginLeft: 5,
     fontFamily: Fonts.NRegular
   },

@@ -1,26 +1,27 @@
 
 // Set initial state
 const initialState = {
-  apiMessage: {},
-  singupData: {},
+  // apiMessage: {},
+  // singupData: {},
   // singupFbData: {},
   // singupGoogleData: {},
-  loginData: {},
-  forgetData: {},
-  userData: {},
+  // loginData: {},
+  // forgetData: {},
+  // userData: {},
 
 //New code
   createUserPhase: false,
   createUserMessage: '',
   createUserData: {},
+  loginUserPhase: false,
+  loginUserMessage: '',
+  loginUserData: {},
+  forgetData: {},
   // getUserPhase: false,
   // getUserMessage: '',
   // getUserData: {},
   // updateUserPhase: false,
   // updateUserMessage: '',
-  // loginUserPhase: false,
-  // loginUserMessage: '',
-  // loginUserData: {},
   // cancelSubscriptionPhase: false,
   // cancelSubscriptionMessage: '',
   // cancelSubscriptionData: {},
@@ -49,6 +50,33 @@ export default function userReducer(state = initialState, action) {
           createUserData: {}
         };  
       }
+    }
+
+    case 'LOGIN': {
+      const input = action.data
+      if(input.status){
+        return {
+          ...state,
+          loginUserPhase: input.status,
+          loginUserMessage: input.message,
+          loginUserData: input.data
+        };  
+      } else {
+        return {
+          ...state,
+          loginUserPhase: input.status,
+          loginUserMessage: input.message,
+          loginUserData: {}
+        };  
+      }
+    }
+
+    case 'FORGET_PASSWORD': {
+      const input = action;
+      return {
+        ...state,
+        forgetData: input.data
+      };
     }
 
     // case 'GET_USER': {
@@ -82,31 +110,6 @@ export default function userReducer(state = initialState, action) {
     //   };
     // }
 
-    // case 'LOGIN': {
-    //   const input = action.data;
-    //   if(input.success){
-    //     return {
-    //       ...state,
-    //       loginUserPhase: input.success,
-    //       loginUserMessage: input.message,
-    //       loginUserData: input.account
-    //     };  
-    //   } else {
-    //     return {
-    //       ...state,
-    //       loginUserPhase: input.success,
-    //       loginUserMessage: input.message,
-    //       loginUserData: {}
-    //     };  
-    //   }
-    // }
-    // case 'FORGET_PASSWORD': {
-    //   const input = action;
-    //   return {
-    //     ...state,
-    //     forgetData: input.data
-    //   };
-    // }
     // case 'SOCIAL_LOGIN': {
     //   const input = action.data;
     //   if(input.success){

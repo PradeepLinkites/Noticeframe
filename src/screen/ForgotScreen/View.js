@@ -17,6 +17,22 @@ export default class ForgetScreen extends React.Component {
       emailError: false,
       emailValidError: false,
       loading: false,
+      forgetData: {}
+    }
+  }
+
+  static getDerivedStateFromProps = (nextProps, prevState) => {
+    return {forgetData: nextProps.forgetData}
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.forgetData !== prevProps.forgetData) {
+      if(this.props.forgetData.status) {
+        this.setState({forgetData: this.props.forgetData , loading: false })
+      }else{
+        this.setState({ isEmailexist : true , loading: false })
+        Alert.alert('NOTICFRAME',this.props.forgetData.message)
+      }
     }
   }
 
@@ -30,7 +46,7 @@ export default class ForgetScreen extends React.Component {
 
   forgotPassword(){
     // const { navigation, store } = this.props
-    const { email } = this.state
+    const { email , loading } = this.state
     var error = true
     var validateEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     this.setState({
@@ -46,13 +62,14 @@ export default class ForgetScreen extends React.Component {
       this.setState({ emailValidError: true })
     }
     if (error) {
-      try {
-       this.setState({ email: '' })
-      } catch (error) {
-        console.log('new user created err', JSON.stringify(error))
-      }
-      // this.props.forgotPassword(email)
-      this.props.navigation.navigate('SignIn')
+      // try {
+      //  this.setState({ email: '', loading: true })
+      // } catch (error) {
+      //   console.log('new user created err', JSON.stringify(error))
+      // }
+      this.setState({ email: '', loading: true })
+      this.props.forgotPassword(email)
+      // this.props.navigation.navigate('SignIn')
     }
   }
 
@@ -103,7 +120,12 @@ export default class ForgetScreen extends React.Component {
             style = {AppStyles.loginButton}
             onPress={this.forgotPassword.bind(this)}
           >
-            <Text style = {AppStyles.submitButtonText}> SUBMIT </Text>
+            {loading
+              ?
+              <ActivityIndicator size="small" color="#FFF" />
+              :
+              <Text style = {AppStyles.submitButtonText}> SUBMIT </Text>
+            }
           </TouchableOpacity>
         </View>
         </ScrollView>

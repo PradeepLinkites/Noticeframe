@@ -8,13 +8,13 @@ import FormRender from './View';
 
 // What data from the store shall we send to the component?
 const mapStateToProps = state => ({
-  apiMessage: state.user.apiMessage,
-  forgetData: state.user.forgetData
+  forgetData: state.user.forgetData,
+  // forgetMessage: state.user.forgetMessage,
+  // forgetPhase: state.user.forgetPhase
 });
 
 // Any actions to map to the component?
 const mapDispatchToProps = {
-  submit: AuthActions.getDeviceID,
   forgotPassword: AuthActions.forgotPassword
 };
 
