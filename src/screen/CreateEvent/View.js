@@ -1,5 +1,5 @@
 import React from 'react'
-import {Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {Modal, Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
@@ -11,38 +11,39 @@ import ImagePicker from 'react-native-image-picker'
 import DateTimePickerModal from "react-native-modal-datetime-picker"
 import moment from "moment"
 import ModalSelector from 'react-native-modal-selector'
+import AsyncStorage from '@react-native-community/async-storage'
+
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
 let index = 0
-const colorData = [
-  { key: index++, label: 'Orange' },
-  { key: index++, label: 'Red' },
-  { key: index++, label: 'Green' },
-  { key: index++, label: 'Blue' },
-]
-
 export default class CreateEvent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      switch1Value: false,
-      switch2Value: false,
-      location: '',
-      notes: '',
-      avatarSource: '',
-      selectedValue: 'Group',
+      eventPicture: '',
       eventName: '',
+      category: 'GROUP',
+      personal: false,
+      business: false,
+      group: true,
+      memberList: ['','',''],
+      defaultFillColor: 'Orange',
+      eventDate: moment().format('DD MMMM, YYYY'),
       groupName: '',
-      selectedColor: 'Orange',
       startTime: moment().add(1, 'hours').format('hh:mm a'),
       isStartPickerVisible: false,
       endTime: moment().add(3, 'hours').format('hh:mm a'),
       isEndPickerVisible: false,
-      eventDate: moment().format('DD MMMM, YYYY'),
       isDatePickerVisible: false,
-      selectValue:'GROUP',
-      selectRecurrence: 'Everyday'
+      setReminderAlarm: '',
+      repeat: 'Everyday',
+      notes: '',
+      location: '',
+      showNotesInSlideShow: false,
+      showEventInSlideShow: false,
+      modalVisible: false,
+      checked: false
     }
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this)
     this.onSelectCategory = this.onSelectCategory.bind(this)
@@ -50,36 +51,45 @@ export default class CreateEvent extends React.Component {
     this.createEvent = this.createEvent.bind(this)
   }
 
+  componentDidMount() {
+    // AsyncStorage.getItem('@user')
+    // .then((value)=>{
+    //  const user = JSON.parse(value)
+    //  console.log('user==>>', user)
+    //  const id = user._id
+    // })
+    // .catch((error)=>{
+    // console.log(error)
+    // })
+    // const data = {
+    //   id: id
+    // }
+    // this.props.getUser(data)
+    // this.props.getSetting(data)
+    // this.props.getGroupListForShow(data)
+  }
+
   onSelectCategory(text) {
-    this.setState({ selectValue : text })
+    if(text === 'PERSONAL'){
+      this.setState({ category : text, personal: true, group: false , business: false })
+    }
+    if(text === 'GROUP'){
+      this.setState({ category : text, personal: false, group: true , business: false })
+    }
+    if(text === 'BUSINESS'){
+      this.setState({ category : text, personal: false, group: false , business: true })
+    }
   }
   onSelectRecurrence(item){
-    this.setState({ selectRecurrence : item })
+    this.setState({ repeat : item })
   }
-  // onChange = (event, selectedDate) => {
-  //   const currentDate = selectedDate || date;
-  //   this.setState({ date : currentDate, show : Platform.OS === 'ios' })
-  // };
-
-  // showMode = currentMode => {
-  //   alert('call')
-  //   this.setState({ show: true, mode: currentMode })
-  // };
-
-  // showDatepicker = () => {
-  //   this.showMode('date')
-  // };
-
-  // showTimepicker = () => {
-  //   this.showMode('time')
-  // };
 
   handleDate = (date) => {
     let newDate = moment(date).utcOffset('+05:30').format('DD-MMMM-YYYY')
-    this.setState({ eventDate: newDate , isDatePickerVisible : false})
+    this.setState({ eventDate: newDate , isDatePickerVisible : false })
   }
  
-  handleStartTime = (date) => {       
+  handleStartTime = (date) => {     
     let time = moment(date).utcOffset('+05:30').format('hh:mm a')
     this.setState({ startTime: time , isStartPickerVisible: false})
   }
@@ -105,10 +115,10 @@ export default class CreateEvent extends React.Component {
  
   toggleSwitch = (value, name) => {
     if(name === 'switch1'){
-       this.setState({switch1Value: value})
+       this.setState({showNotesInSlideShow: value})
      }
      if(name === 'switch2'){
-       this.setState({switch2Value: value})
+       this.setState({showEventInSlideShow: value})
      }
   }
 
@@ -134,51 +144,49 @@ export default class CreateEvent extends React.Component {
       } else {
         let source = {uri: response.uri}
         this.setState({
-          avatarSource: source,
+          eventPicture: source,
         });
       }
     });
   }
 
   createEvent(){
-    alert('call')
-    // const data = {}
-    //   data.eventPicture = this.state.eventPicture
-    //   data.eventName = this.state.eventName
-    //   data.selectContacts = this.state.memberList
-    //   data.defaultFillColor = this.state.defaultFillColor
-    //   data.frameBoundaryColor = defaultFrameColor
-    //   data.eventDateLocal = moment(eventDate).format("YYYY-MM-DD")
-    //   data.eventDate = this.state.eventDate
-    //   data.startTime = start_Time
-    //   data.endTime = end_Time
-    //   data.note = this.state.note
-    //   data.location = this.state.location
-    //   data.personal = this.state.personal
-    //   data.business = this.state.business
-    //   data.group = this.state.group
-    //   data.setReminderAlarm = this.state.setReminderAlarm
-    //   data.showNotesInSlideShow = this.state.showNotesInSlideShow
-    //   data.showEventInSlideShow = this.state.showEventInSlideShow
-    //   data.setTime = this.state.setTime
-    //   data.category = this.state.category
-    //   data.userEmail = this.state.userEmail
-    //   data.texts = this.state.texts
-    //   data.eventRecurrence = {
-    //     repeat: this.state.repeat,
-    //     duration: this.state.duration
-    //   }
-    //   data.count = 1
-    //hide privacy and available , repeat, duration code
-    // console.log(data,'data')
-    // const Details = {
-    //   data: data,
-    //   id: id
-    // }
+    const data = {}
+      data.eventPicture = this.state.eventPicture
+      data.eventName = this.state.eventName
+      data.selectContacts = this.state.memberList
+      data.defaultFillColor = this.state.defaultFillColor
+      // data.frameBoundaryColor = defaultFrameColor
+      data.eventDateLocal = moment(this.state.eventDate).format("YYYY-MM-DD")
+      data.eventDate = this.state.eventDate
+      data.startTime = this.state.startTime
+      data.endTime = this.state.endTime
+      data.note = this.state.notes
+      data.location = this.state.location
+      data.personal = this.state.personal
+      data.business = this.state.business
+      data.group = this.state.group
+      data.setReminderAlarm = this.state.setReminderAlarm
+      data.showNotesInSlideShow = this.state.showNotesInSlideShow
+      data.showEventInSlideShow = this.state.showEventInSlideShow
+      // data.setTime = this.state.setTime
+      data.category = this.state.category
+      // data.userEmail = this.state.userEmail
+      // data.texts = this.state.texts
+      data.eventRecurrence = {
+        repeat: this.state.repeat,
+        // duration: this.state.duration
+      }
+      data.count = 1
+      console.log(data,'data')
+      // const Details = {
+      //   data: data,
+      //   id: id
+      // }
   }
 
   render() {
-    const { selectRecurrence, selectValue, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, getUserData , selectedValue, selectedColor  } = this.state
+    const {checked, modalVisible, memberList, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'CreateEvent' ? 'Create Event' : ''
     return (
@@ -191,7 +199,7 @@ export default class CreateEvent extends React.Component {
             routeKey={'CreateEvent'} 
           />        
             <View style={styles.topContainer}>
-              {get(this.state, 'avatarSource','') === '' ?
+              {get(this.state, 'eventPicture','') === '' ?
                 <TouchableOpacity
                   style={styles.addPictureButton}
                   onPress={this.selectPhotoTapped.bind(this)}
@@ -199,7 +207,7 @@ export default class CreateEvent extends React.Component {
                   <Text style={styles.addPictureText}>Add Picture</Text>
                 </TouchableOpacity>
                 :
-                <Image style={styles.avatar} source={this.state.avatarSource} />
+                <Image style={styles.avatar} source={this.state.eventPicture} />
               }
             </View>
             <View style={styles.eventContainer}>
@@ -215,21 +223,21 @@ export default class CreateEvent extends React.Component {
                   />
                 <View style={{ width: 125, paddingHorizontal: 5}}>
                   <Dropdown
-                    value={selectValue}
+                    value={category}
                     selectedItemColor = '#000'
                     textColor = '#3293ed'
                     onChangeText={(item)=>this.onSelectCategory(item)}
-                    data={category}
+                    data={categoryList}
                     dropdownOffset={{ top: 10, left: 0 }}
                   />
                 </View>
                  {/* <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/> */}
               </View>
             </View>
-              {selectValue === 'GROUP' &&
+              {category === 'GROUP' &&
                 <View style={styles.selectGroupView}>
                   <Text style={styles.listTitle}>Select Group</Text>
-                  <TextInput
+                  {/* <TextInput
                     multiline
                     style={[styles.inputBox,{borderBottomWidth:0}]}
                     placeholder = "Type Group name or select from list"
@@ -237,7 +245,18 @@ export default class CreateEvent extends React.Component {
                     placeholderTextColor="#000"
                     onChangeText={text => this.onGroupNameChange(text)}
                     value={this.state.groupName}
-                  />
+                  /> */}
+                  <View style={{ marginTop: 10 }}>
+                    <Dropdown
+                      value={'Select Member list'}
+                      selectedItemColor = '#000'
+                      textColor = '#000'
+                      onChangeText={(item)=>this.onSelectRecurrence(item)}
+                      data={memberList}
+                      fontSize={14}
+                      dropdownOffset={{ top: 0, left: 0 }}
+                    />
+                </View>
                 </View>
               }
             <View style={styles.colorContainer}>
@@ -246,17 +265,28 @@ export default class CreateEvent extends React.Component {
                   <Text style={[styles.listTitle,{fontWeight:'600',top: 10,marginLeft: 10 }]}>Default Fill colour</Text>
                 </View>
                 <View style={{flexDirection:'row'}}>
-                  <View style={ [styles.roundColorView, {backgroundColor : selectedColor === 'Red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
-                  <ModalSelector
+                  <View style={ [styles.roundColorView, {backgroundColor : defaultFillColor === 'Red' ? 'red' : defaultFillColor === 'Blue' ? 'blue' : defaultFillColor === 'Orange' ? 'orange': defaultFillColor === 'Green' ? 'green': '' }]} />
+                  {/* <ModalSelector
                     initValueTextStyle={[styles.listTitle,{color: "#000"}]}
                     selectStyle={{borderColor: "transparent"}}
                     style={{marginTop: 2,marginRight: 25}}
                     // selectTextStyle={{color: "blue"}}
                     data={colorData}
-                    initValue={selectedColor}
-                    onChange={(option)=>this.setState({ selectedColor: option.label })} 
+                    initValue={defaultFillColor}
+                    onChange={(option)=>this.setState({ defaultFillColor: option.label })} 
                   />
-                 <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.colorDropdownStyle}/>
+                 <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.colorDropdownStyle}/> */}
+                 <View style={{ marginTop: 8 , marginLeft: 10, width: 80 }}>
+                  <Dropdown
+                    value={defaultFillColor}
+                    selectedItemColor = '#000'
+                    textColor = '#000'
+                    onChangeText={(item)=>this.setState({ defaultFillColor: item })}
+                    data={colorData}
+                    fontSize={14}
+                    dropdownOffset={{ top: 0, left: 0 }}
+                  />
+                </View>
                 </View>
               </View>
             </View>
@@ -313,15 +343,20 @@ export default class CreateEvent extends React.Component {
                   checkboxStyle={{tintColor:'#000'}}
                   label={'send email notification when task is about to start'}
                   labelStyle={styles.checkboxText}
-                  // checked={all ? true : false}
-                  // onChange={(e)=>this.toggleAllCheckbox(!all)}
+                  checked={checked}
+                  onChange={()=>this.setState({ checked: !this.state.checked, modalVisible: checked ? modalVisible : !this.state.modalVisible})}
                 />
+                {(get(this.state, 'setReminderAlarm','') !== '' && checked ) &&
+                <Text style={{marginTop: 5}}>
+                  Set Reminder: {this.state.setReminderAlarm}
+                </Text>
+                }
             </View>
             </View>
             <View style={styles.reminderContainer}>
               <TouchableOpacity
                 style={styles.reminderButton}
-                onPress={()=>alert('call')}
+                onPress={()=>this.setState({ modalVisible: !modalVisible })}
               >
                 <Text style={AppStyles.buttonText}>Set Reminder Alarm</Text>
               </TouchableOpacity>
@@ -336,7 +371,7 @@ export default class CreateEvent extends React.Component {
                 </View> */}
                 <View style={{ width: 125 }}>
                   <Dropdown
-                    value={selectRecurrence}
+                    value={repeat}
                     selectedItemColor = '#000'
                     textColor = '#000'
                     onChangeText={(item)=>this.onSelectRecurrence(item)}
@@ -390,9 +425,9 @@ export default class CreateEvent extends React.Component {
                   <Switch
                     // onValueChange = {() => this.toggleSwitch(item, index)}
                     onValueChange = {(value) => this.toggleSwitch(value ,'switch1')}
-                    value = {this.state.switch1Value}
+                    value = {this.state.showNotesInSlideShow}
                     disabled={false}
-                    thumbColor={this.state.switch1Value ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
+                    thumbColor={this.state.showNotesInSlideShow ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
                     trackColor={{ true: '#939393', false : Platform.OS == 'android' ? '#A2a2a2': 'gray' }}
                     trackWidth={10}
                     style={
@@ -411,9 +446,9 @@ export default class CreateEvent extends React.Component {
                   <Switch
                       // onValueChange = {() => this.toggleSwitch(item, index)}
                       onValueChange = {(value) => this.toggleSwitch(value ,'switch2')}
-                      value = {this.state.switch2Value}
+                      value = {this.state.showEventInSlideShow}
                       disabled={false}
-                      thumbColor={this.state.switch2Value ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
+                      thumbColor={this.state.showEventInSlideShow ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
                       trackColor={{ true: '#939393', false : Platform.OS == 'android' ? '#A2a2a2': 'gray' }}
                       trackWidth={10}
                       style={
@@ -467,6 +502,30 @@ export default class CreateEvent extends React.Component {
                 </View>
               </View>
 
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  Alert.alert("Modal has been closed.");
+                }}
+              >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  {alarmData.map((item,ind)=>{
+                    return(
+                      <TouchableOpacity
+                        key= {ind}
+                        style={{ ...styles.openButton  }}
+                        onPress={() =>this.setState({ modalVisible: !modalVisible, setReminderAlarm: item, checked: true })}
+                      >
+                        <Text style={{color:'#fff'}}>{item}</Text>
+                      </TouchableOpacity>
+                    )
+                  })}
+                </View>
+              </View>
+            </Modal>
           </ScrollView>
         </SafeAreaView>
     )
@@ -564,7 +623,7 @@ const styles = StyleSheet.create({
     justifyContent:'center'
   },
   roundColorView: {
-    marginTop: 15, 
+    marginTop: 13, 
     height:18, 
     width:18, 
     borderRadius:9, 
@@ -681,16 +740,53 @@ const styles = StyleSheet.create({
     fontFamily: AppFonts.NRegular,
     letterSpacing: .5,
     // fontWeight: '600',
-  }
+  },
+  //modal style
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalView: {
+    backgroundColor: "white",
+    borderRadius: 10,
+    paddingHorizontal: 60,
+    paddingVertical: 30,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    width: '100%',
+    backgroundColor: "#ff6600",
+    borderRadius: 20,
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    marginBottom: 5,
+  },
 })
 
-const category = [
+const categoryList = [
   { value: 'GROUP' },
   { value: 'PERSONAL' },
   { value: 'BUSINESS' },
+]
+const colorData =[
+  { value: 'Orange' },
+  { value: 'Red' },
+  { value: 'Green' },
+  { value: 'Blue' },
 ]
 const recurrence = [
   { value: 'Everyday' },
   { value: 'Weekly' },
   { value: 'Monthly' },
 ]
+
+const alarmData = ['Before 15 Min', 'Before 30 Min', 'Before 45 Min','Before 1 hour']

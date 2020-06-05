@@ -60,9 +60,9 @@ export default class Login extends React.Component {
     if(key === 'email'){
       this.setState({ emailError: false , emailValidError: false })
     }
-    // if(key === 'password'){
-    //   this.setState({ passwordError : false })
-    // }
+    if(key === 'password'){
+      this.setState({ passwordError : false })
+    }
     if(key === 'confirmPassword'){
       this.setState({ confirmPassError: false , confirmPassMatchError: false })
     }

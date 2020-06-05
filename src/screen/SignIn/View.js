@@ -119,6 +119,7 @@ export default class Login extends React.Component {
             {emailError && <Text style={AppStyles.error}>Please enter email</Text>} 
             {emailValidError && <Text style={AppStyles.error}>Please enter the valid email</Text>}
             <TextInput style = {AppStyles.textinput}
+              secureTextEntry={true}
               underlineColorAndroid = "transparent"
               placeholder = "Your Password here"
               placeholderTextColor = "#A2a2a2"
