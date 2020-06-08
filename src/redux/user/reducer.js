@@ -17,9 +17,10 @@ const initialState = {
   loginUserMessage: '',
   loginUserData: {},
   forgetData: {},
-  // getUserPhase: false,
-  // getUserMessage: '',
-  // getUserData: {},
+  getUserPhase: false,
+  getUserMessage: '',
+  getUserData: {},
+
   // updateUserPhase: false,
   // updateUserMessage: '',
   // cancelSubscriptionPhase: false,
@@ -79,17 +80,17 @@ export default function userReducer(state = initialState, action) {
       };
     }
 
-    // case 'GET_USER': {
-    //   const input = action.data;
-    //   if(input.success){
-    //     return {
-    //       ...state,
-    //       getUserPhase: input.success,
-    //       getUserMessage: input.message,
-    //       getUserData: input.user
-    //     };  
-    //   }
-    // }
+    case 'GET_USER': {
+      const input = action.data
+      if(input.status){
+        return {
+          ...state,
+          getUserPhase: input.status,
+          getUserMessage: input.message,
+          getUserData: input.data
+        };  
+      }
+    }
 
     // case 'UPDATE_USER': {
     //   const input = action.data;
@@ -128,15 +129,14 @@ export default function userReducer(state = initialState, action) {
     //     };  
     //   }
     // }
-    // case 'RESET_PHASE': {
-    //   return {
-    //     ...state,
-    //     createUserPhase: false,
-    //     getUserPhase: false,
-    //     updateUserPhase: false,
-    //     socialLoginPhase: false
-    //   };
-    // }
+    case 'RESET_PHASE': {
+      return {
+        ...state,
+        createUserPhase: false,
+        loginUserPhase: false,
+        getUserPhase: false,
+      };
+    }
     
     // case 'RESET_ERROR_DATA': {
     //   return {

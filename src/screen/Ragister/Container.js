@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 // Actions
 import { createUser, getUser, updateUser, resetPhase, socialLogin } from '@redux/user/actions';
-import * as CategoryActions from '@redux/category/actions';
+// import * as CategoryActions from '@redux/category/actions';
 
 // The component we're mapping to
 import FormRender from './View';

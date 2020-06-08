@@ -10,9 +10,9 @@ import { styles } from 'react-native-really-awesome-button/src/styles';
 
 // What data from the store shall we send to the component?
 const mapStateToProps = state => ({
-  selectCategoryPhase: state.category.selectCategoryPhase,
-  selectCategoryData: state.category.selectCategoryData,
-  categoryData: state.category.categoryData,
+  // selectCategoryPhase: state.category.selectCategoryPhase,
+  // selectCategoryData: state.category.selectCategoryData,
+  // categoryData: state.category.categoryData,
   getUserPhase: state.user.getUserPhase,
   getUserMessage: state.user.getUserMessage,
   getUserData: state.user.getUserData,

@@ -75,8 +75,7 @@ export function createUser(user) {
   }
 
   export function getUser(userId) {
-    // return dispatch => {fetch(`http://169.56.143.172:5001/api/v1/accounts/detail/${userId}`, {
-      return dispatch => { fetch('https://notice-frame-backend.herokuapp.com/api/get/user/', {
+      return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/user/?id=${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -182,11 +181,11 @@ export function createUser(user) {
   //   }
   // }
 
-  // export function resetPhase() {
-  //   return {
-  //     type: "RESET_PHASE"
-  //   }
-  // }
+  export function resetPhase() {
+    return {
+      type: "RESET_PHASE"
+    }
+  }
 
   // export function resetOnError() {
   //   return {

@@ -1,7 +1,7 @@
 import React from 'react'
 import {Modal, Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/commonNavbar'
-import { get } from 'lodash'
+import { get, isEmpty } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import CheckBox from 'react-native-checkbox'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -30,10 +30,13 @@ export default class CreateEvent extends React.Component {
       memberList: ['','',''],
       defaultFillColor: 'Orange',
       eventDate: moment().format('DD MMMM, YYYY'),
+      eventDate1: '',
       groupName: '',
       startTime: moment().add(1, 'hours').format('hh:mm a'),
+      startTime1: '',
       isStartPickerVisible: false,
       endTime: moment().add(3, 'hours').format('hh:mm a'),
+      endTime1: '',
       isEndPickerVisible: false,
       isDatePickerVisible: false,
       setReminderAlarm: '',
@@ -43,7 +46,15 @@ export default class CreateEvent extends React.Component {
       showNotesInSlideShow: false,
       showEventInSlideShow: false,
       modalVisible: false,
-      checked: false
+      checked: false,
+      userEmail: '',
+      getUserData: {},
+      getSettingData: {},
+      groupList:[],
+      userId: '',
+      duration: '',
+      setTime: '',
+      createEventMessage: ''
     }
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this)
     this.onSelectCategory = this.onSelectCategory.bind(this)
@@ -52,21 +63,47 @@ export default class CreateEvent extends React.Component {
   }
 
   componentDidMount() {
-    // AsyncStorage.getItem('@user')
-    // .then((value)=>{
-    //  const user = JSON.parse(value)
-    //  console.log('user==>>', user)
-    //  const id = user._id
-    // })
-    // .catch((error)=>{
-    // console.log(error)
-    // })
-    // const data = {
-    //   id: id
-    // }
-    // this.props.getUser(data)
-    // this.props.getSetting(data)
-    // this.props.getGroupListForShow(data)
+    AsyncStorage.getItem('@user')
+    .then((user) => {
+      const user1 = JSON.parse(user)
+      if(!isEmpty(user1)){
+        this.props.getUser(user1._id)
+        this.props.getSetting(user1._id)
+        this.props.getGroupListForShow(user1._id)
+        this.setState({ userId: user1._id})
+      }
+    })
+  }
+
+
+  static getDerivedStateFromProps(nextProps, prevState){
+    return { getUserData: nextProps.getUserData }
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.createEventPhase) {
+      this.props.resetEventPhase()
+      this.setState({ loading: false , createEventMessage: this.props.createEventMessage})
+      // this.props.navigation.navigate('HomePage')
+    }
+    if (this.props.getUserData !== prevProps.getUserData) {
+      if(this.props.getUserPhase) {
+        this.props.resetPhase()
+        this.setState({ getUserData: this.props.getUserData })
+      }
+    }
+    if (this.props.getSettingData !== prevProps.getSettingData) {
+      if(this.props.getSetttingPhase) {
+        this.props.resetEventPhase()
+        this.setState({ getSettingData: this.props.getSettingData })
+      }
+    }
+    if (prevProps.getGroupListForShowPhase === "success") {
+      if (this.props.getGroupListForShowPhase) {
+        this.props.resetEventPhase()
+        this.setState({ groupList: get(prevProps, 'getGroupListForShowData', []) })
+      }
+    }
   }
 
   onSelectCategory(text) {
@@ -86,17 +123,17 @@ export default class CreateEvent extends React.Component {
 
   handleDate = (date) => {
     let newDate = moment(date).utcOffset('+05:30').format('DD-MMMM-YYYY')
-    this.setState({ eventDate: newDate , isDatePickerVisible : false })
+    this.setState({ eventDate: newDate , isDatePickerVisible : false , eventDate1: date})
   }
  
-  handleStartTime = (date) => {     
+  handleStartTime = (date) => { 
     let time = moment(date).utcOffset('+05:30').format('hh:mm a')
-    this.setState({ startTime: time , isStartPickerVisible: false})
+    this.setState({ startTime: time , isStartPickerVisible: false, startTime1: date})
   }
   
-  handleEndTime = (date) => {       
+  handleEndTime = (date) => {     
     let time = moment(date).utcOffset('+05:30').format('hh:mm a')
-    this.setState({ endTime : time , isEndPickerVisible: false})
+    this.setState({ endTime : time , isEndPickerVisible: false, endTime1: date})
   }
 
   onLocationChange =(text)=>{
@@ -130,7 +167,7 @@ export default class CreateEvent extends React.Component {
       storageOptions: {
         skipBackup: true,
       },
-    };
+    }
 
     ImagePicker.showImagePicker(options, response => {
       console.log('Response = ', response);
@@ -145,9 +182,9 @@ export default class CreateEvent extends React.Component {
         let source = {uri: response.uri}
         this.setState({
           eventPicture: source,
-        });
+        })
       }
-    });
+    })
   }
 
   createEvent(){
@@ -156,11 +193,11 @@ export default class CreateEvent extends React.Component {
       data.eventName = this.state.eventName
       data.selectContacts = this.state.memberList
       data.defaultFillColor = this.state.defaultFillColor
-      // data.frameBoundaryColor = defaultFrameColor
+      data.frameBoundaryColor = this.state.defaultFillColor
       data.eventDateLocal = moment(this.state.eventDate).format("YYYY-MM-DD")
-      data.eventDate = this.state.eventDate
-      data.startTime = this.state.startTime
-      data.endTime = this.state.endTime
+      data.eventDate = this.state.eventDate1
+      data.startTime = this.state.startTime1
+      data.endTime = this.state.endTime1
       data.note = this.state.notes
       data.location = this.state.location
       data.personal = this.state.personal
@@ -169,20 +206,20 @@ export default class CreateEvent extends React.Component {
       data.setReminderAlarm = this.state.setReminderAlarm
       data.showNotesInSlideShow = this.state.showNotesInSlideShow
       data.showEventInSlideShow = this.state.showEventInSlideShow
-      // data.setTime = this.state.setTime
+      data.setTime = this.state.setTime
       data.category = this.state.category
-      // data.userEmail = this.state.userEmail
+      data.userEmail = get(this.state, 'getUserData.email','')
       // data.texts = this.state.texts
       data.eventRecurrence = {
         repeat: this.state.repeat,
-        // duration: this.state.duration
+        duration: this.state.duration
       }
       data.count = 1
-      console.log(data,'data')
-      // const Details = {
-      //   data: data,
-      //   id: id
-      // }
+      const Details = {
+        data: data,
+        id: get(this.state, 'userId','')
+      }
+      this.props.createEvent(Details)
   }
 
   render() {
@@ -517,7 +554,7 @@ export default class CreateEvent extends React.Component {
                       <TouchableOpacity
                         key= {ind}
                         style={{ ...styles.openButton  }}
-                        onPress={() =>this.setState({ modalVisible: !modalVisible, setReminderAlarm: item, checked: true })}
+                        onPress={() =>this.setState({ modalVisible: !modalVisible, setTime: item, checked: true ,setReminderAlarm: checked })}
                       >
                         <Text style={{color:'#fff'}}>{item}</Text>
                       </TouchableOpacity>
