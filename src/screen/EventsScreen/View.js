@@ -1,6 +1,6 @@
 import React from 'react'
 import {ScrollView, Switch,Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
-import { get, isEmpty } from 'lodash'
+import { _, get, isEmpty } from 'lodash'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
@@ -34,7 +34,8 @@ export default class Home extends React.Component {
       key: 'List',
       isGridView: false,
       switchValue: false,
-      getEventData:[]
+      getEventData:[],
+      eventDetails:[]
     }
   }
 
@@ -53,8 +54,18 @@ export default class Home extends React.Component {
       if(this.props.getEventPhase) {
         this.props.resetEventPhase()
         this.setState({ getEventData: get(this.props, 'getEventData', []) })
+        this.handleEvent(get(this.props, 'getEventData', []))
       }
     }
+  }
+
+  handleEvent(value) {
+    const group = _.groupBy(value, 'eventDateLocal')
+    const grp = _.map(group, i => i)
+    this.setState({
+      eventDetails: grp,
+      loading: false
+    })
   }
 
   toggleSwitch = (value) => {
@@ -70,9 +81,9 @@ export default class Home extends React.Component {
     }
     this.setState({ isGridView : !this.state.isGridView})
   }
-
+  
   render() {
-    const { getEventData, isGridView, key } = this.state
+    const { eventDetails, getEventData, isGridView, key } = this.state
     return (
       <SafeAreaView style={AppStyles.container}>
         <ScrollView style={styles.container}>
@@ -122,25 +133,29 @@ export default class Home extends React.Component {
           </View>
           : 
           <View>
-            {items.map( data => {
+            {eventDetails.map((data,ind) => {
               return(
-              <View style={styles.gridView}>
-                <Text style={styles.dateText}>23 Feb 2020</Text>
+              <View style={styles.gridView} key={ind}>
+                <Text style={styles.dateText}>{moment(data[0].eventDate).format("DD MMM YYYY")}</Text>
                 <FlatGrid
                   itemDimension={130}
                   items={data}
-                  renderItem={({ item, index }) => (
-                  <TouchableOpacity onPress={()=> this.props.navigation.navigate('EventDetail')}>
-                    <Image source={item.source} style={[styles.itemContainer, { backgroundColor: item.code }]} key={index} />
-                    <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow')} style={styles.playButton}>
-                      <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
+                  renderItem={({ item, index }) => {
+                    let start_time = moment(item.startTime).format("hh:mm")
+                    let end_time = moment(item.endTime).format("hh:mm")      
+                    return(
+                    <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
+                      <Image source={require('../../assets/images/event_thumb1.png')} style={styles.itemContainer}/>
+                      <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow')} style={styles.playButton}>
+                        <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.eventName}>
+                        <Text style={styles.eventNameText}>{item.eventName}</Text>
+                        <Text style={styles.eventTimeText}>{start_time} to {end_time}</Text>
+                      </TouchableOpacity>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.eventName}>
-                      <Text style={styles.eventNameText}>{item.name}</Text>
-                      <Text style={styles.eventTimeText}>{item.time}</Text>
-                    </TouchableOpacity>
-                  </TouchableOpacity>
-                  )}
+                    )}
+                    }
                 />
               </View>
               )
@@ -227,6 +242,7 @@ const styles = StyleSheet.create({
     // backgroundColor:'red'
   },
   gridView: {
+    flex: 1,
     paddingLeft: 25,
     borderBottomWidth: .3,
     borderBottomColor: '#A2a2a2'

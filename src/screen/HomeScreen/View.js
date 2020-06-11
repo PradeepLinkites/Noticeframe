@@ -19,11 +19,11 @@ import { ActivityIndicator } from 'react-native-paper'
 import { FlatGrid } from 'react-native-super-grid';
 import { ScrollView } from 'react-native-gesture-handler';
 import { ListItem } from 'react-native-elements'
+import AsyncStorage from '@react-native-community/async-storage'
+import moment from "moment"
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
-
 const itemWidth = (deviceWidth - 15) / 2
-
 
 const data = [
   { name: 'Healty Sport', time: '07:30 AM to 08:30 AM', source: require('../../assets/images/image1.jpeg') }, 
@@ -39,7 +39,27 @@ export default class Home extends React.Component {
     this.state = {
       hideNavbar: true,
       tabIndex: 0,
-      routeName: ''
+      routeName: '',
+      getEventData:[],
+    }
+  }
+
+  componentDidMount() {
+    AsyncStorage.getItem('@user')
+    .then((user) => {
+      const user1 = JSON.parse(user)
+      if(!isEmpty(user1)){
+        this.props.getEvent(user1._id)
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.getEventData !== prevProps.getEventData) {
+      if(this.props.getEventPhase) {
+        this.props.resetEventPhase()
+        this.setState({ getEventData: get(this.props, 'getEventData', []) })
+      }
     }
   }
 
@@ -48,55 +68,29 @@ render() {
   const { state } = this.props.navigation
   const route = get(state, 'routeName', '')  === 'Home' ? 'Home' : ''
   return (
-    <SafeAreaView style={AppStyles.container}>
-      <View style={styles.container}>
+    <SafeAreaView style={AppStyles.container,{backgroundColor:'#fff'}}>
+      <View style={styles.gridView}>
         <Text style={styles.text}>Recent Events</Text>
           <FlatGrid
-            itemDimension={150}
+            itemDimension={130}
             items={data}
-            fixed={true}
-            spacing={15}
-            // style={styles.gridView}
-            renderItem={({ item, index }) => (
-              <TouchableOpacity onPress={()=> this.props.navigation.navigate('EventDetail')}>
-                <Image source={item.source} style={[styles.itemContainer, { backgroundColor: item.code }]} key={index} />
+            renderItem={({ item, index }) => {
+              let start_time = moment(item.startTime).format("hh:mm")
+              let end_time = moment(item.endTime).format("hh:mm")      
+              return(
+              <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
+                <Image source={require('../../assets/images/event_thumb1.png')} style={styles.itemContainer}/>
                 <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow')} style={styles.playButton}>
                   <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.eventName}>
-                  <Text style={styles.eventNameText}>{item.name}</Text>
-                  <Text style={styles.eventTimeText}>{item.time}</Text>
+                  <Text style={styles.eventNameText}>{item.eventName}</Text>
+                  <Text style={styles.eventTimeText}>{start_time} to {end_time}</Text>
                 </TouchableOpacity>
               </TouchableOpacity>
-            )}
-          />
-          {/* <FlatList
-            columnWrapperStyle={{flex: 1,justifyContent: "space-around"}}
-            data={data}
-            numColumns={2}
-            renderItem={({item, index}) => (
-              <View style={{flex:1/2,backgroundColor:'pink', margin:2 ,width: '40%'}}>
-                <Image source={item.source} style={{height:100,width:200,flex:1/2}}/>
-              </View>
-              // <ListItem style={{ flex: 1, margin: 5, backgroundColor: '#ddd', height: 130}} >
-                
-              // </ListItem>
-            )}
-          /> */}
-          {/* <View>
-            <FlatList
-              columnWrapperStyle={{justifyContent:'space-between'}}
-              data={data}
-              keyExtractor={item => item.itemId}
-              horizontal={false}
-              numColumns={2}
-              renderItem={({ item, index }) => (
-                <ListItem>
-                  <Image source={item.source} style={{backgroundColor:'red', width: width, height:150, marginLeft:5,marginRight:8}}/>
-                </ListItem>
               )}
-            />
-          </View> */}
+              }
+          />
        </View>
     </SafeAreaView>
   )
@@ -141,8 +135,8 @@ const styles = StyleSheet.create({
   },
   playButton: {
     position:'absolute',
-    top: Platform.OS === 'android' ? 4 : 6,
-    right: Platform.OS === 'android' ? .5 : 4,
+    top: Platform.OS === 'android' ? 6 : 6,
+    right: Platform.OS === 'android' ? 12 : 4,
   },
   eventName:{
     position:'absolute',
