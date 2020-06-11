@@ -16,7 +16,7 @@ const initialState = {
   getEventCalenderPhase: false,
   getEventCalenderData: [],
   getEventSlideShowPhase: false,
-  getEventSlideShowData: {}
+  getEventSlideShowData: []
 };
 
 export default function userReducer(state = initialState, action) {

@@ -4,47 +4,16 @@ import { get , isEmpty } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import Swiper from 'react-native-swiper'
 import AsyncStorage from '@react-native-community/async-storage'
+import moment from "moment"
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
-
-
-const data = [
-  {
-   eventName: 'Board Meetting',
-   date: '20 FEB,',
-   fullDate: '20 FEB, 2020',
-   timeDuration: '09:30 to 12:30',
-   image: require('../../assets/icons/Image_slideshow.png'),
-  },
-  {
-    eventName: 'At Lunch',
-    date: '22 FEB,',
-    fullDate: '22 FEB, 2020',
-    timeDuration: '10:30 to 12:20',
-    image: require('../../assets/icons/Image_slideshow.png')
-   },
-   {
-    eventName: 'Site Visit',
-    date: '20 FEB,',
-    fullDate: '2 FEB, 2020',
-    timeDuration: '09:30 to 12:30',
-    image: require('../../assets/icons/Image_slideshow.png')
-   },
-   {
-    eventName: 'Dinner Time',
-    date: '20 FEB,',
-    fullDate: '20 FEB, 2020',
-    timeDuration: '09:30 to 12:30',
-    image: require('../../assets/icons/Image_slideshow.png')
-   }
-]
 
 export default class SlideShow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       swiperIndex: 0,
-      getEventSlideShowData: {}
+      getEventSlideShowData: []
     }
   }
 
@@ -68,12 +37,12 @@ export default class SlideShow extends React.Component {
   }
 
   render() {
-    const { swiperIndex } = this.state
+    const { getEventSlideShowData, swiperIndex } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'SlideShow' ? 'NOTICE FRAME' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
-        <ScrollView>
+        {/* <ScrollView> */}
         <View style={styles.container}>
           <Swiper
             style={styles.wrapper}
@@ -87,7 +56,10 @@ export default class SlideShow extends React.Component {
             loop={true}
             onIndexChanged={(index)=> this.setState({swiperIndex: index})}
           >        
-            {data.map((item, ind)=>{
+            {getEventSlideShowData.map((item, ind)=>{
+              const date = moment(item.eventDate).format("DD MMM, YYYY")
+              const start_time = moment(item.startTime).format("hh:mm")
+              const end_time = moment(item.endTime).format("hh:mm")
               return(
                 <View key={ind}>
                   <Image source={require('../../assets/icons/Image_slideshow.png')} style={styles.backgroundImage}/>
@@ -95,23 +67,26 @@ export default class SlideShow extends React.Component {
                     <View style={[styles.eventView,{backgroundColor:'rgba(248, 247, 216, 0.2)'}]}>
                       {/* <Text style={styles.eventTitleText}>{Platform.OS === 'android' ? ind: ind}</Text> */}
                       <Text style={styles.eventTitleText}>{item.eventName}</Text>
-                      <Text style={styles.eventDateText}>{item.fullDate}</Text>
-                      <Text style={styles.eventDateText}>{item.timeDuration} </Text>
+                      <Text style={styles.eventDateText}>{date}</Text>
+                    <Text style={styles.eventDateText}>{start_time} to {end_time}</Text>
                     </View>
-                {data.map((item, ind)=>{
+                {getEventSlideShowData.map((item, ind)=>{
+                  const date = moment(item.eventDate).format("DD MMM, YYYY")
+                  const start_time = moment(item.startTime).format("hh:mm")
+                  const end_time = moment(item.endTime).format("hh:mm")
                  return(
-                  <View style={{top : Platform.OS === 'android' ? 60 : 80 }}>
-                  <View style={swiperIndex == ind ?  [styles.smallEventContainer,{borderRightWidth: 3,borderRightColor: '#ff9900'}] : styles.smallEventContainer}>
-                    <View style={styles.smallEventView}>
-                      <View style={{justifyContent:'flex-end'}}>
-                        <Text style={styles.smallEventDateText}>{item.date}</Text>
-                      </View>
-                      <View>
-                        <Text style={styles.smallEventTitleText}>{item.eventName}</Text>
-                        <Text style={styles.smallEventDateText}>{item.timeDuration}  </Text>
+                  <View style={{top : Platform.OS === 'android' ? 60 : 80 }} key={ind}>
+                    <View style={swiperIndex == ind ?  [styles.smallEventContainer,{borderRightWidth: 3,borderRightColor: '#ff9900'}] : styles.smallEventContainer}>
+                      <View style={styles.smallEventView}>
+                        <View style={{justifyContent:'flex-end'}}>
+                          <Text style={styles.smallEventDateText}>{date}</Text>
+                        </View>
+                        <View>
+                          <Text style={styles.smallEventTitleText}>{item.eventName}</Text>
+                          <Text style={styles.smallEventDateText}>{start_time} to {end_time}</Text>
+                        </View>
                       </View>
                     </View>
-                  </View>
                   </View>
                   )
                  })}
@@ -120,11 +95,8 @@ export default class SlideShow extends React.Component {
               )
             })}         
           </Swiper>
-          {/* <View style={styles.box2}>
-            <View style={styles.box3} />
-          </View> */}
         </View>
-        </ScrollView>
+        {/* </ScrollView> */}
       </SafeAreaView>
     )
   }
