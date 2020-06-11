@@ -14,7 +14,9 @@ const initialState = {
   getEventPhase: false,
   getEventData: [],
   getEventCalenderPhase: false,
-  getEventCalenderData: []
+  getEventCalenderData: [],
+  getEventSlideShowPhase: false,
+  getEventSlideShowData: {}
 };
 
 export default function userReducer(state = initialState, action) {
@@ -82,6 +84,16 @@ export default function userReducer(state = initialState, action) {
       return {};
     }
 
+    case 'GET_EVENT_SLIDESHOW': {
+      const input = action.data
+      return {
+        ...state,
+        getEventSlideShowPhase: input.status,
+        getEventSlideShowData: input.data
+      };
+      return {};
+    }
+
     case 'RESET_PHASE': {
       return {
         ...state,
@@ -90,7 +102,8 @@ export default function userReducer(state = initialState, action) {
         createEventPhase: false,
         getEventDetailPhase: false,
         getEventPhase: false,
-        getEventCalenderPhase: false
+        getEventCalenderPhase: false,
+        getEventSlideShowPhase: false
       }
     }
     // case 'SELECT_CATEGORY': {

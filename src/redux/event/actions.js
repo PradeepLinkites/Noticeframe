@@ -140,6 +140,29 @@
       })
       }
     }
+
+    export function getEventSlideShow (userId){
+      return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/event/slideShow?data=${userId}`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+          return dispatch({
+            type: 'GET_EVENT_SLIDESHOW',
+            data
+          });
+        })
+        .catch((error) => {
+            throw error
+        })
+        }
+      }
  
   export function resetEventPhase() {
     return {

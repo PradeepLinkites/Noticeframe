@@ -22,14 +22,16 @@ const items = [[
   { name: 'Football', time: '10:30 AM to 11:30 AM',source: require('../../assets/images/image8.jpeg') }]
 ]
 
-const listImage = require('../../assets/icons/event_list.png')
-const gridImage = require('../../assets/icons/event_gridSelect.png')
+const event_list = require('../../assets/icons/event_list.png')
+const event_list_select = require('../../assets/icons/event_list_select.png')
+const event_grid = require('../../assets/icons/event_grid.png')
+const event_gridSelect = require('../../assets/icons/event_gridSelect.png')
 
 export default class Home extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      key: 'Grid',
+      key: 'List',
       isGridView: false,
       switchValue: false,
       getEventData:[]
@@ -74,11 +76,16 @@ export default class Home extends React.Component {
     return (
       <SafeAreaView style={AppStyles.container}>
         <ScrollView style={styles.container}>
-          <View style={{flexDirection:'row',justifyContent:'space-between'}}> 
-            <Text></Text>
-            <TouchableOpacity onPress={this.toggleButton.bind(this,key)} style={{marginRight: 10,marginTop: 10}}>
-              <Image source={key === 'List' ? listImage: gridImage} style={styles.imageStyle}/>
-            </TouchableOpacity>
+          <View style={{ flexDirection:'row',justifyContent:'space-between',borderBottomWidth: .3, paddingVertical: 15}}> 
+            <Text style={{ fontSize: 18, marginLeft: 10 }}>Events</Text>
+            <View style={{justifyContent: 'flex-end',flexDirection: 'row'}}>
+              <TouchableOpacity onPress={this.toggleButton.bind(this,key)} style={{ marginRight: 10 }}>
+                <Image source={key === 'List' ? event_list_select: event_list} style={styles.imageStyle}/>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.toggleButton.bind(this,key)} style={{ marginRight: 10 }}>
+                <Image source={key === 'Grid' ? event_gridSelect: event_grid} style={styles.imageStyle}/>
+              </TouchableOpacity>
+            </View>
           </View>
           {!isGridView ?
           <View style={{marginTop: 15}}>
@@ -87,7 +94,10 @@ export default class Home extends React.Component {
               let start_time = moment(data.startTime).format("hh:mm")
               let end_time = moment(data.endTime).format("hh:mm")
               return(
-                <TouchableOpacity onPress={()=> this.props.navigation.navigate('EventDetail',{id : data._id})} style={[styles.eventListView,{backgroundColor: data.defaultFillColor.toLowerCase() }]}>
+                <TouchableOpacity 
+                  onPress={()=> this.props.navigation.navigate('EventDetail',{id : data._id})} 
+                  style={[styles.eventListView,{backgroundColor : data.defaultFillColor === 'White' ? '#ffffff' : data.defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : data.defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
+                      : data.defaultFillColor === 'Coral Candy' ? '#f5d5cb': data.defaultFillColor === 'Cruise' ? '#b5dce1': data.defaultFillColor === 'Swirl' ? '#d6cdc8': data.defaultFillColor === 'Tusk' ? '#d7e0b1': ''}]}>
                   <View style={{flex:1}}>
                     <Text style={styles.eventTitleText}>{data.eventName}</Text>
                     <Text style={styles.eventDateText}>{date}</Text>

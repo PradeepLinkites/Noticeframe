@@ -102,7 +102,7 @@ export default class CreateEvent extends React.Component {
     if(this.props.createEventPhase) {
       this.props.resetEventPhase()
       this.setState({ isLoading: false , createEventMessage: this.props.createEventMessage })
-      // this.props.navigation.navigate('HomePage')
+      this.props.navigation.navigate('Home')
     }
     if (this.props.getUserData !== prevProps.getUserData) {
       if(this.props.getUserPhase) {

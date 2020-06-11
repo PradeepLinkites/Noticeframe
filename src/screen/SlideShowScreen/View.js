@@ -1,8 +1,9 @@
 import React from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions } from 'react-native'
-import { get } from 'lodash'
+import { get , isEmpty } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import Swiper from 'react-native-swiper'
+import AsyncStorage from '@react-native-community/async-storage'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -42,7 +43,27 @@ export default class SlideShow extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      swiperIndex: 0
+      swiperIndex: 0,
+      getEventSlideShowData: {}
+    }
+  }
+
+  componentDidMount() {
+    AsyncStorage.getItem('@user')
+    .then((user) => {
+      const user1 = JSON.parse(user)
+      if(!isEmpty(user1)){
+        this.props.getEventSlideShow(user1._id)
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.getEventSlideShowData !== prevProps.getEventSlideShowData) {
+      if(this.props.getEventSlideShowPhase) {
+        this.props.resetEventPhase()
+        this.setState({ getEventSlideShowData: get(this.props, 'getEventSlideShowData', []) })
+      }
     }
   }
 
