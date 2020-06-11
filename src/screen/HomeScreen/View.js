@@ -73,7 +73,7 @@ render() {
         <Text style={styles.text}>Recent Events</Text>
           <FlatGrid
             itemDimension={130}
-            items={data}
+            items={this.state.getEventData}
             renderItem={({ item, index }) => {
               let start_time = moment(item.startTime).format("hh:mm")
               let end_time = moment(item.endTime).format("hh:mm")      
