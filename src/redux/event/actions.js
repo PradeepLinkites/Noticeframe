@@ -59,6 +59,7 @@
         return res.json()
       })
      .then((data) => {
+       console.log('create event==>', data)
         return dispatch({
           type: 'CREATE_EVENT',
           data
@@ -70,35 +71,82 @@
       }
     }
 
+  export function getEvent(userId){
+    console.log('userId', userId)
+    return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/eventsById?data=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+        return dispatch({
+          type: 'GET_EVENT',
+          data
+        });
+      })
+      .catch((error) => {
+          throw error
+      })
+      }
+    }
+    
+  export function eventDetails(userId){
+  return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/eventDetails?data=${userId}`, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    }
+  })
+  .then((res) => {
+    return res.json();
+  })
+  .then((data) => {
+      return dispatch({
+        type: 'GET_EVENT_DETAILS',
+        data
+      });
+    })
+    .catch((error) => {
+        throw error
+    })
+    }
+  }
+
+  export function getEventCalender (userId){
+    return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/event/forCalendars?data=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+        return dispatch({
+          type: 'GET_EVENT_CALENDER',
+          data
+        });
+      })
+      .catch((error) => {
+          throw error
+      })
+      }
+    }
+ 
   export function resetEventPhase() {
     return {
       type: "RESET_PHASE"
     }
   }
 
-// export function categoryList (){
-//   return dispatch => { fetch("http://169.56.143.172:5001/api/v1/categories/get/published", {
-//     method: 'GET',
-//     headers: {
-//       'Accept': 'application/json',
-//       'Content-Type': 'application/json',
-//     }
-//   })
-//   .then((res) => {
-//     return res.json();
-//   })
-//   .then((data) => {
-//       return dispatch({
-//         type: 'CATEGORY',
-//         data
-//       });
-//     })
-//     .catch((error) => {
-//         throw error
-//     })
-//     }
-//   }
- 
 //   export function selectCategory(data){
 //     return dispatch => { fetch("http://169.56.143.172:5001/api/v1/videos/get/filter", {
 //       method: 'POST',

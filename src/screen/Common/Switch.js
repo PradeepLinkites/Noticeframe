@@ -12,7 +12,7 @@ export default class SwitchComponent extends Component {
 	   return (
 			<Switch
 				// onValueChange = {() => this.toggleSwitch(item, index)}
-				onValueChange = {(value) => this.props.OnChange(value)}
+				onValueChange = {(value) => this.props.onChange(value)}
 				value = {this.props.value}
 				disabled={false}
 				thumbColor={this.state.switch4Value ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}

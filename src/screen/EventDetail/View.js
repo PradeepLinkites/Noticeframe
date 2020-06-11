@@ -1,93 +1,135 @@
 import React from 'react'
-import {Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {ActivityIndicator, Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/commonNavbar'
-import { get } from 'lodash'
+import { get , isEmpty } from 'lodash'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
-
+import AsyncStorage from '@react-native-community/async-storage'
+import {NavigationEvents} from 'react-navigation';
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
+import moment from "moment"
+
+const SlideShowOff = require('../../assets/icons/Off.png')
+const SlideShowOn = require('../../assets/icons/On.png')
 
 export default class CreateEvent extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectedColor: 'Orange'
+      isLoading: false,
+      getEventDetailData: {}
     }
   }
+
+  onFocusFunction = () => {
+    const {state} = this.props.navigation
+    this.props.eventDetails(state.params.id)
+  }
+  
+  componentDidMount() {
+    this.setState({ isLoading: true })
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+
+  componentWillUnmount () {
+    this.focusListener.remove()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.getEventDetailData !== prevProps.getEventDetailData) {
+      if(this.props.getEventDetailPhase){
+        this.props.resetEventPhase()
+        this.setState({ getEventDetailData: this.props.getEventDetailData , isLoading: false })
+      }
+    }
+  }
+
   render() {
-    const { selectedColor  } = this.state
+    const { isLoading, getEventDetailData } = this.state
     const { state } = this.props.navigation
+    const selectedColor = get(this.state, 'getEventDetailData.defaultFillColor','')
     const route = get(state, 'routeName', '')  === 'EventDetail' ? 'Event Detail' : ''
+    const date = moment(get(this.state, 'getEventDetailData.eventDate','')).format("DD MMM, YYYY")
+    const start_time = moment(get(this.state, 'getEventDetailData.startTime','')).format("hh:mm")
+    const end_time = moment(get(this.state, 'getEventDetailData.endTime','')).format("hh:mm")
     return (
-        <SafeAreaView style={[styles.container,{backgroundColor: '#3b5261'}]}>
-        <ScrollView style={styles.container}>
-          <Navbar 
-            navigation={this.props.navigation} 
-            navTitle={route} 
-            style={{ height: this.state.height }}
-            routeKey={'EventDetail'} 
-          />       
-            <View style={styles.topContainer}>
-              <Image style={styles.avatar} source={require('../../assets/icons/Image_slideshow.png')} />
-                <View style={styles.textWrapper}>
-                  <Text style={styles.eventTitleText}>Board Meeting</Text>
-                  <Text style={styles.eventDateText}>20 FEB, 2020</Text>
-                  <Text style={styles.eventDateText}>09:30 to 12:30 </Text>
-                </View>
-            </View>
-            <View style={[styles.viewContainer,{borderBottomWidth: .3}]}>
-               <Text style={styles.titleText}>PERSONAL</Text>
-            </View>
-            <View style={styles.viewContainer}>
-               <Text style={styles.titleText}>Contacts</Text>
-               <Text style={styles.nameText}>David Williams</Text>
-               <Text style={styles.nameText}>Steve James</Text>
-            </View>
-            <View style={styles.colorContainer}>
-              <Text style={[styles.titleText,{marginTop:9}]}>Default Fill colour </Text>
-              <View style={{flexDirection:'row'}}> 
-                <View style={ [styles.roundColorView, {marginRight:8, backgroundColor : selectedColor === 'red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
-                <Text style={[styles.subTitleText,{marginTop: 12}]}>Orange</Text>
+        <SafeAreaView style={[styles.container,{backgroundColor: '#fff'}]}>
+          {isLoading ?
+            <ActivityIndicator animating = {isLoading} color = 'red' size = "large" style = {styles.activityIndicator} />
+            :
+          <ScrollView style={styles.container}>
+            <Navbar 
+              navigation={this.props.navigation} 
+              navTitle={route} 
+              style={{ height: this.state.height }}
+              routeKey={'EventDetail'} 
+            />       
+              <View style={styles.topContainer}>
+                <Image style={styles.avatar} source={require('../../assets/icons/Image_slideshow.png')} />
+                  <View style={styles.textWrapper}>
+                    <Text style={styles.eventTitleText}>{get(getEventDetailData, 'eventName', '')}</Text>
+                    <Text style={styles.eventDateText}>{date}</Text>
+                    <Text style={styles.eventDateText}>{start_time} to {end_time} </Text>
+                  </View>
               </View>
-            </View>
-            <View style={[styles.reminderContainer,{marginTop: 5,borderBottomWidth: 0}]}>
-              <Text style={styles.titleText}>Reminder</Text>
-              <Text style={styles.subTitleText}>Everyday 8:00 PM</Text>
-            </View>
-            <View style={styles.reminderContainer}>
-              <Text style={styles.titleText}>Event Recurrence</Text>
-              <Text style={styles.subTitleText}>Wed, 23 Feb 2020</Text>
-            </View>            
-            <View style={styles.notesContainer}>
-              <Text style={styles.titleText}>Note</Text>
-              <Text style={[styles.subTitleText,{marginTop: 8}]}>Metting is regarding the latest project deadline</Text>
-            </View>
-            <View style={styles.notesContainer}>
-              <Text style={styles.titleText}>Location</Text>
-              <Text style={[styles.subTitleText,{marginTop: 8}]}>Str. I Gualdariya, 9, 47890, italy</Text>
-            </View>
-            <View style={[styles.reminderContainer,{marginTop:5,borderBottomWidth:0}]}>
-              <Text style={[styles.subTitleText,{marginTop:9}]}>Show Event in SlideShow</Text>
-              <View style={ [styles.roundColorView, {backgroundColor : selectedColor === 'red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
-            </View>
-            <View style={[styles.reminderContainer,{borderBottomWidth:0}]}>
-              <Text style={styles.titleText}>Availability</Text>
-              <Text style={styles.subTitleText}>BUSY</Text>
-            </View>
-            <View style={styles.reminderContainer}>
-              <Text style={styles.titleText}>Privacy</Text>
-              <Text style={styles.subTitleText}>PRIVATE</Text>
-            </View>
-            <View style={styles.bottomContainer}>
-              <TouchableOpacity onPress={()=>this.props.navigation.navigate('EditEvent')}> 
-                <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={()=>alert('Notes deleted successfully')}> 
-                <Image source={require('../../assets/icons/Delete.png')} style={styles.imageStyle}/>
-              </TouchableOpacity>
-            </View>
+              <View style={[styles.viewContainer,{borderBottomWidth: .3}]}>
+                <Text style={styles.titleText}>{get(getEventDetailData, 'category', '')}</Text>
+              </View>
+              {get(getEventDetailData, 'category', '') === 'Group' && 
+                <View style={styles.viewContainer}>
+                  <Text style={styles.titleText}>Contacts</Text>
+                  <Text style={styles.nameText}>David Williams</Text>
+                  <Text style={styles.nameText}>Steve James</Text>
+                </View>
+              }
+              <View style={styles.colorContainer}>
+                <Text style={[styles.titleText,{marginTop:9}]}>Default Fill colour </Text>
+                <View style={{flexDirection:'row'}}> 
+                  <View style={ [styles.roundColorView,{marginRight: 8, backgroundColor : selectedColor === 'Red' ? 'red' : selectedColor === 'Blue' ? 'blue' : selectedColor === 'Orange' ? 'orange': selectedColor === 'Green' ? 'green': '' }]} />
+                  <Text style={[styles.subTitleText,{marginTop: 12}]}>{get(getEventDetailData, 'defaultFillColor', '')}</Text>
+                </View>
+              </View>
+              <View style={[styles.reminderContainer,{marginTop: 5,borderBottomWidth: 0}]}>
+                <Text style={styles.titleText}>Reminder</Text>
+                <Text style={styles.subTitleText}>{get(getEventDetailData, 'setTime', '')}</Text>
+              </View>
+              <View style={styles.reminderContainer}>
+                <Text style={styles.titleText}>Event Recurrence</Text>
+                <Text style={styles.subTitleText}>{get(getEventDetailData, 'eventRecurrence.repeat', '')}</Text>
+              </View>            
+              <View style={styles.notesContainer}>
+                <Text style={styles.titleText}>Note</Text>
+                <Text style={[styles.subTitleText,{marginTop: 8}]}>{get(getEventDetailData, 'note', '')}</Text>
+              </View>
+              <View style={styles.notesContainer}>
+                <Text style={styles.titleText}>Location</Text>
+                <Text style={[styles.subTitleText,{marginTop: 8}]}>{get(getEventDetailData, 'location', '')}</Text>
+              </View>
+              <View style={[styles.reminderContainer,{marginTop:5,borderBottomWidth:0}]}>
+                <Text style={[styles.subTitleText,{marginTop:9}]}>Show Event in SlideShow</Text>
+                 <Image source={get(getEventDetailData, 'showEventInSlideShow', false) ? SlideShowOn: SlideShowOff }/>
+              </View>
+              {/* <View style={[styles.reminderContainer,{borderBottomWidth:0}]}>
+                <Text style={styles.titleText}>Availability</Text>
+                <Text style={styles.subTitleText}>BUSY</Text>
+              </View> */}
+              <View style={styles.reminderContainer}>
+                <Text style={styles.titleText}>Privacy</Text>
+                <Text style={styles.subTitleText}>PRIVATE</Text>
+              </View>
+              <View style={styles.bottomContainer}>
+                <TouchableOpacity onPress={()=>this.props.navigation.navigate('EditEvent')}> 
+                  <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={()=>alert('Notes deleted successfully')}> 
+                  <Image source={require('../../assets/icons/Delete.png')} style={styles.imageStyle}/>
+                </TouchableOpacity>
+              </View>
           </ScrollView>
+          }
         </SafeAreaView>
     )
   }
@@ -96,7 +138,13 @@ export default class CreateEvent extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'#e2e9f6'
+    backgroundColor:'#fff'
+  },
+  activityIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 80
   },
   topContainer:{
     height: deviceHeight *.25 ,
@@ -109,7 +157,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   eventDateText: {
-    fontSize: hp(1.5),
+    fontSize: hp(1.7),
 	  fontFamily: AppFonts.NRegular,
     marginTop: 5,
     letterSpacing: .8,
@@ -153,7 +201,7 @@ const styles = StyleSheet.create({
     height:16, 
     width:16, 
     borderRadius:8, 
-    marginLeft: 86 
+    marginLeft: 86,
   },
   colorContainer: {
     paddingLeft: wp(5),

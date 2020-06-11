@@ -16,7 +16,17 @@ import AsyncStorage from '@react-native-community/async-storage'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
-let index = 0
+let index = 0;
+const colorItem = [
+    { key: index++, label: 'White' },
+    { key: index++, label: 'Hawkes Blue' },
+    { key: index++, label: 'Milk Punch' },
+    { key: index++, label: 'Coral Candy'},
+    { key: index++, label: 'Cruise' },
+    { key: index++, label: 'Swirl'},
+    { key: index++, label: 'Tusk' },
+]
+
 export default class CreateEvent extends React.Component {
   constructor(props) {
     super(props);
@@ -28,7 +38,7 @@ export default class CreateEvent extends React.Component {
       business: false,
       group: true,
       memberList: ['','',''],
-      defaultFillColor: 'Orange',
+      defaultFillColor: 'Tusk',
       eventDate: moment().format('DD MMMM, YYYY'),
       eventDate1: '',
       groupName: '',
@@ -45,6 +55,8 @@ export default class CreateEvent extends React.Component {
       location: '',
       showNotesInSlideShow: false,
       showEventInSlideShow: false,
+      private: true,
+      public: false,
       modalVisible: false,
       checked: false,
       userEmail: '',
@@ -54,13 +66,24 @@ export default class CreateEvent extends React.Component {
       userId: '',
       duration: '',
       setTime: '',
-      createEventMessage: ''
+      createEventMessage: '',
+      isLoading: false,
+      eventNameError :false,
+      notesError: false,
+      red: 0,
+      yellow: 0,
+      green: 0,
+      redHour: 24,
+      yellowHour: 48,
+      greenHour: 72,
     }
+    // this.state = this._initState
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this)
     this.onSelectCategory = this.onSelectCategory.bind(this)
     this.onSelectRecurrence = this.onSelectRecurrence.bind(this)
     this.createEvent = this.createEvent.bind(this)
   }
+
 
   componentDidMount() {
     AsyncStorage.getItem('@user')
@@ -75,15 +98,10 @@ export default class CreateEvent extends React.Component {
     })
   }
 
-
-  static getDerivedStateFromProps(nextProps, prevState){
-    return { getUserData: nextProps.getUserData }
-  }
-
   componentDidUpdate(prevProps) {
     if(this.props.createEventPhase) {
       this.props.resetEventPhase()
-      this.setState({ loading: false , createEventMessage: this.props.createEventMessage})
+      this.setState({ isLoading: false , createEventMessage: this.props.createEventMessage })
       // this.props.navigation.navigate('HomePage')
     }
     if (this.props.getUserData !== prevProps.getUserData) {
@@ -95,14 +113,22 @@ export default class CreateEvent extends React.Component {
     if (this.props.getSettingData !== prevProps.getSettingData) {
       if(this.props.getSetttingPhase) {
         this.props.resetEventPhase()
-        this.setState({ getSettingData: this.props.getSettingData })
+        this.setState({
+          personal: get(this.props, 'getSettingData.Event.personal', false),
+          business: get(this.props, 'getSettingData.Event.business', false),
+          red: get(this.props, 'getSettingData.FrameColor.red', []),
+          yellow: get(this.props, 'getSettingData.FrameColor.yellow', []),  
+          green: get(this.props, 'getSettingData.FrameColor.green', []),
+          redHour: get(this.props, 'getSettingData.FrameColor.redHour', []),
+          yellowHour: get(this.props, 'getSettingData.FrameColor.yellowHour', []),
+          greenHour: get(this.props, 'getSettingData.FrameColor.greenHour', []),
+          loading: false
+        })
       }
     }
-    if (prevProps.getGroupListForShowPhase === "success") {
-      if (this.props.getGroupListForShowPhase) {
-        this.props.resetEventPhase()
-        this.setState({ groupList: get(prevProps, 'getGroupListForShowData', []) })
-      }
+    if (this.props.getGroupListForShowPhase) {
+      this.props.resetEventPhase()
+      this.setState({ groupList: get(this.props, 'getGroupListForShowData', []) })
     }
   }
 
@@ -122,6 +148,7 @@ export default class CreateEvent extends React.Component {
   }
 
   handleDate = (date) => {
+    // console.log('date===>>', date)
     let newDate = moment(date).utcOffset('+05:30').format('DD-MMMM-YYYY')
     this.setState({ eventDate: newDate , isDatePickerVisible : false , eventDate1: date})
   }
@@ -131,7 +158,7 @@ export default class CreateEvent extends React.Component {
     this.setState({ startTime: time , isStartPickerVisible: false, startTime1: date})
   }
   
-  handleEndTime = (date) => {     
+  handleEndTime = (date) => {    
     let time = moment(date).utcOffset('+05:30').format('hh:mm a')
     this.setState({ endTime : time , isEndPickerVisible: false, endTime1: date})
   }
@@ -150,13 +177,11 @@ export default class CreateEvent extends React.Component {
     this.setState({ groupName: text })
   }
  
-  toggleSwitch = (value, name) => {
-    if(name === 'switch1'){
-       this.setState({showNotesInSlideShow: value})
-     }
-     if(name === 'switch2'){
-       this.setState({showEventInSlideShow: value})
-     }
+  toggleSwitch1 = (value) => {
+    this.setState({showNotesInSlideShow: value})
+  }
+  toggleSwitch2 = (value) => {
+    this.setState({showEventInSlideShow: value})
   }
 
   selectPhotoTapped() {
@@ -187,32 +212,53 @@ export default class CreateEvent extends React.Component {
     })
   }
 
+  _resetState =()=> {
+    this.setState(this._initState)
+  }
+
   createEvent(){
+    const{ eventPicture, eventName, memberList, defaultFillColor, eventDate, eventDate1, startTime1, endTime1, notes, 
+        location, personal, business, group, setReminderAlarm, showNotesInSlideShow, showEventInSlideShow, setTime,
+        category, repeat, duration } = this.state
+    var error = true
+    this.setState({
+      eventNameError: false,
+      notesError: false,
+    })
+    if (eventName.trim() === '') {
+      error = false
+      this.setState({ eventNameError: true })
+    } 
+    if (notes.trim() === '') {
+      error = false
+      this.setState({ notesError: true })
+    } 
+    if (error) {
     const data = {}
-      data.eventPicture = this.state.eventPicture
-      data.eventName = this.state.eventName
-      data.selectContacts = this.state.memberList
-      data.defaultFillColor = this.state.defaultFillColor
-      data.frameBoundaryColor = this.state.defaultFillColor
-      data.eventDateLocal = moment(this.state.eventDate).format("YYYY-MM-DD")
-      data.eventDate = this.state.eventDate1
-      data.startTime = this.state.startTime1
-      data.endTime = this.state.endTime1
-      data.note = this.state.notes
-      data.location = this.state.location
-      data.personal = this.state.personal
-      data.business = this.state.business
-      data.group = this.state.group
-      data.setReminderAlarm = this.state.setReminderAlarm
-      data.showNotesInSlideShow = this.state.showNotesInSlideShow
-      data.showEventInSlideShow = this.state.showEventInSlideShow
-      data.setTime = this.state.setTime
-      data.category = this.state.category
+      data.eventPicture = eventPicture
+      data.eventName = eventName
+      data.selectContacts = memberList
+      data.defaultFillColor = defaultFillColor
+      data.frameBoundaryColor = defaultFillColor
+      data.eventDateLocal = moment(eventDate).format("YYYY-MM-DD")
+      data.eventDate = eventDate1
+      data.startTime = startTime1
+      data.endTime = endTime1
+      data.note = notes
+      data.location = location
+      data.personal = personal
+      data.business = business
+      data.group = group
+      data.setReminderAlarm = setReminderAlarm
+      data.showNotesInSlideShow = showNotesInSlideShow
+      data.showEventInSlideShow = showEventInSlideShow
+      data.setTime = setTime
+      data.category = category
       data.userEmail = get(this.state, 'getUserData.email','')
       // data.texts = this.state.texts
       data.eventRecurrence = {
-        repeat: this.state.repeat,
-        duration: this.state.duration
+        repeat: repeat,
+        duration: duration
       }
       data.count = 1
       const Details = {
@@ -220,10 +266,11 @@ export default class CreateEvent extends React.Component {
         id: get(this.state, 'userId','')
       }
       this.props.createEvent(Details)
+    }
   }
 
   render() {
-    const {checked, modalVisible, memberList, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
+    const {eventNameError, notesError, checked, modalVisible, memberList, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'CreateEvent' ? 'Create Event' : ''
     return (
@@ -268,8 +315,8 @@ export default class CreateEvent extends React.Component {
                     dropdownOffset={{ top: 10, left: 0 }}
                   />
                 </View>
-                 {/* <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/> */}
               </View>
+              {eventNameError && <Text style={AppStyles.error}>Please enter the event name</Text>}
             </View>
               {category === 'GROUP' &&
                 <View style={styles.selectGroupView}>
@@ -302,18 +349,19 @@ export default class CreateEvent extends React.Component {
                   <Text style={[styles.listTitle,{fontWeight:'600',top: 10,marginLeft: 10 }]}>Default Fill colour</Text>
                 </View>
                 <View style={{flexDirection:'row'}}>
-                  <View style={ [styles.roundColorView, {backgroundColor : defaultFillColor === 'Red' ? 'red' : defaultFillColor === 'Blue' ? 'blue' : defaultFillColor === 'Orange' ? 'orange': defaultFillColor === 'Green' ? 'green': '' }]} />
-                  {/* <ModalSelector
+                  <View style={ [styles.roundColorView, {backgroundColor : defaultFillColor === 'White' ? '#ffffff' : defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
+                    : defaultFillColor === 'Coral Candy' ? '#f5d5cb': defaultFillColor === 'Cruise' ? '#b5dce1': defaultFillColor === 'Swirl' ? '#d6cdc8': defaultFillColor === 'Tusk' ? '#d7e0b1': ''}]} />
+                  <ModalSelector
                     initValueTextStyle={[styles.listTitle,{color: "#000"}]}
                     selectStyle={{borderColor: "transparent"}}
                     style={{marginTop: 2,marginRight: 25}}
                     // selectTextStyle={{color: "blue"}}
-                    data={colorData}
+                    data={colorItem}
                     initValue={defaultFillColor}
                     onChange={(option)=>this.setState({ defaultFillColor: option.label })} 
                   />
-                 <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.colorDropdownStyle}/> */}
-                 <View style={{ marginTop: 8 , marginLeft: 10, width: 80 }}>
+                 <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.colorDropdownStyle}/>
+                 {/* <View style={{ marginTop: 8 , marginLeft: 10, width: 80 }}>
                   <Dropdown
                     value={defaultFillColor}
                     selectedItemColor = '#000'
@@ -323,7 +371,7 @@ export default class CreateEvent extends React.Component {
                     fontSize={14}
                     dropdownOffset={{ top: 0, left: 0 }}
                   />
-                </View>
+                </View> */}
                 </View>
               </View>
             </View>
@@ -356,6 +404,7 @@ export default class CreateEvent extends React.Component {
                       headerTextIOS="START TIME"
                       confirmTextIOS="DONE"
                       cancelTextIOS="CANCEL"
+                      date ={new Date(this.state.eventDate)}
                     />
                   <Text style={styles.selectedText}>{get(this.state,'startTime','')}</Text>
                 </TouchableOpacity>
@@ -371,6 +420,7 @@ export default class CreateEvent extends React.Component {
                       headerTextIOS="END TIME"
                       confirmTextIOS="DONE"
                       cancelTextIOS="CANCEL"
+                      date ={new Date(this.state.eventDate)}
                     />
                   <Text style={styles.selectedText}>{get(this.state,'endTime','')}</Text>
                 </TouchableOpacity>
@@ -385,7 +435,7 @@ export default class CreateEvent extends React.Component {
                 />
                 {(get(this.state, 'setReminderAlarm','') !== '' && checked ) &&
                 <Text style={{marginTop: 5}}>
-                  Set Reminder: {this.state.setReminderAlarm}
+                  Set Reminder: {this.state.setTime}
                 </Text>
                 }
             </View>
@@ -432,6 +482,7 @@ export default class CreateEvent extends React.Component {
                     value={this.state.notes}
                   />
               </View>
+              {notesError && <Text style={AppStyles.error}>Please enter the notes</Text>}
             </View>
 
             <View style={styles.selectGroupView}>
@@ -455,50 +506,20 @@ export default class CreateEvent extends React.Component {
 
             <View style={[styles.eventContainer,{marginTop:15}]}>
               <View style={{flexDirection:'row',marginTop:10,justifyContent:'space-between'}}>
-              <View style={{justifyContent:'center'}}>
+                <View style={{justifyContent:'center'}}>
                   <Text style={[styles.slideShowText,{marginBottom:20}]}>Show Notes in SlideShow</Text>
                 </View>
-                <View>
-                  <Switch
-                    // onValueChange = {() => this.toggleSwitch(item, index)}
-                    onValueChange = {(value) => this.toggleSwitch(value ,'switch1')}
-                    value = {this.state.showNotesInSlideShow}
-                    disabled={false}
-                    thumbColor={this.state.showNotesInSlideShow ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
-                    trackColor={{ true: '#939393', false : Platform.OS == 'android' ? '#A2a2a2': 'gray' }}
-                    trackWidth={10}
-                    style={
-                      Platform.OS === 'android'
-                        ? { transform: [{ scaleX: 1 }, { scaleY: 1 }] }
-                        : { transform: [{ scaleX: .6 }, { scaleY: .6 }] }
-                    }
-                    ios_backgroundColor={'#EBECF0'}
-                />
-                </View>
+                  <SwitchComponent onChange = {this.toggleSwitch1.bind(this)}  value={this.state.showNotesInSlideShow}/>
               </View>
               <View style={{flexDirection:'row',marginTop:10,justifyContent:'space-between'}}>
                 <View style={{justifyContent:'center'}}>
                   <Text style={styles.slideShowText}>Show Event in SlideShow</Text>
                 </View>
-                  <Switch
-                      // onValueChange = {() => this.toggleSwitch(item, index)}
-                      onValueChange = {(value) => this.toggleSwitch(value ,'switch2')}
-                      value = {this.state.showEventInSlideShow}
-                      disabled={false}
-                      thumbColor={this.state.showEventInSlideShow ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
-                      trackColor={{ true: '#939393', false : Platform.OS == 'android' ? '#A2a2a2': 'gray' }}
-                      trackWidth={10}
-                      style={
-                        Platform.OS === 'android'
-                          ? { transform: [{ scaleX: 1 }, { scaleY: 1 }] }
-                          : { transform: [{ scaleX: .6 }, { scaleY: .6 }] }
-                      }
-                      ios_backgroundColor={'#EBECF0'}
-                  />
+                  <SwitchComponent onChange = {this.toggleSwitch2.bind(this)}  value={this.state.showEventInSlideShow}/>
               </View>
             </View>
             <View style={styles.statusContainer}>
-                <View style={{flexDirection:'row'}}>
+                {/* <View style={{flexDirection:'row'}}>
                   <TouchableOpacity style={styles.statusButton}
                     // onPress={onPress}
                   >
@@ -509,17 +530,17 @@ export default class CreateEvent extends React.Component {
                   >
                     <Text style={[styles.statusButtonText,{color:'#A2a2a2'}]}>AVAILABLE</Text>
                   </TouchableOpacity>
-                </View>
-                <View style={{flexDirection:'row', marginTop: 20}}>
-                  <TouchableOpacity style={styles.statusButton}
-                    // onPress={onPress}
+                </View> */}
+                <View style={{flexDirection:'row'}}>
+                  <TouchableOpacity style={[styles.statusButton, {backgroundColor: this.state.private ? '#ff6600': '#fff'}]}
+                    onPress={()=>this.setState({ private: true, public: false })}
                   >
-                    <Text style={[styles.statusButtonText,{color:'#FFF'}]}>PRIVATE</Text>
+                    <Text style={[styles.statusButtonText,{color: this.state.private ? '#fff': '#A2a2a2'}]}>PRIVATE</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={[styles.statusButton,{backgroundColor:'#fff',borderRightWidth:.3,borderTopWidth:.3,borderBottomWidth:.3}]}
-                    // onPress={onPress}
-                  >
-                    <Text style={[styles.statusButtonText,{color:'#A2a2a2'}]}>PUBLIC</Text>
+                  <TouchableOpacity style={[styles.statusButton, {backgroundColor: this.state.public ? '#ff6600': '#fff'}]}
+                    onPress={()=>this.setState({ public: true, private: false })}
+                    >
+                    <Text style={[styles.statusButtonText,{color: this.state.public ? '#fff': '#A2a2a2'}]}>PUBLIC</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -527,7 +548,7 @@ export default class CreateEvent extends React.Component {
               <View style={styles.bottomContainer}>
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <TouchableOpacity style={[styles.cancelButton, {backgroundColor:'#A2a2a2'}]}
-                    // onPress={onPress}
+                   onPress = {this._resetState}
                   >
                     <Text style={[styles.cancelText,{color:'#000'}]}>CANCEL</Text>
                   </TouchableOpacity>
@@ -665,6 +686,7 @@ const styles = StyleSheet.create({
     width:18, 
     borderRadius:9, 
     marginLeft: 86,
+    borderWidth: .2
   },
   timeText: {
     marginRight: 10,
@@ -724,16 +746,15 @@ const styles = StyleSheet.create({
     // fontWeight: '600',
   },
   statusContainer: {
-    padding: 20,
-    marginTop: 10,
+    padding: 25,
     backgroundColor:'#fff',
   },
   statusButton: {
+    borderWidth: .3,
     width:'50%',
-    backgroundColor:'#ff6600',
     alignItems:'center',
     justifyContent:'center',
-    paddingVertical: Platform.OS === 'android' ? 3 : 6
+    paddingVertical: Platform.OS === 'android' ? 5 : 6
   },
   statusButtonText: {
 	  color: '#fff',
@@ -815,10 +836,13 @@ const categoryList = [
   { value: 'BUSINESS' },
 ]
 const colorData =[
-  { value: 'Orange' },
-  { value: 'Red' },
-  { value: 'Green' },
-  { value: 'Blue' },
+  { value: 'White' },
+  { value: 'Hawkes Blue' },
+  { value: 'Milk Punch' },
+  { value: 'Coral Candy' },
+  { value: 'Cruise' },
+  { value: 'Swirl' },
+  { value: 'Tusk' },
 ]
 const recurrence = [
   { value: 'Everyday' },

@@ -231,7 +231,7 @@ export default class Login extends React.Component {
               value={password}
             />
             <TouchableOpacity onPress={()=>this.setState({ showPassword: !showPassword })} style={styles.eyeContainer}>
-              <Image source={require('../../assets/icons/Eye.png')} style={styles.eyeImage} />
+              <Image source={showPassword ? require('../../assets/icons/Eye.png') :require('../../assets/icons/Eye_cross.png') } style={showPassword ? styles.eyeImage : [styles.eyeImage,{height: 28,marginTop: 0}]} />
             </TouchableOpacity>
             </View>
             {passwordError && (
@@ -287,6 +287,7 @@ const styles = StyleSheet.create({
     // backgroundColor:'red'
   },
   eyeImage: {
+    marginTop: 4,
     position: 'absolute',
     right: 2,
     height: 20,

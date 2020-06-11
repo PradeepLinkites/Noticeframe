@@ -8,13 +8,13 @@ const initialState = {
   getGroupListForShowMessgae: '',
   getGroupListForShowData: {},
   createEventPhase: false,
-  createEventMessage: ''
-  // apiMessage: {},
-  // categoryData: {},
-  // selectCategoryPhase: false,
-  // selectCategoryData: {},
-  // editUserData: {},
-  // addCardData:{}
+  createEventMessage: '',
+  getEventDetailPhase: false,
+  getEventDetailData: {},
+  getEventPhase: false,
+  getEventData: [],
+  getEventCalenderPhase: false,
+  getEventCalenderData: []
 };
 
 export default function userReducer(state = initialState, action) {
@@ -51,16 +51,48 @@ export default function userReducer(state = initialState, action) {
       };
       return {};
     }
-    
+  
+    case 'GET_EVENT': {
+      const input = action.data
+      if(input.status){
+        return {
+          ...state,
+          getEventPhase: input.status,
+          getEventData: input.data
+        };  
+      }
+    }
+    case 'GET_EVENT_DETAILS': {
+      const input = action.data
+      return {
+        ...state,
+        getEventDetailPhase: input.status,
+        getEventDetailData: input.data
+      };
+      return {};
+    }
+
+    case 'GET_EVENT_CALENDER': {
+      const input = action.data
+      return {
+        ...state,
+        getEventCalenderPhase: input.status,
+        getEventCalenderData: input.data
+      };
+      return {};
+    }
+
     case 'RESET_PHASE': {
       return {
         ...state,
         getSetttingPhase: false,
         getGroupListForShowPhase: false,
         createEventPhase: false,
+        getEventDetailPhase: false,
+        getEventPhase: false,
+        getEventCalenderPhase: false
       }
     }
-
     // case 'SELECT_CATEGORY': {
     //   const input = action.data;
     //   if(input.success) {

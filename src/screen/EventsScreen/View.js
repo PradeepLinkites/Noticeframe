@@ -1,10 +1,14 @@
 import React from 'react'
 import {ScrollView, Switch,Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
-import { get } from 'lodash'
+import { get, isEmpty } from 'lodash'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import { FlatGrid } from 'react-native-super-grid';
+import SwitchComponent from '../Common/Switch'
+import AsyncStorage from '@react-native-community/async-storage'
+import moment from "moment"
+
 
 const items = [[
   { name: 'Healty Sport', time: '07:30 AM to 08:30 AM', source: require('../../assets/images/image1.jpeg') }, 
@@ -18,32 +22,41 @@ const items = [[
   { name: 'Football', time: '10:30 AM to 11:30 AM',source: require('../../assets/images/image8.jpeg') }]
 ]
 
+const listImage = require('../../assets/icons/event_list.png')
+const gridImage = require('../../assets/icons/event_gridSelect.png')
+
 export default class Home extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       key: 'Grid',
       isGridView: false,
-      switch1Value: false,
-      switch2Value: false,
-      switch3Value: false,
-      switch4Value: false,
+      switchValue: false,
+      getEventData:[]
     }
   }
 
-  toggleSwitch = (value, name) => {
-   if(name === 'switch1'){
-      this.setState({switch1Value: value})
+  componentDidMount() {
+    AsyncStorage.getItem('@user')
+    .then((user) => {
+      const user1 = JSON.parse(user)
+      if(!isEmpty(user1)){
+        this.props.getEvent(user1._id)
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.getEventData !== prevProps.getEventData) {
+      if(this.props.getEventPhase) {
+        this.props.resetEventPhase()
+        this.setState({ getEventData: get(this.props, 'getEventData', []) })
+      }
     }
-    if(name === 'switch2'){
-      this.setState({switch2Value: value})
-    }
-    if(name === 'switch3'){
-      this.setState({switch3Value: value})
-    }
-    if(name === 'switch4'){
-      this.setState({switch4Value: value})
-    }
+  }
+
+  toggleSwitch = (value) => {
+    this.setState({ switchValue: value })
   }
 
   toggleButton(name){
@@ -57,153 +70,45 @@ export default class Home extends React.Component {
   }
 
   render() {
-    const { isGridView, key } = this.state
+    const { getEventData, isGridView, key } = this.state
     return (
       <SafeAreaView style={AppStyles.container}>
         <ScrollView style={styles.container}>
           <View style={{flexDirection:'row',justifyContent:'space-between'}}> 
             <Text></Text>
             <TouchableOpacity onPress={this.toggleButton.bind(this,key)} style={{marginRight: 10,marginTop: 10}}>
-              <Text style={{fontSize:16}}>{key} View</Text>
+              <Image source={key === 'List' ? listImage: gridImage} style={styles.imageStyle}/>
             </TouchableOpacity>
           </View>
           {!isGridView ?
-          <View>
-          <View style={styles.dateView}>
-            <Text style={styles.dateText}>23 Feb 2020</Text>
-          </View>
-          <View style={[styles.eventListView,{backgroundColor:'#e2e9f6'}]}>
-            <View style={{flex:1}}>
-              <Text style={styles.eventTitleText}>Board Meeting</Text>
-              <Text style={styles.eventDateText}>23 FEB, 2020</Text>
-              <Text style={styles.eventDateText}>09:30 AM to 12:30 PM</Text>
-            </View>
-            <View>
-            <View style={styles.slideShowView}>
-              <Text style={styles.slideShowText}>Show in SlideShow</Text>
-              <Switch
-                // onValueChange = {() => this.toggleSwitch(item, index)}
-                onValueChange = {(value) => this.toggleSwitch(value ,'switch1')}
-                value = {this.state.switch1Value}
-                disabled={false}
-                thumbColor={this.state.switch1Value ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
-                trackColor={{ true: '#939393', false : Platform.OS == 'android' ? '#A2a2a2': 'gray' }}
-                style={
-                  Platform.OS === 'android'
-                    ? { transform: [{ scaleX: 1 }, { scaleY: 1 }] }
-                    : { transform: [{ scaleX: .6 }, { scaleY: .6 }] }
-                }
-                ios_backgroundColor={'#EBECF0'}
-              />
-            </View>
-            </View>
-            <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent')}>
-                <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
-              </TouchableOpacity>
-            <View style={styles.shareView}>
-              <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
-            </View>
-          </View>
-          <View style={[styles.eventListView,{backgroundColor:'#d3eaed'}]}>
-            <View style={{flex:1}}>
-              <Text style={styles.eventTitleText}>Study Time</Text>
-              <Text style={styles.eventDateText}>23 FEB, 2020</Text>
-              <Text style={styles.eventDateText}>09:30 AM to 12:30 PM</Text>
-            </View>
-            <View>
-            <View style={styles.slideShowView}>
-              <Text style={styles.slideShowText}>Show in SlideShow</Text>
-              <Switch
-                // onValueChange = {() => this.toggleSwitch(item, index)}
-                onValueChange = {(value) => this.toggleSwitch(value ,'switch2')}
-                value = {this.state.switch2Value}
-                disabled={false}
-                thumbColor={this.state.switch2Value ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
-                trackColor={{ true: '#939393', false : Platform.OS == 'android' ? '#A2a2a2': 'gray' }}
-                style={
-                  Platform.OS === 'android'
-                    ? { transform: [{ scaleX: 1 }, { scaleY: 1 }] }
-                    : { transform: [{ scaleX: .6 }, { scaleY: .6 }] }
-                }
-                ios_backgroundColor={'#EBECF0'}
-              />
-            </View>
-            </View>
-            <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent')}>
-              <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
-            </TouchableOpacity>
-            <View style={styles.shareView}>
-              <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
-            </View>
-          </View>
-          <View style={styles.dateView}>
-            <Text style={styles.dateText}>24 Feb 2020</Text>
-          </View>
-          <View style={[styles.eventListView,{backgroundColor:'#e6e1de'}]}>
-            <View style={{flex:1}}>
-              <Text style={styles.eventTitleText}>Football Practice</Text>
-              <Text style={styles.eventDateText}>24 FEB, 2020</Text>
-              <Text style={styles.eventDateText}>09:30 AM to 12:30 PM</Text>
-            </View>
-            <View>
-            <View style={styles.slideShowView}>
-              <Text style={styles.slideShowText}>Show in SlideShow</Text>
-              <Switch
-                // onValueChange = {() => this.toggleSwitch(item, index)}
-                onValueChange = {(value) => this.toggleSwitch(value ,'switch3')}
-                value = {this.state.switch3Value}
-                disabled={false}
-                thumbColor={this.state.switch3Value ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
-                trackColor={{ true: '#939393', false : Platform.OS == 'android' ? '#A2a2a2': 'gray' }}
-                style={
-                  Platform.OS === 'android'
-                    ? { transform: [{ scaleX: 1 }, { scaleY: 1 }] }
-                    : { transform: [{ scaleX: .6 }, { scaleY: .6 }] }
-                }
-                ios_backgroundColor={'#EBECF0'}
-              />
-            </View>
-            </View>
-            <TouchableOpacity  style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent')}>
-              <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
-            </TouchableOpacity>
-            <View style={styles.shareView}>
-              <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
-            </View>
-          </View>
-          <View style={[styles.eventListView,{backgroundColor:'#f8eedf'}]}>
-            <View style={{flex:1}}>
-              <Text style={styles.eventTitleText}>Study Time</Text>
-              <Text style={styles.eventDateText}>24 FEB, 2020</Text>
-              <Text style={styles.eventDateText}>09:30 AM to 12:30 PM</Text>
-            </View>
-            <View>
-            <View style={styles.slideShowView}>
-              <Text style={styles.slideShowText}>Show in SlideShow</Text>
-              <Switch
-                // onValueChange = {() => this.toggleSwitch(item, index)}
-                onValueChange = {(value) => this.toggleSwitch(value ,'switch4')}
-                value = {this.state.switch4Value}
-                disabled={false}
-                thumbColor={this.state.switch4Value ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
-                trackColor={{ true: '#939393', false : Platform.OS == 'android' ? '#A2a2a2': 'gray' }}
-                trackWidth={10}
-                style={
-                  Platform.OS === 'android'
-                    ? { transform: [{ scaleX: 1 }, { scaleY: 1 }] }
-                    : { transform: [{ scaleX: .6 }, { scaleY: .6 }] }
-                }
-                ios_backgroundColor={'#EBECF0'}
-              />
-            </View>
-            </View>
-              <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent')}>
-                <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
-              </TouchableOpacity>
-            <View style={styles.shareView}>
-              <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
-            </View>
-          </View>
+          <View style={{marginTop: 15}}>
+            {getEventData.map((data, ind)=>{
+              let date = moment(data.eventDate).format("DD MMM, YYYY")
+              let start_time = moment(data.startTime).format("hh:mm")
+              let end_time = moment(data.endTime).format("hh:mm")
+              return(
+                <TouchableOpacity onPress={()=> this.props.navigation.navigate('EventDetail',{id : data._id})} style={[styles.eventListView,{backgroundColor: data.defaultFillColor.toLowerCase() }]}>
+                  <View style={{flex:1}}>
+                    <Text style={styles.eventTitleText}>{data.eventName}</Text>
+                    <Text style={styles.eventDateText}>{date}</Text>
+                    <Text style={styles.eventDateText}>{start_time} to {end_time}</Text>
+                  </View>
+                  <View>
+                  <View style={styles.slideShowView}>
+                    <Text style={styles.slideShowText}>Show in SlideShow</Text>
+                    <SwitchComponent onChange = {this.toggleSwitch.bind(this)} value = {data.showEventInSlideShow}/>
+                  </View>
+                  </View>
+                    <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent')}>
+                      <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
+                    </TouchableOpacity>
+                  <View style={styles.shareView}>
+                    <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
+                  </View>
+                </TouchableOpacity>
+                )
+              })
+            }
           </View>
           : 
           <View>
@@ -261,7 +166,7 @@ const styles = StyleSheet.create({
     paddingLeft: Platform.OS === 'android' ? 15 : 15 ,
     paddingTop: Platform.OS === 'android' ? 8 : 12	,
     paddingBottom: Platform.OS === 'android' ? 8 : 12 ,
-    marginBottom: 1,
+    marginBottom: 2,
     flexDirection: 'row',
   },
   eventTitleText: {

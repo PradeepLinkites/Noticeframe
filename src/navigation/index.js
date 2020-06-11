@@ -104,13 +104,9 @@ const mainStack = createStackNavigator({
 	initialRoute: 'AppStack',
 });
 
-const AppContainer = createAppContainer(mainStack);
-// const AppContainer = createAppContainer(AppStack);
+// const AppContainer = createAppContainer(mainStack);
+const AppContainer = createAppContainer(AppStack);
 const AppContainerHome = createAppContainer(AppStack);
-
-// const retrievedItem = AsyncStorage.getItem('@user')
-// const user = JSON.parse(JSON.stringify(retrievedItem))
-// console.log('user', user)
 
 export default class App extends React.Component {
 	render() {

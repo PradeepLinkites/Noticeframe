@@ -1,16 +1,15 @@
 import React from 'react'
 import { Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
-import { get } from 'lodash'
+import { get , isEmpty } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import moment from 'moment'
 import {Calendar} from 'react-native-calendars'
 import Modal from 'react-native-modal';
+import AsyncStorage from '@react-native-community/async-storage'
 
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
-
-const array = ['2020-05-20', '2020-05-22', '2020-05-26']
 
 const sampleEvents = [
   { 'date': '2020-06-23','startTime': '09:00:00', 'endTime': '09:20:00','duration': '00:20:00', 'note': 'Walk my dog' },
@@ -30,7 +29,27 @@ export default class Monthly extends React.Component {
       // markedData: ['2020-05-21', '2020-05-22', '2020-05-26'],
       markedData: sampleEvents,
       isModalVisible: false,
-      currentDate: ''
+      currentDate: '',
+      getEventCalenderData: []
+    }
+  }
+
+  componentDidMount() {
+    AsyncStorage.getItem('@user')
+    .then((user) => {
+      const user1 = JSON.parse(user)
+      if(!isEmpty(user1)){
+        this.props.getEventCalender(user1._id)
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.getEventCalenderData !== prevProps.getEventCalenderData) {
+      if(this.props.getEventCalenderPhase) {
+        this.props.resetEventPhase()
+        this.setState({ getEventCalenderData: this.props.getEventCalenderData })
+      }
     }
   }
 
@@ -94,13 +113,13 @@ export default class Monthly extends React.Component {
           />
 
         <Modal isVisible={this.state.isModalVisible}>
-          <View style={{height: 400, backgroundColor:'#fff'}}>
+          <View style={{ backgroundColor:'#fff', paddingTop: 10 }}>
               <Text style={{ alignSelf:'center',fontSize: 20, top: 3}}>List of Events</Text>
-              {this.state.markedData.map(item => {
+              {this.state.markedData.map((item,ind) => {
                 if(item.date === this.state.currentDate){
                   return(
-                  <View style={{flex: 1}}>
-                    <TouchableOpacity style={styles.event} onPress={this.onNavigate}>
+                  <View>
+                    <TouchableOpacity style={styles.event} onPress={this.onNavigate} key = {ind}>
                       <View style={styles.eventDuration}>
                         <View style={styles.durationContainer}>
                           <View style={styles.durationDot} />
@@ -113,7 +132,7 @@ export default class Monthly extends React.Component {
                         <View style={styles.durationDotConnector} />
                       </View>
                       <View>
-                        <Text numberOfLines={3} style={styles.eventText}>{item.note}</Text>
+                        <Text numberOfLines={3} style={{color: '#fff'}}>{item.note}</Text>
                       </View>
                     </TouchableOpacity>
                     <View style={{height:2, backgroundColor:'#A2a2a2',width: '100%'}} /> 
@@ -121,7 +140,7 @@ export default class Monthly extends React.Component {
                   )                 
                 }
               })}
-            <Button title="Cancel" onPress={this.toggleModal} color="#A2a2a2"/>
+            <Button title="Cancel" onPress={this.toggleModal} color='#A2a2a2'/>
           </View>
         </Modal>
 
@@ -135,16 +154,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: 500,
-    backgroundColor:'#fff'
+    backgroundColor:'#fff',
   },
   event: {
-    backgroundColor:'#fff',
-    flex: 1,
+    backgroundColor:'#ff6600',
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: .5,
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    borderRadius: 30,
+    marginTop: 20,
+    marginBottom: 20,
+    paddingVertical: 6
 },
 eventDuration: {
     width: '30%',
@@ -164,13 +186,13 @@ durationDot: {
 },
 durationDotConnector: {
     height: 20,
-    borderLeftColor: 'grey',
+    borderLeftColor: '#fff',
     borderLeftWidth: StyleSheet.hairlineWidth,
     position: 'absolute',
     left: 2
 },
 durationText: {
-    color: 'grey',
+    color: '#fff',
     fontSize: 14
 },
 })
