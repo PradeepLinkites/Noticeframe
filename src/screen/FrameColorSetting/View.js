@@ -1,12 +1,10 @@
 import React from 'react'
-import {Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {Platform, StyleSheet, Text, View, Button, SafeAreaView, ScrollView, Dimensions,TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get } from 'lodash'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import SwitchComponent from '../Common/Switch'
-import ModalSelector from 'react-native-modal-selector'
-
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -14,19 +12,67 @@ export default class FrameColorSetting extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      value: '',
-      animationType : 'Fade-in',
-      slideValue1: 20,
-      slideValue2: 20,
-      slideValue3: 20
+      urgent: false,
+      lessUrgent: false,
+      notUrgent: false,
+      urgentHours: 24,
+      lessUrgentHours: 48,
+      notUrgentHours: 72
     }
   }
-  OnChange=(value)=>{
-     this.setState({ value: value})
+
+  onChange(name, value){
+    if(name === 'urgent'){
+      this.setState({ urgent: value})
+    }
+    if(name === 'lessUrgent'){
+      this.setState({ lessUrgent: value})
+    }
+    if(name === 'notUrgent'){
+      this.setState({ notUrgent: value})
+    }
+  }
+
+  _decrementHours(name){
+    const { urgentHours, lessUrgentHours, notUrgentHours } = this.state
+    if(name === 'urgent'){
+      if(urgentHours > 12 && urgentHours <= 24 ){
+        this.setState({ urgentHours : urgentHours - 1 })
+      }
+    }
+    if(name === 'lessUrgent'){
+      if(lessUrgentHours > 24 && lessUrgentHours <= 72 ){
+        this.setState({ lessUrgentHours : lessUrgentHours - 1 })
+      }
+    }
+    if(name === 'notUrgent'){
+      if(notUrgentHours > 72 ){
+        this.setState({ notUrgentHours : notUrgentHours - 1 })
+      }
+    }
+  }
+
+  _incrementHours(name){
+    const { urgentHours, lessUrgentHours, notUrgentHours } = this.state
+    if(name === 'urgent'){
+      if(urgentHours >= 12 && urgentHours < 24 ){
+        this.setState({ urgentHours : urgentHours  + 1 })
+      }
+    }
+    if(name === 'lessUrgent'){
+      if(lessUrgentHours >= 24 && lessUrgentHours < 72 ){
+        this.setState({ lessUrgentHours : lessUrgentHours + 1 })
+      }
+    }
+    if(name === 'notUrgent'){
+      if(notUrgentHours >= 72 ){
+        this.setState({ notUrgentHours : notUrgentHours + 1 })
+      }
+    }
   }
 
   render() {
-    const { slideValue1,slideValue2,slideValue3, animationType, selectedColor  } = this.state
+    const { urgent, lessUrgent, notUrgent, urgentHours, lessUrgentHours, notUrgentHours,slideValue1,slideValue2,slideValue3 } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'FrameColorSetting' ? 'Frame Color Settings' : ''
     return (
@@ -43,26 +89,26 @@ export default class FrameColorSetting extends React.Component {
             <View style={styles.mainView}>
               <View><Text style={styles.label}>URGENT</Text></View>
               <View style={[styles.colorButton,{backgroundColor:'#ed1c24',marginLeft: Platform.OS === 'android' ? 35: 40}]}></View>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
+              <SwitchComponent onChange={this.onChange.bind(this, 'urgent')} value={urgent}/>
             </View>
             <View style={styles.mainView}>
               <View><Text style={styles.label}>LESS URGENT</Text></View>
               <View style={[styles.colorButton,{backgroundColor:'#ff9900'}]}></View>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
+              <SwitchComponent onChange={this.onChange.bind(this, 'lessUrgent')} value={lessUrgent}/>
             </View>
             <View style={styles.mainView}>
               <View><Text style={styles.label}>NOT URGENT</Text></View>
               <View style={[styles.colorButton,{backgroundColor:'#00a651',marginLeft: Platform.OS === 'android' ? 5: 2}]}></View>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
+              <SwitchComponent onChange={this.onChange.bind(this, 'notUrgent')}  value={notUrgent}/>
             </View>
           </View> 
           {/* Frame color timing */}
-          <View style={{backgroundColor:'#e2e9f6',flex: 1}}>
+          <View style={{backgroundColor:'#e2e9f6',flex: 1 ,marginBottom: 20}}>
             <View style={[styles.bottomView,{marginTop:10}]}>
               <Text style={[styles.headerText,{marginTop:15,flex:1}]}>Frame colors timing</Text>            
-              <View style={[styles.mainView,{justifyContent:'space-around',flex:1}]}>
-                <TouchableOpacity style={styles.minitsButton}><Text style={[styles.timeText,{color:'#fff'}]}>MINUTES</Text></TouchableOpacity>
-                <TouchableOpacity style={[styles.minitsButton,{paddingHorizontal:15,backgroundColor:'#fff'}]}><Text style={[styles.timeText,{color:'#A2a2a2'}]}>HOURS</Text></TouchableOpacity>
+              <View style={[styles.mainView,{justifyContent:'space-around'}]}>
+                {/* <TouchableOpacity style={styles.minitsButton}><Text style={[styles.timeText,{color:'#fff'}]}>MINUTES</Text></TouchableOpacity> */}
+                <View style={[styles.minitsButton,{paddingHorizontal:15 }]}><Text style={[styles.timeText,{color:'#fff'}]}>HOURS</Text></View>
               </View>
             </View> 
             <View style={styles.intervalContainer}>
@@ -70,9 +116,17 @@ export default class FrameColorSetting extends React.Component {
                 <View style={[styles.colorButtonBottom,{backgroundColor:'#ed1c24'}]}/>
               </View>
               <View style={styles.buttonView}>
-                <TouchableOpacity onPress={()=>this.setState({ slideValue1: this.state.slideValue1 - 1})} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
-                <View style={{justifyContent:'center'}}><Text style={styles.number}>{slideValue1}</Text></View>
-                <TouchableOpacity onPress={()=>this.setState({ slideValue1: this.state.slideValue1 + 1})} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
+                {urgentHours !== 12 ? 
+                  <TouchableOpacity onPress={this._decrementHours.bind(this,'urgent')} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
+                  :                
+                  <View style={[styles.slideShowBox,{backgroundColor:'#E9E9E9'}]}><Text></Text></View>
+                  }
+                  <View style={{justifyContent:'center'}}><Text style={styles.number}>{urgentHours}</Text></View>
+                {urgentHours !== 24 ? 
+                  <TouchableOpacity onPress={this._incrementHours.bind(this,'urgent')} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
+                  :                
+                  <View style={[styles.slideShowBox,{backgroundColor:'#E9E9E9'}]}><Text></Text></View>
+                }
               </View>
             </View> 
             <View style={styles.intervalContainer}>
@@ -80,9 +134,17 @@ export default class FrameColorSetting extends React.Component {
                 <View style={[styles.colorButtonBottom,{backgroundColor:'#ff9900'}]}/>
               </View>
               <View style={styles.buttonView}>
-                <TouchableOpacity onPress={()=>this.setState({ slideValue2: this.state.slideValue2 - 1})} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
-                <View style={{justifyContent:'center'}}><Text style={styles.number}>{slideValue2}</Text></View>
-                <TouchableOpacity onPress={()=>this.setState({ slideValue2: this.state.slideValue2 + 1})} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
+                {lessUrgentHours !== 24 ? 
+                  <TouchableOpacity onPress={this._decrementHours.bind(this,'lessUrgent')} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
+                  :                
+                  <View style={[styles.slideShowBox,{backgroundColor:'#E9E9E9'}]}><Text></Text></View>
+                  }
+                  <View style={{justifyContent:'center'}}><Text style={styles.number}>{lessUrgentHours}</Text></View>
+                {lessUrgentHours !== 72 ? 
+                  <TouchableOpacity onPress={this._incrementHours.bind(this,'lessUrgent')} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
+                  :                
+                  <View style={[styles.slideShowBox,{backgroundColor:'#E9E9E9'}]}><Text></Text></View>
+                }              
               </View>
             </View> 
             <View style={styles.intervalContainer}>
@@ -90,13 +152,16 @@ export default class FrameColorSetting extends React.Component {
                 <View style={[styles.colorButtonBottom,{backgroundColor:'#00a651'}]}/>
               </View>
               <View style={styles.buttonView}>
-                <TouchableOpacity onPress={()=>this.setState({ slideValue3: this.state.slideValue3 - 1})} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
-                <View style={{justifyContent:'center'}}><Text style={styles.number}>{slideValue3}</Text></View>
-                <TouchableOpacity onPress={()=>this.setState({ slideValue3: this.state.slideValue3 + 1})} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
+                {notUrgentHours !== 72 ? 
+                  <TouchableOpacity onPress={this._decrementHours.bind(this,'notUrgent')} style={styles.slideShowBox}><Text>-</Text></TouchableOpacity>
+                  :                
+                  <View style={[styles.slideShowBox,{backgroundColor:'#E9E9E9'}]}><Text></Text></View>
+                }                
+                <View style={{justifyContent:'center'}}><Text style={styles.number}>{notUrgentHours}</Text></View>
+                <TouchableOpacity onPress={this._incrementHours.bind(this,'notUrgent')} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
               </View>
             </View> 
           </View>
-
         </ScrollView>
       </SafeAreaView>
     )
