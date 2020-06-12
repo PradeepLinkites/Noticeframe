@@ -1,26 +1,34 @@
 import { connect } from 'react-redux';
 
 // Actions
-import { cancelSubscription , getUser, resetPhase } from '@redux/user/actions';
+import { eventDetails , getSetting, getGroupListForShow, updateEvent, resetEventPhase } from '@redux/event/actions';
 
 // The component we're mapping to
 import FormRender from './View';
 
 // What data from the store shall we send to the component?
 const mapStateToProps = state => ({
-  getUserPhase: state.user.getUserPhase,
-  getUserMessage: state.user.getUserMessage,
-  getUserData: state.user.getUserData,
-  cancelSubscriptionPhase: state.user.cancelSubscriptionPhase,
-  cancelSubscriptionMessage: state.user.cancelSubscriptionMessage,
-  cancelSubscriptionData: state.user.cancelSubscriptionData
+  getEventDetailPhase: state.event.getEventDetailPhase,
+  getEventDetailData: state.event.getEventDetailData,
+  getSetttingPhase: state.event.getSetttingPhase,
+  getSettingMessage: state.event.getSettingMessage,
+  getSettingData: state.event.getSettingData,
+  getGroupListForShowPhase: state.event.getGroupListForShowPhase,
+  getGroupListForShowMessgae: state.event.getGroupListForShowMessgae,
+  getGroupListForShowData: state.event.getGroupListForShowData,
+  updateEventPhase: state.event.updateEventPhase,
+  updateEventMessage: state.event.updateEventMessage,
+  updateEventData: state.event.updateEventData,
+
 });
 
 // Any actions to map to the component?
 const mapDispatchToProps = {
-  cancelSubscription: cancelSubscription,
-  getUser: getUser,
-  resetPhase: resetPhase
+  eventDetails: eventDetails,
+  getSetting: getSetting,
+  getGroupListForShow: getGroupListForShow,
+  updateEvent: updateEvent,
+  resetEventPhase: resetEventPhase,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormRender);

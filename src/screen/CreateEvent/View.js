@@ -835,15 +835,6 @@ const categoryList = [
   { value: 'PERSONAL' },
   { value: 'BUSINESS' },
 ]
-const colorData =[
-  { value: 'White' },
-  { value: 'Hawkes Blue' },
-  { value: 'Milk Punch' },
-  { value: 'Coral Candy' },
-  { value: 'Cruise' },
-  { value: 'Swirl' },
-  { value: 'Tusk' },
-]
 const recurrence = [
   { value: 'Everyday' },
   { value: 'Weekly' },
@@ -851,3 +842,13 @@ const recurrence = [
 ]
 
 const alarmData = ['Before 15 Min', 'Before 30 Min', 'Before 45 Min','Before 1 hour']
+
+{/*const colorData =[
+  { value: 'White' },
+  { value: 'Hawkes Blue' },
+  { value: 'Milk Punch' },
+  { value: 'Coral Candy' },
+  { value: 'Cruise' },
+  { value: 'Swirl' },
+  { value: 'Tusk' },
+]*/}

@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {Alert, ActivityIndicator, Picker, TextInput, Switch, Platform, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get , isEmpty } from 'lodash'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -18,33 +18,67 @@ export default class CreateEvent extends React.Component {
     super(props)
     this.state = {
       isLoading: false,
+      userId: '',
       getEventDetailData: {}
     }
   }
 
   onFocusFunction = () => {
     const {state} = this.props.navigation
-    this.props.eventDetails(state.params.id)
+    AsyncStorage.getItem('@user')
+    .then((user) => {
+      const user1 = JSON.parse(user)
+      if(!isEmpty(user1)){
+        this.props.eventDetails(state.params.id)
+        this.props.getSetting(user1._id)
+        this.props.getGroupListForShow(user1._id)
+        this.setState({ userId: user1._id})
+      }
+    })
   }
-  
-  componentDidMount() {
+
+  componentDidMount(){
     this.setState({ isLoading: true })
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction()
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount(){
     this.focusListener.remove()
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps){
     if (this.props.getEventDetailData !== prevProps.getEventDetailData) {
       if(this.props.getEventDetailPhase){
         this.props.resetEventPhase()
         this.setState({ getEventDetailData: this.props.getEventDetailData , isLoading: false })
       }
     }
+    if(this.props.deleteEventPhase){
+      this.props.resetEventPhase()
+      this.setState({isLoading: false })
+      alert('Event deleted Successfully')
+      this.props.navigation.navigate('Home')
+      this.props.getEvent(this.state.userId)
+      
+    }
+  }
+
+  onDelete =()=>{
+    let eventId = get(this.state, 'getEventDetailData._id', '')
+    Alert.alert(
+      'Alert Title',
+      'You want to delete this event ?',
+      [{
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel'
+        },
+        { text: 'OK', onPress: () => this.props.deleteEvent(eventId)}
+      ],
+      { cancelable: false }
+    )
   }
 
   render() {
@@ -122,10 +156,10 @@ export default class CreateEvent extends React.Component {
                 <Text style={styles.subTitleText}>PRIVATE</Text>
               </View>
               <View style={styles.bottomContainer}>
-                <TouchableOpacity onPress={()=>this.props.navigation.navigate('EditEvent')}> 
+                <TouchableOpacity onPress={()=>this.props.navigation.navigate('EditEvent',{id : get(getEventDetailData, '_id', '')})}>
                   <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={()=>alert('Notes deleted successfully')}> 
+                <TouchableOpacity onPress={this.onDelete}> 
                   <Image source={require('../../assets/icons/Delete.png')} style={styles.imageStyle}/>
                 </TouchableOpacity>
               </View>
@@ -201,7 +235,7 @@ const styles = StyleSheet.create({
     marginTop: 14, 
     height:16, 
     width:16, 
-    borderRadius:8, 
+    borderRadius: 10, 
     marginLeft: 86,
   },
   colorContainer: {

@@ -141,29 +141,76 @@
       }
     }
 
-    export function getEventSlideShow (userId){
-      return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/event/slideShow?data=${userId}`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
+  export function getEventSlideShow (userId){
+    return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/event/slideShow?data=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+        return dispatch({
+          type: 'GET_EVENT_SLIDESHOW',
+          data
+        });
+      })
+      .catch((error) => {
+          throw error
+      })
+      }
+    }
+
+  export function updateEvent(data){
+    return dispatch => { fetch("https://notice-frame-backend.herokuapp.com/api/put/event", {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
       })
       .then((res) => {
-        return res.json();
+        return res.json()
       })
-      .then((data) => {
-          return dispatch({
-            type: 'GET_EVENT_SLIDESHOW',
-            data
-          });
-        })
-        .catch((error) => {
-            throw error
-        })
-        }
+     .then((data) => {
+        return dispatch({
+          type: 'UPDATE_EVENT',
+          data
+        });
+      })
+      .catch((error) => {
+        throw error
+      })
       }
+    }
  
+  export function deleteEvent(eventId){
+    return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/delete/event?data=${eventId}`, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+        return dispatch({
+          type: 'DELETE_EVENT',
+          data
+        });
+      })
+      .catch((error) => {
+          throw error
+      })
+      }
+  }
+
   export function resetEventPhase() {
     return {
       type: "RESET_PHASE"
