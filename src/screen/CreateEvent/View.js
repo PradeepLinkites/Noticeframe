@@ -49,13 +49,13 @@ export default class CreateEvent extends React.Component {
       endTime1: '',
       isEndPickerVisible: false,
       isDatePickerVisible: false,
-      setReminderAlarm: '',
+      setReminderAlarm: false,
       repeat: 'Everyday',
       notes: '',
       location: '',
       showNotesInSlideShow: false,
       showEventInSlideShow: false,
-      private: true,
+      private: false,
       public: false,
       modalVisible: false,
       checked: false,
@@ -103,6 +103,8 @@ export default class CreateEvent extends React.Component {
       this.props.resetEventPhase()
       this.setState({ isLoading: false , createEventMessage: this.props.createEventMessage })
       this.props.navigation.navigate('Home')
+      alert('Event Created Successfully')
+      this.props.getEvent(this.state.userId)
     }
     if (this.props.getUserData !== prevProps.getUserData) {
       if(this.props.getUserPhase) {
@@ -240,7 +242,7 @@ export default class CreateEvent extends React.Component {
       data.selectContacts = memberList
       data.defaultFillColor = defaultFillColor
       data.frameBoundaryColor = defaultFillColor
-      data.eventDateLocal = moment(eventDate).format("YYYY-MM-DD")
+      data.eventDateLocal = moment(eventDate).format("DD-MM-YYYY")
       data.eventDate = eventDate1
       data.startTime = startTime1
       data.endTime = endTime1

@@ -13,7 +13,8 @@ export default class SlideShow extends React.Component {
     super(props);
     this.state = {
       swiperIndex: 0,
-      getEventSlideShowData: []
+      getEventSlideShowData: [],
+      slideShowData: []
     }
   }
 
@@ -31,13 +32,15 @@ export default class SlideShow extends React.Component {
     if (this.props.getEventSlideShowData !== prevProps.getEventSlideShowData) {
       if(this.props.getEventSlideShowPhase) {
         this.props.resetEventPhase()
-        this.setState({ getEventSlideShowData: get(this.props, 'getEventSlideShowData', []) })
+        let newArray =  get(this.props, 'getEventSlideShowData', [])
+        const newArray2 = newArray.filter(item => item.showEventInSlideShow)
+        this.setState({ getEventSlideShowData: get(this.props, 'getEventSlideShowData', []), slideShowData: newArray2 })
       }
     }
   }
 
   render() {
-    const { getEventSlideShowData, swiperIndex } = this.state
+    const { slideShowData, getEventSlideShowData, swiperIndex } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'SlideShow' ? 'NOTICE FRAME' : ''
     return (
@@ -45,7 +48,6 @@ export default class SlideShow extends React.Component {
         {/* <ScrollView> */}
         <View style={styles.container}>
           <Swiper
-            style={styles.wrapper}
             autoplay={true}
             dot={<View style={{backgroundColor: '#A2a2a2', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3}} />}
             activeDot={<View style={{backgroundColor: '#ff6600', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3}} />} 
@@ -56,10 +58,10 @@ export default class SlideShow extends React.Component {
             loop={true}
             onIndexChanged={(index)=> this.setState({swiperIndex: index})}
           >        
-            {getEventSlideShowData.map((item, ind)=>{
+            {slideShowData.map((item, ind)=>{
               const date = moment(item.eventDate).format("DD MMM, YYYY")
-              const start_time = moment(item.startTime).format("hh:mm")
-              const end_time = moment(item.endTime).format("hh:mm")
+              const start_time = moment(item.startTime).format("h:mm A")
+              const end_time = moment(item.endTime).format("h:mm A")
               return(
                 <View key={ind}>
                   <Image source={require('../../assets/icons/Image_slideshow.png')} style={styles.backgroundImage}/>
@@ -70,7 +72,7 @@ export default class SlideShow extends React.Component {
                       <Text style={styles.eventDateText}>{date}</Text>
                     <Text style={styles.eventDateText}>{start_time} to {end_time}</Text>
                     </View>
-                {getEventSlideShowData.map((item, ind)=>{
+                {slideShowData.map((item, ind)=>{
                   const date = moment(item.eventDate).format("DD MMM, YYYY")
                   const start_time = moment(item.startTime).format("hh:mm")
                   const end_time = moment(item.endTime).format("hh:mm")
@@ -107,7 +109,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff'
   },
-  wrapper: {},
   backgroundImage:{
     width: '100%',
     height: deviceHeight,
@@ -124,10 +125,10 @@ const styles = StyleSheet.create({
   eventTitleText: {
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(22) : AppSizes.verticalScale(18),
     fontFamily: AppFonts.NBlack,
-    fontWeight:'900',
+    // fontWeight:'900',
     letterSpacing: 1,
     color: '#fff',
-    marginBottom: Platform.OS === 'android' ? 2 : 5
+    marginBottom: Platform.OS === 'android' ? 3 : 5
   },
   eventDateText: {
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
@@ -138,8 +139,8 @@ const styles = StyleSheet.create({
   },
   eventView: {
     paddingLeft: 30,
-    paddingTop: Platform.OS === 'android' ? 8 : 10,
-    paddingBottom: Platform.OS === 'android' ? 12 : 15 ,
+    paddingTop: Platform.OS === 'android' ? 6 : 10,
+    paddingBottom: Platform.OS === 'android' ? 5 : 15 ,
   },
   smallEventContainer: {
     width: deviceWidth * .5,

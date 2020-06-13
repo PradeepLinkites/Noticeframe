@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 // Actions
 import { getUser, resetPhase } from '@redux/user/actions';
-import { getSetting, getGroupListForShow, createEvent, resetEventPhase } from '@redux/event/actions';
+import { getSetting, getGroupListForShow, createEvent, getEvent, resetEventPhase } from '@redux/event/actions';
 
 
 // The component we're mapping to
@@ -28,10 +28,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   getUser: getUser,
   resetPhase: resetPhase,
-
+  getEvent: getEvent,
   getSetting: getSetting,
   getGroupListForShow: getGroupListForShow,
   createEvent: createEvent,
+  getEvent: getEvent,
   resetEventPhase: resetEventPhase,
 
 };

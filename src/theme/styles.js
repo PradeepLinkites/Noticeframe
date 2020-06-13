@@ -5,7 +5,6 @@ import { Dimensions, Platform } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 export default {
-
   // container: {
   //   flex: 1,
   // },
@@ -78,9 +77,6 @@ export default {
   // },
 
   
-
-
-
   // Style for NoticeFrame
   // Auth
   container: {
@@ -188,4 +184,47 @@ export default {
     fontFamily: Fonts.NRegular,
     letterSpacing:.2
  },
+
+  // Style for GridView
+  gridView: {
+    paddingLeft: 25,
+    borderBottomWidth: .3,
+    borderBottomColor: '#A2a2a2'
+  },
+  itemContainer: {
+    borderRadius: 22,
+    borderWidth: 4,
+    borderColor: 'red',
+    height: Platform.OS === 'android' ? Sizes.verticalScale(140) : Sizes.verticalScale(130),
+    width:  Platform.OS === 'android' ? Sizes.verticalScale(140) : Sizes.verticalScale(130),
+    marginBottom: 2
+  },
+  playButton: {
+    position:'absolute',
+    top: Platform.OS === 'android' ? 6 : 6,
+    right: Platform.OS === 'android' ? 22 : 30,
+  },
+  eventBottomBar:{
+    width: Platform.OS === 'android' ? Sizes.verticalScale(135) : Sizes.verticalScale(130),
+    position:'absolute',
+    bottom : 5,
+    left: 4,
+    paddingLeft: 12,
+    paddingVertical: 3,
+    borderBottomLeftRadius: 22,
+    borderBottomRightRadius: 22,
+    backgroundColor: '#000000'
+  },
+  eventNameText:{
+    marginBottom: 4,
+    color:'#fff',
+    fontSize: Platform.OS === 'android' ? 12 : 16,
+    fontWeight:'800'
+  },
+  eventTimeText: {
+    color:'#fff',
+    fontSize: Platform.OS === 'android' ? 10 : 12,
+    fontWeight:'500',
+    marginBottom: 2,
+  },
 };

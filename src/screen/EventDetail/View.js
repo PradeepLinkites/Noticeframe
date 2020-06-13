@@ -60,8 +60,7 @@ export default class CreateEvent extends React.Component {
       this.setState({isLoading: false })
       alert('Event deleted Successfully')
       this.props.navigation.navigate('Home')
-      this.props.getEvent(this.state.userId)
-      
+      this.props.getEvent(this.state.userId)     
     }
   }
 
@@ -87,8 +86,8 @@ export default class CreateEvent extends React.Component {
     const selectedColor = get(this.state, 'getEventDetailData.defaultFillColor','')
     const route = get(state, 'routeName', '')  === 'EventDetail' ? 'Event Detail' : ''
     const date = moment(get(this.state, 'getEventDetailData.eventDate','')).format("DD MMM, YYYY")
-    const start_time = moment(get(this.state, 'getEventDetailData.startTime','')).format("hh:mm")
-    const end_time = moment(get(this.state, 'getEventDetailData.endTime','')).format("hh:mm")
+    const start_time = moment(get(this.state, 'getEventDetailData.startTime','')).format("h:mm A")
+    const end_time = moment(get(this.state, 'getEventDetailData.endTime','')).format("h:mm A")
     return (
         <SafeAreaView style={[styles.container,{backgroundColor: '#fff'}]}>
           {isLoading ?
@@ -153,7 +152,7 @@ export default class CreateEvent extends React.Component {
               </View> */}
               <View style={styles.reminderContainer}>
                 <Text style={styles.titleText}>Privacy</Text>
-                <Text style={styles.subTitleText}>PRIVATE</Text>
+                <Text style={styles.subTitleText}>{get(getEventDetailData, 'private', false) ? 'PRIVATE': get(getEventDetailData, 'public', false) ? 'PUBLIC': ''}</Text>
               </View>
               <View style={styles.bottomContainer}>
                 <TouchableOpacity onPress={()=>this.props.navigation.navigate('EditEvent',{id : get(getEventDetailData, '_id', '')})}>

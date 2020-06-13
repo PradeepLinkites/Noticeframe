@@ -1,33 +1,21 @@
 import React from 'react'
-import {ScrollView, Switch,Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {ScrollView, StyleSheet, Text, View, SafeAreaView, Image, Dimensions, TouchableOpacity } from 'react-native'
 import { _, get, isEmpty } from 'lodash'
-const deviceWidth = Dimensions.get('window').width
-const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import { FlatGrid } from 'react-native-super-grid';
 import SwitchComponent from '../Common/Switch'
 import AsyncStorage from '@react-native-community/async-storage'
 import moment from "moment"
+const deviceWidth = Dimensions.get('window').width
+const deviceHeight = Dimensions.get('window').height
 
-
-const items = [[
-  { name: 'Healty Sport', time: '07:30 AM to 08:30 AM', source: require('../../assets/images/image1.jpeg') }, 
-  { name: 'Sport', time: '09:30 AM to 10:30 AM', source: require('../../assets/images/image2.jpeg') }],
-
-  [{ name: 'Football', time: '10:30 AM to 11:30 AM', source: require('../../assets/images/image3.jpeg') }, 
-  {name: 'Football', time: '10:30 AM to 11:30 AM',source: require('../../assets/images/image4.jpeg') },
-  { name: 'Football', time: '10:30 AM to 11:30 AM',source: require('../../assets/images/image5.jpeg') }],
-  
-  [{ name: 'Football', time: '10:30 AM to 11:30 AM',source: require('../../assets/images/image7.jpeg') }, 
-  { name: 'Football', time: '10:30 AM to 11:30 AM',source: require('../../assets/images/image8.jpeg') }]
-]
 
 const event_list = require('../../assets/icons/event_list.png')
 const event_list_select = require('../../assets/icons/event_list_select.png')
 const event_grid = require('../../assets/icons/event_grid.png')
 const event_gridSelect = require('../../assets/icons/event_gridSelect.png')
 
-export default class Home extends React.Component {
+export default class EventScreen extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -87,7 +75,7 @@ export default class Home extends React.Component {
     return (
       <SafeAreaView style={AppStyles.container}>
         <ScrollView style={styles.container}>
-          <View style={{ flexDirection:'row',justifyContent:'space-between',borderBottomWidth: .3, paddingVertical: 15}}> 
+          <View style={styles.topContainer}> 
             <Text style={{ fontSize: 18, marginLeft: 10 }}>Events</Text>
             <View style={{justifyContent: 'flex-end',flexDirection: 'row'}}>
               <TouchableOpacity onPress={this.toggleButton.bind(this,key)} style={{ marginRight: 10 }}>
@@ -99,11 +87,11 @@ export default class Home extends React.Component {
             </View>
           </View>
           {!isGridView ?
-          <View style={{marginTop: 15}}>
+          <View>
             {getEventData.map((data, ind)=>{
               let date = moment(data.eventDate).format("DD MMM, YYYY")
-              let start_time = moment(data.startTime).format("hh:mm")
-              let end_time = moment(data.endTime).format("hh:mm")
+              let start_time = moment(data.startTime).format("h:mm A")
+              let end_time = moment(data.endTime).format("h:mm A")
               return(
                 <TouchableOpacity 
                   onPress={()=> this.props.navigation.navigate('EventDetail',{id : data._id})} 
@@ -135,27 +123,29 @@ export default class Home extends React.Component {
           <View>
             {eventDetails.map((data,ind) => {
               return(
-              <View style={styles.gridView} key={ind}>
+              <View style={AppStyles.gridView} key={ind}>
                 <Text style={styles.dateText}>{moment(data[0].eventDate).format("DD MMM YYYY")}</Text>
                 <FlatGrid
                   itemDimension={130}
                   items={data}
                   renderItem={({ item, index }) => {
-                    let start_time = moment(item.startTime).format("hh:mm")
-                    let end_time = moment(item.endTime).format("hh:mm")      
+                    let start_time = moment(item.startTime).format("h:mm A")
+                    let end_time = moment(item.endTime).format("h:mm A")      
                     return(
-                    <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
-                      <Image source={require('../../assets/images/event_thumb1.png')} style={styles.itemContainer}/>
-                      <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow')} style={styles.playButton}>
-                        <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
+                      <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
+                        <Image source={require('../../assets/images/event_thumb1.png')} style={AppStyles.itemContainer}/>
+                          {get(item, 'showEventInSlideShow', false) && 
+                          <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow')} style={AppStyles.playButton}>
+                            <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
+                          </TouchableOpacity>
+                          }
+                        <View style={AppStyles.eventBottomBar}>
+                          <Text style={AppStyles.eventNameText}>{item.eventName}</Text>
+                          <Text style={AppStyles.eventTimeText}>{start_time}  to  {end_time}</Text>
+                        </View>
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.eventName}>
-                        <Text style={styles.eventNameText}>{item.eventName}</Text>
-                        <Text style={styles.eventTimeText}>{start_time} to {end_time}</Text>
-                      </TouchableOpacity>
-                    </TouchableOpacity>
                     )}
-                    }
+                  }
                 />
               </View>
               )
@@ -165,7 +155,7 @@ export default class Home extends React.Component {
           }
         </ScrollView>
         <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
-            <Image source={require('../../assets/icons/Add.png')} style={{height: 52,width: 52}}/>
+          <Image source={require('../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
         </TouchableOpacity>
       </SafeAreaView>
     )
@@ -174,36 +164,31 @@ export default class Home extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor:'#fff'
+    flex: 1, backgroundColor:'#fff'
   },
-  dateView: {
-    backgroundColor: '#fff',
-    paddingLeft: Platform.OS === 'android' ? 15 : 15 ,
-    paddingTop: Platform.OS === 'android' ? 34 : 36	,
-    paddingBottom: Platform.OS === 'android' ? 6 : 8 ,
+  topContainer: {
+    flexDirection:'row', justifyContent:'space-between', borderBottomWidth: .3, paddingVertical: 15
   },
   dateText: {
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
-    fontWeight: '500',
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14), fontWeight: '500', marginTop: 5
   },
   eventListView: {
-    paddingLeft: Platform.OS === 'android' ? 15 : 15 ,
+    paddingLeft: Platform.OS === 'android' ? 13 : 12 ,
     paddingTop: Platform.OS === 'android' ? 8 : 12	,
-    paddingBottom: Platform.OS === 'android' ? 8 : 12 ,
+    paddingBottom: Platform.OS === 'android' ? 5 : 12 ,
     marginBottom: 2,
     flexDirection: 'row',
   },
   eventTitleText: {
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(12),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
     fontFamily: AppFonts.NRegular,
     fontWeight:'500',
     letterSpacing: .3,
+    marginBottom: 5
   },
   eventDateText: {
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(10) : AppSizes.verticalScale(8),
 	  fontFamily: AppFonts.NRegular,
-    marginTop: 4,
     letterSpacing: .2
   },
   slideShowText: {
@@ -220,17 +205,13 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   editView: {
-    marginTop:4,
-    marginRight:8
+    marginTop:4, marginRight:8
   },
   imageStyle :{
-    height: Platform.OS === 'android' ? AppSizes.verticalScale(28) : AppSizes.verticalScale(22),
-    width: 30,
-    // backgroundColor:'red'
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(28) : AppSizes.verticalScale(22),  width: 30,
   },
   shareView: {
-    marginTop:4,
-    marginRight:8
+    marginTop:4, marginRight:8
   },
   plusButtonStyle: {
     width:  Platform.OS === 'android' ? AppSizes.verticalScale(50) : AppSizes.verticalScale(50), 
@@ -239,42 +220,5 @@ const styles = StyleSheet.create({
     position: 'absolute',                                          
     bottom: Platform.OS === 'android' ? 22 : 32,                                                    
     right: Platform.OS === 'android' ? 26 : 15,  
-    // backgroundColor:'red'
-  },
-  gridView: {
-    flex: 1,
-    paddingLeft: 25,
-    borderBottomWidth: .3,
-    borderBottomColor: '#A2a2a2'
-  },
-  itemContainer: {
-    justifyContent: 'flex-end',
-    borderRadius: 22,
-    borderWidth: 4,
-    borderColor: 'red',
-    padding: 10,
-    height: Platform.OS === 'android' ? AppSizes.verticalScale(150) : AppSizes.verticalScale(130),
-    width:  Platform.OS === 'android' ? AppSizes.verticalScale(150) : AppSizes.verticalScale(130),
-    marginBottom: 2
-  },
-  playButton: {
-    position:'absolute',
-    top: Platform.OS === 'android' ? 4 : 6,
-    right: Platform.OS === 'android' ? 15 : 10,
-  },
-  eventName:{
-    position:'absolute',
-    bottom : 10,
-    left: 14,
-  },
-  eventNameText:{
-    color:'#fff',
-    fontSize: Platform.OS === 'android' ? 14 : 16,
-    fontWeight:'800'
-  },
-  eventTimeText: {
-    color:'#fff',
-    fontSize: Platform.OS === 'android' ? 10 : 12,
-    fontWeight:'500'
-  },
+  }
 })
