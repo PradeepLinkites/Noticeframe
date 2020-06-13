@@ -66,13 +66,15 @@ export default class HomeScreen extends React.Component {
                 return(
                 <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
                   <Image source={require('../../assets/images/event_thumb1.png')} style={AppStyles.itemContainer}/>
-                  <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow')} style={AppStyles.playButton}>
-                    <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={AppStyles.eventBottomBar}>
-                    <Text style={AppStyles.eventNameText}>{item.eventName}</Text>
-                    <Text style={AppStyles.eventTimeText}>{start_time} to {end_time}</Text>
-                  </TouchableOpacity>
+                  {get(item, 'showEventInSlideShow', false) && 
+                    <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow')} style={AppStyles.playButton}>
+                      <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
+                    </TouchableOpacity>
+                  }
+                    <TouchableOpacity style={AppStyles.eventBottomBar}>
+                      <Text style={AppStyles.eventNameText}>{item.eventName}</Text>
+                      <Text style={AppStyles.eventTimeText}>{start_time} to {end_time}</Text>
+                    </TouchableOpacity>
                 </TouchableOpacity>
                 )}
                 }
