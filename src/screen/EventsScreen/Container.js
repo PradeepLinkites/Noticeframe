@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 
 // Actions
-import { getEvent , resetEventPhase } from '@redux/event/actions';
+import { getEvent , updateSlideShow, getEventSlideShow, resetEventPhase } from '@redux/event/actions';
 
 // The component we're mapping to
 import FormRender from './View';
@@ -10,11 +10,15 @@ import FormRender from './View';
 const mapStateToProps = state => ({
   getEventPhase: state.event.getEventPhase,
   getEventData: state.event.getEventData,
+  updateSlideShowPhase: state.event.updateSlideShowPhase,
+  updateSlideShowMessage: state.event.updateSlideShowMessage,
 });
 
 // Any actions to map to the component?
 const mapDispatchToProps = {
   getEvent: getEvent,
+  updateSlideShow: updateSlideShow,
+  getEventSlideShow: getEventSlideShow,
   resetEventPhase: resetEventPhase,
 };
 

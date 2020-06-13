@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions } from 'react-native'
-import { get , isEmpty } from 'lodash'
+import { get , isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import Swiper from 'react-native-swiper'
 import AsyncStorage from '@react-native-community/async-storage'

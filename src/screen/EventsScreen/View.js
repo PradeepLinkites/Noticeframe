@@ -1,5 +1,5 @@
 import React from 'react'
-import {ScrollView, StyleSheet, Text, View, SafeAreaView, Image, Dimensions, TouchableOpacity } from 'react-native'
+import {ActivityIndicator, ScrollView, StyleSheet, Text, View, SafeAreaView, Image, Dimensions, TouchableOpacity } from 'react-native'
 import { _, get, isEmpty } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import { FlatGrid } from 'react-native-super-grid';
@@ -23,7 +23,9 @@ export default class EventScreen extends React.Component {
       isGridView: false,
       switchValue: false,
       getEventData:[],
-      eventDetails:[]
+      eventDetails:[],
+      isLoading: false,
+      userId: ''
     }
   }
 
@@ -33,17 +35,24 @@ export default class EventScreen extends React.Component {
       const user1 = JSON.parse(user)
       if(!isEmpty(user1)){
         this.props.getEvent(user1._id)
+        this.setState({ userId: user1._id})
       }
     })
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.getEventData !== prevProps.getEventData) {
-      if(this.props.getEventPhase) {
+      if(this.props.getEventPhase){
         this.props.resetEventPhase()
         this.setState({ getEventData: get(this.props, 'getEventData', []) })
         this.handleEvent(get(this.props, 'getEventData', []))
       }
+    }
+    if(this.props.updateSlideShowPhase){
+      this.props.resetEventPhase()
+      this.setState({ isLoading: false })
+      this.props.getEvent(this.state.userId)
+      this.props.getEventSlideShow(this.state.userId)
     }
   }
 
@@ -56,8 +65,16 @@ export default class EventScreen extends React.Component {
     })
   }
 
-  toggleSwitch = (value) => {
-    this.setState({ switchValue: value })
+  toggleSwitch = (id, index, value) => {
+    const { getEventData } = this.state
+    const newArray = [...this.state.getEventData]
+    newArray[index].showEventInSlideShow = value
+    this.setState({ getEventData: newArray , isLoading: true })
+    const details = {
+      data: value,
+      id: id
+    }
+    this.props.updateSlideShow(details)
   }
 
   toggleButton(name){
@@ -71,7 +88,7 @@ export default class EventScreen extends React.Component {
   }
   
   render() {
-    const { eventDetails, getEventData, isGridView, key } = this.state
+    const { eventDetails, getEventData, isGridView, key , isLoading} = this.state
     return (
       <SafeAreaView style={AppStyles.container}>
         <ScrollView style={styles.container}>
@@ -105,7 +122,7 @@ export default class EventScreen extends React.Component {
                   <View>
                   <View style={styles.slideShowView}>
                     <Text style={styles.slideShowText}>Show in SlideShow</Text>
-                    <SwitchComponent onChange = {this.toggleSwitch.bind(this)} value = {data.showEventInSlideShow}/>
+                    <SwitchComponent onChange = {this.toggleSwitch.bind(this, data._id, ind )} value = {data.showEventInSlideShow}/>
                   </View>
                   </View>
                     <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent')}>
