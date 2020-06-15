@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, Modal, Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {ActivityIndicator, Modal,  TextInput, Platform, Alert, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get ,isEmpty } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
@@ -16,8 +16,7 @@ const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
 let index = 0
-
-export default class CreateEvent extends React.Component {
+export default class EditEvent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -274,7 +273,6 @@ export default class CreateEvent extends React.Component {
         repeat: repeat,
         duration: duration
       }
-      console.log('data ===>>', data)
       data.count = 1
       const Details = {
         data: data,

@@ -125,7 +125,7 @@ export default class EventScreen extends React.Component {
                     <SwitchComponent onChange = {this.toggleSwitch.bind(this, data._id, ind )} value = {data.showEventInSlideShow}/>
                   </View>
                   </View>
-                    <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent')}>
+                    <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent',{id : data._id})}>
                       <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
                     </TouchableOpacity>
                   <View style={styles.shareView}>

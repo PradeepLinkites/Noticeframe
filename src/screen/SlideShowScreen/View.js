@@ -57,6 +57,7 @@ export default class SlideShow extends React.Component {
             autoplayTimeout={2}
             loop={true}
             onIndexChanged={(index)=> this.setState({swiperIndex: index})}
+            key={this.state.slideShowData.length}
           >        
             {slideShowData.map((item, ind)=>{
               const date = moment(item.eventDate).format("DD MMM, YYYY")
