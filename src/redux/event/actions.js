@@ -235,6 +235,30 @@
     }
   }
 
+  export function createGroup(data){
+    return dispatch => { fetch("https://notice-frame-backend.herokuapp.com/api/post/createGroup", {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+      })
+      .then((res) => {
+        return res.json()
+      })
+     .then((data) => {
+        return dispatch({
+          type: 'CREATE_GROUP',
+          data
+        });
+      })
+      .catch((error) => {
+        throw error
+      })
+    }
+  }
+
   export function resetEventPhase() {
     return {
       type: "RESET_PHASE"

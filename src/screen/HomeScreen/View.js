@@ -54,8 +54,8 @@ export default class HomeScreen extends React.Component {
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'Home' ? 'Home' : ''
     return (
-      <SafeAreaView style={AppStyles.container,{backgroundColor:'#fff'}}>
-        <View style={AppStyles.gridView}>
+      <SafeAreaView style={{flex: 1}}>
+        <View style={{paddingLeft: 25}}>
           <Text style={styles.text}>Recent Events</Text>
             <FlatGrid
               itemDimension={130}

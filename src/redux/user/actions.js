@@ -97,6 +97,29 @@ export function createUser(user) {
       }
     }
 
+    export function getUserListForShow() {
+      return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/userListForShow`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          }
+        })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+           return dispatch({
+              type: 'GET_USERLISTFORSHOW',
+              data
+            });
+          })
+          .catch((error) => {
+              throw error
+          })
+      }
+    }
+
   // export function updateUser(user) {
   //   return dispatch => { fetch('http://169.56.143.172:5001/api/v1/accounts/edit', {
   //         method: 'POST',

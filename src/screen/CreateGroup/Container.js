@@ -1,7 +1,8 @@
 import { connect } from 'react-redux';
 
 // Actions
-import { cancelSubscription , getUser, resetPhase } from '@redux/user/actions';
+import { getUser, getUserListForShow, resetPhase } from '@redux/user/actions';
+import { createGroup , resetEventPhase } from '@redux/event/actions';
 
 // The component we're mapping to
 import FormRender from './View';
@@ -11,16 +12,20 @@ const mapStateToProps = state => ({
   getUserPhase: state.user.getUserPhase,
   getUserMessage: state.user.getUserMessage,
   getUserData: state.user.getUserData,
-  cancelSubscriptionPhase: state.user.cancelSubscriptionPhase,
-  cancelSubscriptionMessage: state.user.cancelSubscriptionMessage,
-  cancelSubscriptionData: state.user.cancelSubscriptionData
+  getUserListForShowPhase: state.user.getUserListForShowPhase,
+  getUserListForShowData: state.user.getUserListForShowData,
+
+  createGroupPhase: state.event.createGroupPhase,
+  createGroupMessage: state.event.createGroupMessage,
 });
 
 // Any actions to map to the component?
 const mapDispatchToProps = {
-  cancelSubscription: cancelSubscription,
   getUser: getUser,
-  resetPhase: resetPhase
+  getUserListForShow: getUserListForShow,
+  createGroup: createGroup,
+  resetPhase: resetPhase,
+  resetEventPhase: resetEventPhase
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormRender);

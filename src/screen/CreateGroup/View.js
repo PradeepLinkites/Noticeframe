@@ -1,23 +1,76 @@
 import React from 'react'
-import {Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {Picker, TextInput, Platform, StyleSheet, Text, View,  SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/commonNavbar'
-import { get } from 'lodash'
+import { get, isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import ImagePicker from 'react-native-image-picker'
-
+import AsyncStorage from '@react-native-community/async-storage'
+import MultiSelect from 'react-native-multiple-select'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
-
 
 export default class CreateEvent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       avatarSource: '',
-      groupName: ''
+      groupName: '',
+      texts: [],
+      fileList: [],
+      userList: [],
+      eventPicture: [],
+      eventPictureError: false,
+      groupNameError: false,
+      firstName:'',
+      lastName:'',
+      userId: '',
+      selectedItems: [],
+      selectedItemsError: false,
+      message: ''
     }
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
+  }
+
+  componentDidMount() {
+    AsyncStorage.getItem('@user')
+    .then((user) => {
+      const user1 = JSON.parse(user)
+      if(!isEmpty(user1)){
+        this.props.getUser(user1._id)
+        this.props.getUserListForShow()
+        this.setState({ userId: user1._id})
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.createGroupPhase) {
+      this.setState({ selectedItems: [], groupName: '',  loading: false , message:  get(prevProps, 'createGroupMessage','')})
+      alert(get(prevProps, 'createGroupMessage',''))
+    }
+    if (prevProps.getUserListForShowPhase) {
+      let arr = []
+      this.props.resetPhase()
+      get(prevProps, 'getUserListForShowData', []).map(item=>{
+        let obj = {}
+        obj['id'] = get(item, '_id', '')
+        obj['firstName'] = get(item, 'firstName', '')
+        obj['lastName'] = get(item, 'lastName', '')
+        obj['email'] = get(item, 'email', '')
+        obj['key'] = get(item, 'key', '')
+        obj['name'] = get(item, 'email', '')
+        arr.push(obj)
+      })
+      this.setState({ userList: arr })
+    }
+    if (prevProps.getUserPhase) {
+      this.setState({ 
+        firstName: get(prevProps, 'getUserData.firstName', ''), 
+        lastName: get(prevProps, 'getUserData.lastName', ''),
+        loading: false })
+    }
+    this.props.resetPhase()
   }
 
   selectPhotoTapped() {
@@ -48,11 +101,51 @@ export default class CreateEvent extends React.Component {
     });
   }
 
+  createGroup() {
+    let memberList = []
+    this.state.userList.map(item=>{
+    if(this.state.selectedItems.indexOf(item.id) != -1){
+      memberList.push(item)
+    }
+    })
+    const {groupName, userId, selectedItems } = this.state
+    var error = true
+    this.setState({
+      groupNameError: false,
+      selectedItemsError: false,
+    })
+    if (groupName.trim() === '') {
+      error = false
+      this.setState({ groupNameError: true })
+    }
+    if ((selectedItems).length === 0) {
+      error = false
+      this.setState({ selectedItemsError: true })
+    }
+    if(error){
+      this.setState({ loading: true })
+      const data = {
+        groupName: this.state.groupName,
+        inviteMembers: memberList,
+        userId: userId,
+        userName: this.state.firstName + ' ' + this.state.lastName,
+        key: Date.now()
+      }
+      console.log(data,'data')
+      this.props.createGroup(data)
+    }
+  }
+
+  onSelectedItemsChange = selectedItems => {
+    this.setState({ selectedItems })
+  }
+
   render() {
+    const { groupNameError,  userList, selectedItemsError } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'CreateGroup' ? 'Create Group' : ''
     return (
-    <SafeAreaView style={[AppStyles.container,{backgroundColor:'#3b5261'}]}>
+        <SafeAreaView style={[AppStyles.container,{backgroundColor:'#3b5261'}]}>
           <Navbar 
             navigation={this.props.navigation} 
             navTitle={route} 
@@ -83,17 +176,41 @@ export default class CreateEvent extends React.Component {
                   onChangeText={text => this.setState({ groupName: text})}
                   value={this.state.groupName}
                 />
+              {groupNameError && <Text style={AppStyles.error}>Please enter event name</Text>} 
             </View>
             <View style={styles.eventContainer}>
-                <Text style={styles.listTitle}>Select Members to join</Text>
-                <TextInput
+                <Text style={[styles.listTitle,{marginBottom: 10}]}>Select Members to join</Text>
+                {/* <TextInput
                   multiline
                   style={styles.inputBox}
                   maxLength={40}
                   placeholderTextColor="red"
-                  // onChangeText={text => this.setState({ groupName: text})}
-                  // value={this.state.groupName}
+                  onChangeText={text => this.setState({ texts: text})}
+                  value={this.state.texts}
+                /> */}
+                <MultiSelect
+                  items={userList}
+                  uniqueKey="id"
+                  ref={component => {
+                    this.multiSelect = component  
+                  }}
+                  onSelectedItemsChange={this.onSelectedItemsChange}
+                  selectedItems={this.state.selectedItems}
+                  selectText="Pick Members"
+                  searchInputPlaceholderText="Search Names ..."
+                  onChangeInput={text => console.log(text)}
+                  tagRemoveIconColor="#CCC"
+                  tagBorderColor="#CCC"
+                  tagTextColor="#CCC"
+                  selectedItemTextColor="#CCC"
+                  selectedItemIconColor="#CCC"
+                  itemTextColor="#000"
+                  displayKey="name"
+                  searchInputStyle={{ color: '#CCC' }}
+                  submitButtonColor="#48d22b"
+                  submitButtonText="Submit"
                 />
+              {selectedItemsError && <Text style={AppStyles.error}>Please select the member</Text>} 
             </View>
             <View style={styles.eventContainer}>
                 <Text style={styles.listTitle}>To members who have not joined</Text>
@@ -113,14 +230,14 @@ export default class CreateEvent extends React.Component {
                       <Text style={[styles.cancelText,{color:'#000'}]}>CANCEL</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={[styles.cancelButton, {backgroundColor:'#3b5261'}]}
-                      // onPress={() => this.props.navigation.navigate('ListView')}
+                    onPress={this.createGroup.bind(this)}
                     >
-                      <Text style={[styles.cancelText,{color:'#fff'}]}>CREATE</Text>
+                    <Text style={[styles.cancelText,{color:'#fff'}]}>CREATE</Text>
                   </TouchableOpacity>
                 </View>
               </View>
           </ScrollView>    
-      </SafeAreaView>
+        </SafeAreaView>
     )
   }
 }

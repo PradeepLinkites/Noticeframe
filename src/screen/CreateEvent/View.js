@@ -37,11 +37,13 @@ export default class CreateEvent extends React.Component {
       personal: false,
       business: false,
       group: true,
-      memberList: ['','',''],
+      groupName: '',
+      memberList: [],
+      groupList:[],
+      groupListName: [],
       defaultFillColor: 'Tusk',
       eventDate: moment().format('DD MMMM, YYYY'),
       eventDate1: '',
-      groupName: '',
       startTime: moment().add(1, 'hours').format('hh:mm a'),
       startTime1: '',
       isStartPickerVisible: false,
@@ -62,7 +64,6 @@ export default class CreateEvent extends React.Component {
       userEmail: '',
       getUserData: {},
       getSettingData: {},
-      groupList:[],
       userId: '',
       duration: '',
       setTime: '',
@@ -130,7 +131,13 @@ export default class CreateEvent extends React.Component {
     }
     if (this.props.getGroupListForShowPhase) {
       this.props.resetEventPhase()
-      this.setState({ groupList: get(this.props, 'getGroupListForShowData', []) })
+      let arr = []
+      get(this.props, 'getGroupListForShowData', []).map(item=>{
+        let obj = {}
+        obj['value'] = get(item, 'groupName', '')
+        arr.push(obj)
+      })
+      this.setState({ groupList: get(this.props, 'getGroupListForShowData', []), groupListName: arr })
     }
   }
 
@@ -145,12 +152,12 @@ export default class CreateEvent extends React.Component {
       this.setState({ category : text, personal: false, group: false , business: true })
     }
   }
+
   onSelectRecurrence(item){
     this.setState({ repeat : item })
   }
 
   handleDate = (date) => {
-    // console.log('date===>>', date)
     let newDate = moment(date).utcOffset('+05:30').format('DD-MMMM-YYYY')
     this.setState({ eventDate: newDate , isDatePickerVisible : false , eventDate1: date})
   }
@@ -175,8 +182,15 @@ export default class CreateEvent extends React.Component {
   onEventChange =(text)=>{
     this.setState({ eventName: text })
   }
-  onGroupNameChange =(text)=>{
-    this.setState({ groupName: text })
+  
+  selectGroupName =(name)=>{
+    const { groupList, memberList } = this.state
+    groupList.map(item =>{
+      if(item.groupName === name){
+        this.setState({ memberList: [...memberList , item ]})
+      }
+    })
+    this.setState({ groupName: name })
   }
  
   toggleSwitch1 = (value) => {
@@ -195,10 +209,7 @@ export default class CreateEvent extends React.Component {
         skipBackup: true,
       },
     }
-
     ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
-
       if (response.didCancel) {
         console.log('User cancelled photo picker');
       } else if (response.error) {
@@ -219,10 +230,16 @@ export default class CreateEvent extends React.Component {
   }
 
   createEvent(){
-    const{ eventPicture, eventName, memberList, defaultFillColor, eventDate, eventDate1, startTime1, endTime1, notes, 
+    const{ eventPicture, eventName, groupName, memberList, defaultFillColor, eventDate, eventDate1, startTime1, endTime1, notes, 
         location, personal, business, group, setReminderAlarm, showNotesInSlideShow, showEventInSlideShow, setTime,
         category, repeat, duration } = this.state
     var error = true
+    // let newArray = []
+    // this.state.userList.map(item=>{
+    // if(this.state.selectedItems.indexOf(item.id) != -1){
+    //   memberList.push(item)
+    // }
+    // })
     this.setState({
       eventNameError: false,
       notesError: false,
@@ -272,7 +289,7 @@ export default class CreateEvent extends React.Component {
   }
 
   render() {
-    const {eventNameError, notesError, checked, modalVisible, memberList, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
+    const {eventNameError, notesError, checked, modalVisible, groupListName, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'CreateEvent' ? 'Create Event' : ''
     return (
@@ -300,45 +317,36 @@ export default class CreateEvent extends React.Component {
               <Text style={styles.listTitle}>Event Name</Text>
               <View style={{ flexDirection:'row', justifyContent:'space-between'}}>
                 <TextInput
-                    style={styles.eventInputBox}
-                    placeholder = "Event Name"
-                    placeholderTextColor="#000"
-                    maxLength={40}
-                    onChangeText={text => this.onEventChange(text)}
-                    value={this.state.eventName}
+                  style={styles.eventInputBox}
+                  placeholder = "Event Name"
+                  placeholderTextColor="#000"
+                  maxLength={40}
+                  onChangeText={text => this.onEventChange(text)}
+                  value={this.state.eventName}
                   />
-                <View style={{ width: 125, paddingHorizontal: 5}}>
-                  <Dropdown
-                    value={category}
-                    selectedItemColor = '#000'
-                    textColor = '#3293ed'
-                    onChangeText={(item)=>this.onSelectCategory(item)}
-                    data={categoryList}
-                    dropdownOffset={{ top: 10, left: 0 }}
-                  />
-                </View>
+              <View style={{ width: 125, paddingHorizontal: 5}}>
+                <Dropdown
+                  value={category}
+                  selectedItemColor = '#000'
+                  textColor = '#3293ed'
+                  onChangeText={(item)=>this.onSelectCategory(item)}
+                  data={categoryList}
+                  dropdownOffset={{ top: 10, left: 0 }}
+                />
+              </View>
               </View>
               {eventNameError && <Text style={AppStyles.error}>Please enter the event name</Text>}
             </View>
               {category === 'GROUP' &&
                 <View style={styles.selectGroupView}>
                   <Text style={styles.listTitle}>Select Group</Text>
-                  {/* <TextInput
-                    multiline
-                    style={[styles.inputBox,{borderBottomWidth:0}]}
-                    placeholder = "Type Group name or select from list"
-                    maxLength={40}
-                    placeholderTextColor="#000"
-                    onChangeText={text => this.onGroupNameChange(text)}
-                    value={this.state.groupName}
-                  /> */}
                   <View style={{ marginTop: 10 }}>
                     <Dropdown
-                      value={'Select Member list'}
+                      value={'Select Group Name'}
                       selectedItemColor = '#000'
                       textColor = '#000'
-                      onChangeText={(item)=>this.onSelectRecurrence(item)}
-                      data={memberList}
+                      onChangeText={(item)=>this.selectGroupName(item)}
+                      data={groupListName}
                       fontSize={14}
                       dropdownOffset={{ top: 0, left: 0 }}
                     />

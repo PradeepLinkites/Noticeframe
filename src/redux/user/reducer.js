@@ -1,15 +1,6 @@
 
 // Set initial state
 const initialState = {
-  // apiMessage: {},
-  // singupData: {},
-  // singupFbData: {},
-  // singupGoogleData: {},
-  // loginData: {},
-  // forgetData: {},
-  // userData: {},
-
-//New code
   createUserPhase: false,
   createUserMessage: '',
   createUserData: {},
@@ -20,15 +11,8 @@ const initialState = {
   getUserPhase: false,
   getUserMessage: '',
   getUserData: {},
-
-  // updateUserPhase: false,
-  // updateUserMessage: '',
-  // cancelSubscriptionPhase: false,
-  // cancelSubscriptionMessage: '',
-  // cancelSubscriptionData: {},
-  // socialLoginPhase: false,
-  // socialLoginMessage: '',
-  // socialLoginData: {}
+  getUserListForShowPhase: false,
+  getUserListForShowData: [],
 };
 
 export default function userReducer(state = initialState, action) {
@@ -92,6 +76,26 @@ export default function userReducer(state = initialState, action) {
       }
     }
 
+    case 'GET_USERLISTFORSHOW': {
+      const input = action.data
+      if(input.status){
+        return {
+          ...state,
+          getUserListForShowPhase: input.status,
+          getUserListForShowData: input.data
+        };  
+      }
+    }
+    
+    case 'RESET_PHASE': {
+      return {
+        ...state,
+        createUserPhase: false,
+        loginUserPhase: false,
+        getUserPhase: false,
+        getUserListForShowPhase: false
+      };
+    }
     // case 'UPDATE_USER': {
     //   const input = action.data;
     //   return {
@@ -129,15 +133,7 @@ export default function userReducer(state = initialState, action) {
     //     };  
     //   }
     // }
-    case 'RESET_PHASE': {
-      return {
-        ...state,
-        createUserPhase: false,
-        loginUserPhase: false,
-        getUserPhase: false,
-      };
-    }
-    
+  
     // case 'RESET_ERROR_DATA': {
     //   return {
     //     ...state,
