@@ -29,6 +29,7 @@ export default class CreateEvent extends React.Component {
       selectedItemsError: false,
       message: ''
     }
+    this._initState = this.state 
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
   }
 
@@ -80,10 +81,8 @@ export default class CreateEvent extends React.Component {
       maxHeight: 500,
       storageOptions: {
         skipBackup: true,
-        // maxWidth: 1200, maxHeight: 800, quality: 0.9, noData: true,
       },
     };
-
     ImagePicker.showImagePicker(options, response => {
       console.log('Response = ', response);
       if (response.didCancel) {
@@ -104,9 +103,9 @@ export default class CreateEvent extends React.Component {
   createGroup() {
     let memberList = []
     this.state.userList.map(item=>{
-    if(this.state.selectedItems.indexOf(item.id) != -1){
-      memberList.push(item)
-    }
+      if(this.state.selectedItems.indexOf(item.id) != -1){
+        memberList.push(item)
+      }
     })
     const {groupName, userId, selectedItems } = this.state
     var error = true
@@ -131,13 +130,18 @@ export default class CreateEvent extends React.Component {
         userName: this.state.firstName + ' ' + this.state.lastName,
         key: Date.now()
       }
-      console.log(data,'data')
       this.props.createGroup(data)
     }
   }
 
   onSelectedItemsChange = selectedItems => {
     this.setState({ selectedItems })
+  }
+
+  _cancel =()=> {
+    this.setState(this._initState)
+    this.props.navigation.goBack(null)
+    return true
   }
 
   render() {
@@ -191,24 +195,23 @@ export default class CreateEvent extends React.Component {
                 <MultiSelect
                   items={userList}
                   uniqueKey="id"
-                  ref={component => {
-                    this.multiSelect = component  
-                  }}
                   onSelectedItemsChange={this.onSelectedItemsChange}
                   selectedItems={this.state.selectedItems}
                   selectText="Pick Members"
                   searchInputPlaceholderText="Search Names ..."
                   onChangeInput={text => console.log(text)}
                   tagRemoveIconColor="#CCC"
-                  tagBorderColor="#CCC"
-                  tagTextColor="#CCC"
-                  selectedItemTextColor="#CCC"
-                  selectedItemIconColor="#CCC"
-                  itemTextColor="#000"
+                  tagBorderColor="#3b5261"
+                  tagTextColor="#A2a2a2"
+                  selectedItemTextColor="#000"
+                  selectedItemIconColor="green"
+                  itemTextColor="#A2a2a2"
                   displayKey="name"
                   searchInputStyle={{ color: '#CCC' }}
-                  submitButtonColor="#48d22b"
+                  submitButtonColor="#3b5261"
                   submitButtonText="Submit"
+                  textColor="#A2a2a2"
+                  itemFontSize={18}
                 />
               {selectedItemsError && <Text style={AppStyles.error}>Please select the member</Text>} 
             </View>
@@ -218,16 +221,16 @@ export default class CreateEvent extends React.Component {
                   style={styles.button}
                   onPress={()=>alert('call')}
                 >
-                  <Text style={AppStyles.buttonText}>Resend Email Notification</Text>
+                  <Text style={AppStyles.buttonText}>Send Email Notification</Text>
                 </TouchableOpacity>
             </View>
 
               <View style={styles.bottomView}>
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                   <TouchableOpacity style={[styles.cancelButton, {backgroundColor:'#A2a2a2'}]}
-                      // onPress={onPress}
+                    onPress={this._cancel.bind(this)}
                     >
-                      <Text style={[styles.cancelText,{color:'#000'}]}>CANCEL</Text>
+                    <Text style={[styles.cancelText,{color:'#000'}]}>CANCEL</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={[styles.cancelButton, {backgroundColor:'#3b5261'}]}
                     onPress={this.createGroup.bind(this)}

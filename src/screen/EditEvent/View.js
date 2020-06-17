@@ -544,8 +544,8 @@ export default class EditEvent extends React.Component {
               
               <View style={styles.bottomContainer}>
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-                <TouchableOpacity style={[styles.cancelButton, {backgroundColor:'#A2a2a2'}]}
-                    onPress={()=>this.props.navigation.navigate('Home')}
+                  <TouchableOpacity style={[styles.cancelButton, {backgroundColor:'#A2a2a2'}]}
+                    onPress={()=>this.props.navigation.goBack(null)}
                   >
                     <Text style={[styles.cancelText,{color:'#000'}]}>CANCEL</Text>
                   </TouchableOpacity>

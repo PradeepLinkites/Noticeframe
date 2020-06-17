@@ -78,7 +78,7 @@ export default class CreateEvent extends React.Component {
       yellowHour: 48,
       greenHour: 72,
     }
-    // this.state = this._initState
+    this._initState = this.state 
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this)
     this.onSelectCategory = this.onSelectCategory.bind(this)
     this.onSelectRecurrence = this.onSelectRecurrence.bind(this)
@@ -225,8 +225,10 @@ export default class CreateEvent extends React.Component {
     })
   }
 
-  _resetState =()=> {
+  _resetState = () => {
     this.setState(this._initState)
+    this.props.navigation.goBack(null)
+    return true
   }
 
   createEvent(){
