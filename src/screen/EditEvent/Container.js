@@ -10,7 +10,7 @@ import FormRender from './View';
 const mapStateToProps = state => ({
   getEventDetailPhase: state.event.getEventDetailPhase,
   getEventDetailData: state.event.getEventDetailData,
-  getSetttingPhase: state.event.getSetttingPhase,
+  getSettingPhase: state.event.getSettingPhase,
   getSettingMessage: state.event.getSettingMessage,
   getSettingData: state.event.getSettingData,
   getGroupListForShowPhase: state.event.getGroupListForShowPhase,

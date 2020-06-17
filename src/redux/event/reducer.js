@@ -25,7 +25,8 @@ const initialState = {
   updateSlideShowPhase: false,
   updateSlideShowMessage: '',
   createGroupPhase: false,
-  createGroupMessage: ''
+  createGroupMessage: '',
+  updateSettingPhase: false,
 };
 
 export default function userReducer(state = initialState, action) {
@@ -35,7 +36,7 @@ export default function userReducer(state = initialState, action) {
       if(input.status){
         return {
           ...state,
-          getSetttingPhase: input.status,
+          getSettingPhase: input.status,
           getSettingMessage: input.message,
           getSettingData: input.data
         };  
@@ -148,10 +149,20 @@ export default function userReducer(state = initialState, action) {
       }
     }
 
+    case 'UPDATE_SETTING': {
+      const input = action.data
+      if(input.status){
+        return {
+          ...state,
+          updateSettingPhase: input.status,
+        };  
+      }
+    }
+
     case 'RESET_PHASE': {
       return {
         ...state,
-        getSetttingPhase: false,
+        getSettingPhase: false,
         getGroupListForShowPhase: false,
         createEventPhase: false,
         getEventDetailPhase: false,
@@ -161,7 +172,8 @@ export default function userReducer(state = initialState, action) {
         updateEventPhase: false,
         deleteEventPhase: false,
         updateSlideShowPhase: false,
-        createGroupPhase: false
+        createGroupPhase: false,
+        updateSettingPhase: false
       }
     }
     // case 'SELECT_CATEGORY': {

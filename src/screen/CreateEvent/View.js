@@ -114,7 +114,7 @@ export default class CreateEvent extends React.Component {
       }
     }
     if (this.props.getSettingData !== prevProps.getSettingData) {
-      if(this.props.getSetttingPhase) {
+      if(this.props.getSettingPhase) {
         this.props.resetEventPhase()
         this.setState({
           personal: get(this.props, 'getSettingData.Event.personal', false),

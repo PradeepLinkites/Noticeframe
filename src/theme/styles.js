@@ -79,9 +79,16 @@ export default {
   
   // Style for NoticeFrame
   // Auth
+  
   container: {
     flex: 1,
     backgroundColor:'#3b5261'
+  },
+  activityIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 80
   },
   scrollContainer: {
     backgroundColor:'#fff'
@@ -173,8 +180,7 @@ export default {
     backgroundColor:'#ff6600',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: Platform.OS === 'android' ? 5 : 6,
-    paddingBottom: Platform.OS === 'android' ? 5 : 6,
+    paddingVertical: Platform.OS === 'android' ? 5 : 6,
     marginLeft: 5,
     marginRight: 5
   },

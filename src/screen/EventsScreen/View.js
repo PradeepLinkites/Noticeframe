@@ -1,6 +1,6 @@
 import React from 'react'
 import {ActivityIndicator, ScrollView, StyleSheet, Text, View, SafeAreaView, Image, Dimensions, TouchableOpacity } from 'react-native'
-import { _, get, isEmpty } from 'lodash'
+import { _, get, isEmpty , size} from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import { FlatGrid } from 'react-native-super-grid';
 import SwitchComponent from '../Common/Switch'
@@ -30,6 +30,7 @@ export default class EventScreen extends React.Component {
   }
 
   componentDidMount() {
+    this.setState({ isLoading: true })
     AsyncStorage.getItem('@user')
     .then((user) => {
       const user1 = JSON.parse(user)
@@ -44,7 +45,7 @@ export default class EventScreen extends React.Component {
     if (this.props.getEventData !== prevProps.getEventData) {
       if(this.props.getEventPhase){
         this.props.resetEventPhase()
-        this.setState({ getEventData: get(this.props, 'getEventData', []) })
+        this.setState({ getEventData: get(this.props, 'getEventData', []), isLoading: false })
         this.handleEvent(get(this.props, 'getEventData', []))
       }
     }
@@ -69,7 +70,7 @@ export default class EventScreen extends React.Component {
     const { getEventData } = this.state
     const newArray = [...this.state.getEventData]
     newArray[index].showEventInSlideShow = value
-    this.setState({ getEventData: newArray , isLoading: true })
+    this.setState({ getEventData: newArray })
     const details = {
       data: value,
       id: id
@@ -90,7 +91,10 @@ export default class EventScreen extends React.Component {
   render() {
     const { eventDetails, getEventData, isGridView, key , isLoading} = this.state
     return (
-      <SafeAreaView style={AppStyles.container}>
+      <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
+       {isLoading ?
+        <ActivityIndicator color = {'#3b5261'} size = "large" style = {AppStyles.activityIndicator} />
+        :
         <ScrollView style={styles.container}>
           <View style={styles.topContainer}> 
             <Text style={{ fontSize: 18, marginLeft: 10 }}>Events</Text>
@@ -111,7 +115,7 @@ export default class EventScreen extends React.Component {
               let end_time = moment(data.endTime).format("h:mm A")
               return(
                 <TouchableOpacity 
-                  onPress={()=> this.props.navigation.navigate('EventDetail',{id : data._id})} 
+                  onPress={()=> this.props.navigation.navigate('EventDetail',{id : data._id})}b 
                   style={[styles.eventListView,{backgroundColor : data.defaultFillColor === 'White' ? '#ffffff' : data.defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : data.defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
                       : data.defaultFillColor === 'Coral Candy' ? '#f5d5cb': data.defaultFillColor === 'Cruise' ? '#b5dce1': data.defaultFillColor === 'Swirl' ? '#d6cdc8': data.defaultFillColor === 'Tusk' ? '#d7e0b1': ''}]}>
                   <View style={{flex:1}}>
@@ -135,9 +139,15 @@ export default class EventScreen extends React.Component {
                 )
               })
             }
+            {size(getEventData) == 0 && 
+              <View style={{alignItems: 'center',marginTop: deviceHeight/5}}>
+                <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
+                <Text>No Events Created Yet Create One Now!</Text>
+              </View>
+            }
           </View>
           : 
-          <View>
+          <>
             {eventDetails.map((data,ind) => {
               return(
               <View style={AppStyles.gridView} key={ind}>
@@ -168,9 +178,16 @@ export default class EventScreen extends React.Component {
               )
             })
             }
-          </View>
+            {size(eventDetails) == 0 && 
+              <View style={{alignItems: 'center',marginTop: deviceHeight/5}}>
+                <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
+                <Text>No Events Created Yet Create One Now!</Text>
+              </View>
+            }
+          </>
           }
         </ScrollView>
+        }
         <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
           <Image source={require('../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
         </TouchableOpacity>
@@ -181,7 +198,7 @@ export default class EventScreen extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, backgroundColor:'#fff'
+    backgroundColor:'#fff'
   },
   topContainer: {
     flexDirection:'row', justifyContent:'space-between', borderBottomWidth: .3, paddingVertical: 15

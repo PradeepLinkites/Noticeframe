@@ -1,10 +1,12 @@
 import React from 'react'
-import {Platform, StyleSheet, Text, View, Button, SafeAreaView, ScrollView, Dimensions,TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Platform, StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions,TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
-import { get } from 'lodash'
+import { get, isEmpty } from 'lodash'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import SwitchComponent from '../Common/Switch'
+import AsyncStorage from '@react-native-community/async-storage'
+
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -12,15 +14,51 @@ export default class FrameColorSetting extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      settingDetails:[],
       urgent: false,
       lessUrgent: false,
       notUrgent: false,
       urgentHours: 24,
       lessUrgentHours: 48,
-      notUrgentHours: 72
+      notUrgentHours: 72,
+      userId: '',   
+      isLoading: true
     }
   }
 
+  componentDidMount() {
+    AsyncStorage.getItem('@user')
+    .then((user) => {
+      const user1 = JSON.parse(user)
+      if(!isEmpty(user1)){
+        this.props.getSetting(user1._id)
+        this.setState({ userId: user1._id})
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps){
+    // console.log('props==>>', this.props.updateSettingPhase)
+      if(this.props.getSettingPhase){
+        this.props.resetEventPhase()
+        this.setState({ 
+          settingDetails: get(this.props,'getSettingData',''),
+          urgent: get(this.props,'getSettingData.FrameColor.red',''),
+          lessUrgent: get(this.props,'getSettingData.FrameColor.yellow',''),
+          notUrgent: get(this.props,'getSettingData.FrameColor.green',''),
+          urgentHours: get(this.props,'getSettingData.FrameColor.redHour',''), 
+          lessUrgentHours: get(this.props,'getSettingData.FrameColor.yellowHour',''), 
+          notUrgentHours: get(this.props,'getSettingData.FrameColor.greenHour',''),
+          isLoading: false
+        })
+      }
+    if(this.props.updateSettingPhase){
+      this.props.resetEventPhase()
+      this.setState({ isLoading : false })
+      this.props.getSetting(this.state.userId)
+    }
+  }
+  
   onChange(name, value){
     if(name === 'urgent'){
       this.setState({ urgent: value})
@@ -71,8 +109,31 @@ export default class FrameColorSetting extends React.Component {
     }
   }
 
+  submit(){
+    this.setState({ isLoading: true })
+    const data = {
+      id: this.state.userId,
+      value:{
+        FrameColor: {
+          red: this.state.urgent,
+          yellow: this.state.lessUrgent,
+          green: this.state.notUrgent,
+          redHour: this.state.urgentHours,
+          yellowHour: this.state.lessUrgentHours,
+          greenHour: this.state.notUrgentHours,
+          frameColorsObj: [
+            { color:'#ed1c24', sign:'Urgent', type: this.state.urgent },
+            { color:'#ff9900', sign:'Less-Urgent', type: this.state.lessUrgent },
+            { color:'#3cb878', sign:'Not-Urgent', type: this.state.notUrgent }
+          ]
+        }
+      }
+    }
+    this.props.updateSetting(data)
+  }
+
   render() {
-    const { urgent, lessUrgent, notUrgent, urgentHours, lessUrgentHours, notUrgentHours,slideValue1,slideValue2,slideValue3 } = this.state
+    const { isLoading,  urgent, lessUrgent, notUrgent, urgentHours, lessUrgentHours, notUrgentHours,slideValue1,slideValue2,slideValue3 } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'FrameColorSetting' ? 'Frame Color Settings' : ''
     return (
@@ -161,6 +222,17 @@ export default class FrameColorSetting extends React.Component {
                 <TouchableOpacity onPress={this._incrementHours.bind(this,'notUrgent')} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity>
               </View>
             </View> 
+            <TouchableOpacity
+              style={[AppStyles.button,{backgroundColor: '#3b5261', paddingVertical: Platform.OS === 'android' ? 10  : 12 ,marginLeft: 20,marginRight: 20}]}
+              onPress={this.submit.bind(this)}
+            >
+              {isLoading
+                ?
+                <ActivityIndicator size="small" color="#fff" />
+                :
+                <Text style={[AppStyles.buttonText,{fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14)}]}>Save</Text>
+              }
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </SafeAreaView>

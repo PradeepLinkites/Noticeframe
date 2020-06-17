@@ -47,6 +47,7 @@ export default class SlideShow extends React.Component {
       <SafeAreaView style={AppStyles.container}>
         {/* <ScrollView> */}
         <View style={styles.container}>
+          {size(slideShowData) > 0 ?
           <Swiper
             autoplay={true}
             dot={<View style={{backgroundColor: '#A2a2a2', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3}} />}
@@ -98,6 +99,12 @@ export default class SlideShow extends React.Component {
               )
             })}         
           </Swiper>
+          : 
+          <View style={{justifyContent: 'center',alignItems: 'center',flex: 1}}>
+            <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
+            <Text>No Events Created Yet Create One Now!</Text>
+          </View>
+          }
         </View>
         {/* </ScrollView> */}
       </SafeAreaView>
@@ -149,8 +156,6 @@ const styles = StyleSheet.create({
     alignSelf:'flex-end',
     right: 20,
     backgroundColor: 'rgba(248, 247, 216, 0.2)',
-    // borderRightWidth: 3,
-    // borderRightColor: '#ff9900'
   },
   smallEventView: {
     flexDirection:'row',

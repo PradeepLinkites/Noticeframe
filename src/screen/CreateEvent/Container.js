@@ -14,7 +14,7 @@ const mapStateToProps = state => ({
   getUserMessage: state.user.getUserMessage,
   getUserData: state.user.getUserData,
 
-  getSetttingPhase: state.event.getSetttingPhase,
+  getSettingPhase: state.event.getSettingPhase,
   getSettingMessage: state.event.getSettingMessage,
   getSettingData: state.event.getSettingData,
   getGroupListForShowPhase: state.event.getGroupListForShowPhase,
