@@ -37,8 +37,7 @@ export default class FrameColorSetting extends React.Component {
     })
   }
 
-  componentDidUpdate(prevProps){
-    // console.log('props==>>', this.props.updateSettingPhase)
+  componentDidUpdate(prevProps, prevState){
       if(this.props.getSettingPhase){
         this.props.resetEventPhase()
         this.setState({ 

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Modal, Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {Modal, TextInput, Platform, Alert, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get, isEmpty } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
@@ -119,12 +119,12 @@ export default class CreateEvent extends React.Component {
         this.setState({
           personal: get(this.props, 'getSettingData.Event.personal', false),
           business: get(this.props, 'getSettingData.Event.business', false),
-          red: get(this.props, 'getSettingData.FrameColor.red', []),
-          yellow: get(this.props, 'getSettingData.FrameColor.yellow', []),  
-          green: get(this.props, 'getSettingData.FrameColor.green', []),
-          redHour: get(this.props, 'getSettingData.FrameColor.redHour', []),
-          yellowHour: get(this.props, 'getSettingData.FrameColor.yellowHour', []),
-          greenHour: get(this.props, 'getSettingData.FrameColor.greenHour', []),
+          red: get(this.props, 'getSettingData.FrameColor.red', false),
+          yellow: get(this.props, 'getSettingData.FrameColor.yellow', false),  
+          green: get(this.props, 'getSettingData.FrameColor.green', false),
+          redHour: get(this.props, 'getSettingData.FrameColor.redHour', 0),
+          yellowHour: get(this.props, 'getSettingData.FrameColor.yellowHour', 0),
+          greenHour: get(this.props, 'getSettingData.FrameColor.greenHour', 0),
           loading: false
         })
       }
@@ -159,6 +159,8 @@ export default class CreateEvent extends React.Component {
 
   handleDate = (date) => {
     let newDate = moment(date).utcOffset('+05:30').format('DD-MMMM-YYYY')
+    console.log('date==>>', date)
+    console.log('newDate==>>', newDate)
     this.setState({ eventDate: newDate , isDatePickerVisible : false , eventDate1: date})
   }
  
@@ -236,12 +238,8 @@ export default class CreateEvent extends React.Component {
         location, personal, business, group, setReminderAlarm, showNotesInSlideShow, showEventInSlideShow, setTime,
         category, repeat, duration } = this.state
     var error = true
-    // let newArray = []
-    // this.state.userList.map(item=>{
-    // if(this.state.selectedItems.indexOf(item.id) != -1){
-    //   memberList.push(item)
-    // }
-    // })
+    console.log('startTime1==>>', startTime1)
+    console.log('endTime1==>>', endTime1)
     this.setState({
       eventNameError: false,
       notesError: false,
@@ -286,6 +284,7 @@ export default class CreateEvent extends React.Component {
         data: data,
         id: get(this.state, 'userId','')
       }
+      console.log('data==>>', Details)
       this.props.createEvent(Details)
     }
   }

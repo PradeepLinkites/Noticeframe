@@ -1,7 +1,7 @@
 
 // Set initial state
 const initialState = {
-  getSetttingPhase: false,
+  getSettingPhase: false,
   getSettingMessage: '',
   getSettingData: {},
   getGroupListForShowPhase: false,

@@ -208,7 +208,7 @@ export default {
   playButton: {
     position:'absolute',
     top: Platform.OS === 'android' ? 6 : 6,
-    right: Platform.OS === 'android' ? 22 : 30,
+    right: Platform.OS === 'android' ? 26 : 30,
   },
   eventBottomBar:{
     width: Platform.OS === 'android' ? Sizes.verticalScale(135) : Sizes.verticalScale(130),

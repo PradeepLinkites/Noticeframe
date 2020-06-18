@@ -15,8 +15,7 @@ const deviceHeight = Dimensions.get('window').height
 let index = 0
 const data = [
     { key: index++, label: 'Google Calender' },
-    { key: index++, label: 'Samsung Calender' },
-    { key: index++, label: 'Apple Calender' },
+    { key: index++, label: 'OutLoook Calender' },
 ]
 
 const items = [{

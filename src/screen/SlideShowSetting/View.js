@@ -1,12 +1,12 @@
 import React from 'react'
-import {Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {ActivityIndicator, Platform, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/commonNavbar'
-import { get } from 'lodash'
+import { get , isEmpty, size } from 'lodash'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import SwitchComponent from '../Common/Switch'
 import ModalSelector from 'react-native-modal-selector'
-
+import AsyncStorage from '@react-native-community/async-storage'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -22,31 +22,130 @@ export default class SlideShowSetting extends React.Component {
     super(props)
     this.state = {
       selectValue: '',
-      animationType : 'Fade-in',
-      slideValue: 3
+      transitions: 'Fade-in',
+      settingDetails:[],
+      eventName: 0,
+      eventDate: 0,
+      startTime: 0,
+      endTime: 0,
+      note: 0,
+      importedInSlideShow: 0,
+      screensaver: 0,
+      personal : '',
+      business : '',
+      group : '',
+      numberOfEventsInSlideshow: 6,
+      status: 0,
+      isLoading: false,
+      userId: '',
+      loading: false
     }
   }
-  OnChange=(value)=>{
-     this.setState({ selectValue: value})
+
+  componentDidMount() {
+    this.setState({ isLoading: true })
+    AsyncStorage.getItem('@user')
+    .then((user) => {
+      const user1 = JSON.parse(user)
+      if(!isEmpty(user1)){
+        this.setState({ userId: user1._id })
+        this.props.getSetting(user1._id)
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if(this.props.getSettingPhase){
+      this.setState({ 
+        settingDetails: get(this.props,'getSettingData',''),
+        eventName: get(this.props,'getSettingData.SlideShow.eventName',''),
+        eventDate: get(this.props,'getSettingData.SlideShow.eventDate',''),
+        startTime: get(this.props,'getSettingData.SlideShow.startTime',''),
+        endTime: get(this.props,'getSettingData.SlideShow.endTime',''),
+        note: get(this.props,'getSettingData.SlideShow.note',''),
+        importedInSlideShow: get(this.props,'getSettingData.SlideShow.importedInSlideShow',''),
+        screensaver: get(this.props,'getSettingData.SlideShow.screensaver',''),
+        transitions: get(this.props,'getSettingData.SlideShow.transitions',''),
+        personal : get(this.props,'getSettingData.SlideShow.personal',''),
+        business : get(this.props,'getSettingData.SlideShow.business',''),
+        group : get(this.props,'getSettingData.SlideShow.group',''),
+        numberOfEventsInSlideshow: get(this.props,'getSettingData.SlideShow.numberOfEventsInSlideshow',''),
+        isLoading: false
+      })
+    }
+    if(this.props.updateSettingPhase){
+      this.props.getSetting(this.state.userId)
+      this.setState({ loading: false })
+    }
+    this.props.resetEventPhase()
+  }
+
+  onChange(name, value){
+    if(name === 'eventName'){
+      this.setState({ eventName: value})
+    }
+    if(name === 'eventDate'){
+      this.setState({ eventDate: value})
+    }
+    if(name === 'startTime'){
+      this.setState({ startTime: value})
+    }
+    if(name === 'endTime'){
+      this.setState({ endTime: value})
+    }
+    if(name === 'note'){
+      this.setState({ note: value})
+    }
+    if(name === 'screensaver'){
+      this.setState({ screensaver: value})
+    }
   }
 
   onChangeMinus =()=>{
-    if(this.state.slideValue > 3){
-      this.setState({ slideValue: this.state.slideValue - 1})
+    if(this.state.numberOfEventsInSlideshow > 5){
+      this.setState({ numberOfEventsInSlideshow: this.state.numberOfEventsInSlideshow - 1})
     }
   }
   onChangePlus =()=>{
-    if(this.state.slideValue < 15){
-      this.setState({ slideValue: this.state.slideValue + 1 })
+    if(this.state.numberOfEventsInSlideshow < 15){
+      this.setState({ numberOfEventsInSlideshow: this.state.numberOfEventsInSlideshow + 1 })
     }
   }
 
+  onSubmit(){
+    this.setState({ loading: true })
+    const data = {
+      id: this.state.userId,
+      value:{
+        SlideShow: {
+          note: this.state.note,
+          group : this.state.group,
+          endTime: this.state.endTime,
+          personal : this.state.personal,
+          business : this.state.business,
+          eventName: this.state.eventName,
+          eventDate: this.state.eventDate,
+          startTime: this.state.startTime,
+          transitions: this.state.transitions,
+          screensaver: this.state.screensaver,
+          importedInSlideShow: this.state.importedInSlideShow,
+          numberOfEventsInSlideshow: this.state.numberOfEventsInSlideshow
+        }
+      }
+    }
+    // console.log(data,'data')
+    this.props.updateSetting(data)
+  }
+
   render() {
-    const { selectValue, slideValue, animationType, selectedColor  } = this.state
+    const { isLoading, numberOfEventsInSlideshow, transitions  } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'SlideShowSetting' ? 'SlideShow Settings' : ''
     return (
-      <SafeAreaView style={[styles.container,{backgroundColor: '#3b5261'}]}>
+      <SafeAreaView style={[styles.container,{backgroundColor: '#fff'}]}>
+        {isLoading ?
+        <ActivityIndicator color = {'#3b5261'} size = "large" style = {AppStyles.activityIndicator} />
+        :
         <ScrollView style={styles.container}>
           <Navbar 
             navigation={this.props.navigation} 
@@ -61,10 +160,9 @@ export default class SlideShowSetting extends React.Component {
                   initValueTextStyle={{color:'#000',fontSize:14,marginTop:2}}
                   selectStyle={{borderColor: "transparent"}}
                   style={{right:20}}
-                  // selectTextStyle={{color: "blue"}}
                   data={data}
-                  initValue={animationType}
-                  onChange={(option)=>this.setState({ selectValue: option.label })} 
+                  initValue={transitions}
+                  onChange={(option)=>this.setState({ transitions: option.label })} 
                   />
                 <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/>
               </View>
@@ -72,43 +170,58 @@ export default class SlideShowSetting extends React.Component {
             <View style={styles.transitionView}>
               <View style={{flex:1,paddingRight:50,marginTop:5}}><Text style={styles.transitionText}>No.of events in slideShow</Text></View>
               <View style={styles.buttonView}>
-                {/* <TouchableOpacity onPress={this.onChangeMinus} style={styles.slideShowBox}> */}
-               <TouchableOpacity onPress={this.onChangeMinus}><Image source={require('../../assets/icons/-.png')} style={styles.image} /></TouchableOpacity>
-                {/* </TouchableOpacity> */}
-                <View style={{justifyContent:'center'}}><Text style={styles.number}>{slideValue}</Text></View>
+                {numberOfEventsInSlideshow == 5 ? <View style={{marginRight: 55}} />
+                :
+                <TouchableOpacity onPress={this.onChangeMinus}><Image source={require('../../assets/icons/-.png')} style={styles.image} /></TouchableOpacity>
+                }
+                  <View style={{justifyContent:'center'}}><Text style={styles.number}>{numberOfEventsInSlideshow}</Text></View>
+                {numberOfEventsInSlideshow == 15 ? <View style={{marginLeft: 55}} />
+                :
                 <TouchableOpacity onPress={this.onChangePlus}><Image source={require('../../assets/icons/+.png')} style={styles.image} /></TouchableOpacity>
-                {/* <TouchableOpacity onPress={this.onChangePlus} style={styles.slideShowBox}><Text>+</Text></TouchableOpacity> */}
+                }
               </View>
             </View>
             <View style={styles.topContainer}>
             <Text style={styles.headerText}>Slideshow Features to display</Text>
             <View style={styles.mainView}>
               <Text style={styles.settingText}>Event Name</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
+              <SwitchComponent onChange={this.onChange.bind(this, 'eventName')} value={this.state.eventName}/>
             </View>
             <View style={styles.mainView}>
             <Text style={styles.settingText}>Event Date</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
+            <SwitchComponent onChange={this.onChange.bind(this, 'eventDate')} value={this.state.eventDate}/>
             </View>
             <View style={styles.mainView}>
             <Text style={styles.settingText}>Event Start Time</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
+            <SwitchComponent onChange={this.onChange.bind(this, 'startTime')} value={this.state.startTime}/>
             </View>
             <View style={styles.mainView}>
             <Text style={styles.settingText}>Event End Time</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
+            <SwitchComponent onChange={this.onChange.bind(this,'endTime')} value={this.state.endTime}/>
             </View>
             <View style={[styles.mainView ,{paddingBottom: 20}]}>
               <Text style={styles.settingText}>Summary Event box</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
+              <SwitchComponent onChange={this.onChange.bind(this,'note')} value={this.state.note}/>
             </View>
           </View> 
           <View style={styles.bottomView}>
             <Text style={styles.bottomText}>Allow Slideshow to act as screen saver when device is locked</Text>
-            <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
-          </View>      
+            <SwitchComponent onChange={this.onChange.bind(this, 'screensaver')} value={this.state.screensaver}/>
+          </View>
+          <TouchableOpacity
+              style={[AppStyles.button,{backgroundColor: '#3b5261', paddingVertical: Platform.OS === 'android' ? 10  : 12 ,marginLeft: 20,marginRight: 20}]}
+              onPress={this.onSubmit.bind(this)}
+            >
+              {this.state.loading
+                ?
+                <ActivityIndicator size="small" color="#fff" />
+                :
+                <Text style={[AppStyles.buttonText,{fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14)}]}>Save</Text>
+              }
+            </TouchableOpacity>      
         </ScrollView>
-      </SafeAreaView>
+        }
+     </SafeAreaView>
     )
   }
 }
@@ -165,7 +278,6 @@ const styles = StyleSheet.create({
   number: {
     justifyContent :'center',
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(20) : AppSizes.verticalScale(18),
-    // fontWeight: Platform.OS === 'android' ? '600' : '500'
   },
   headerText: {
     marginBottom: 10, 
