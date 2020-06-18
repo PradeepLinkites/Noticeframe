@@ -318,13 +318,12 @@ class Logout extends React.Component {
 	constructor(props) {
 		super(props)
 	}
-
 	componentDidMount() {
 		alert('logout Successfully')
-		// AsyncStorage.removeItem('@user');
-		// this.props.screenProps.updateUser({})
+		AsyncStorage.removeItem('@user');
+		this.props.screenProps.updateUser({})
 		// LoginManager.logOut()
-		// this.props.navigation.navigate('AuthStack')
+		this.props.navigation.navigate('AuthStack')
 	}
 
 	render() {

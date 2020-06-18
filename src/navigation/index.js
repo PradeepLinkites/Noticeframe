@@ -104,13 +104,13 @@ const mainStack = createStackNavigator({
 	initialRoute: 'AppStack',
 });
 
-// const AppContainer = createAppContainer(mainStack);
-const AppContainer = createAppContainer(AppStack);
+const AppContainer = createAppContainer(mainStack);
+// const AppContainer = createAppContainer(AppStack);
 const AppContainerHome = createAppContainer(AppStack);
 
 export default class App extends React.Component {
 	render() {
-		const isLogin = (get(this.props,'user.email','') && get(this.props,'user.planId','') !== '' && size(get(this.props,'user.categoryInterests',[])) > 0) ? true : false
+		const isLogin = (get(this.props,'user.email','')  ? true : false)
 		return (
 			isLogin ? <AppContainerHome screenProps={{...this.props}} /> : <AppContainer screenProps={{...this.props}} />
 	  );
