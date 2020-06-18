@@ -142,7 +142,7 @@ export default class CreateEvent extends React.Component {
                 <Text style={styles.titleText}>Location</Text>
                 <Text style={[styles.subTitleText,{marginTop: 8}]}>{get(getEventDetailData, 'location', '')}</Text>
               </View>
-              <View style={[styles.reminderContainer,{marginTop:5,borderBottomWidth:0}]}>
+              <View style={[styles.reminderContainer,{marginTop:5,borderBottomWidth:.3}]}>
                 <Text style={[styles.subTitleText,{marginTop:9}]}>Show Event in SlideShow</Text>
                  <Image source={get(getEventDetailData, 'showEventInSlideShow', false) ? SlideShowOn: SlideShowOff }/>
               </View>
@@ -150,10 +150,10 @@ export default class CreateEvent extends React.Component {
                 <Text style={styles.titleText}>Availability</Text>
                 <Text style={styles.subTitleText}>BUSY</Text>
               </View> */}
-              <View style={styles.reminderContainer}>
+              {/* <View style={styles.reminderContainer}>
                 <Text style={styles.titleText}>Privacy</Text>
                 <Text style={styles.subTitleText}>{get(getEventDetailData, 'private', false) ? 'PRIVATE': get(getEventDetailData, 'public', false) ? 'PUBLIC': ''}</Text>
-              </View>
+              </View> */}
               <View style={styles.bottomContainer}>
                 <TouchableOpacity onPress={()=>this.props.navigation.navigate('EditEvent',{id : get(getEventDetailData, '_id', '')})}>
                   <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>

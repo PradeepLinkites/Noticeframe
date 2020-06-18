@@ -184,14 +184,6 @@ export default class CreateEvent extends React.Component {
             </View>
             <View style={styles.eventContainer}>
                 <Text style={[styles.listTitle,{marginBottom: 10}]}>Select Members to join</Text>
-                {/* <TextInput
-                  multiline
-                  style={styles.inputBox}
-                  maxLength={40}
-                  placeholderTextColor="red"
-                  onChangeText={text => this.setState({ texts: text})}
-                  value={this.state.texts}
-                /> */}
                 <MultiSelect
                   items={userList}
                   uniqueKey="id"
@@ -215,7 +207,7 @@ export default class CreateEvent extends React.Component {
                 />
               {selectedItemsError && <Text style={AppStyles.error}>Please select the member</Text>} 
             </View>
-            <View style={styles.eventContainer}>
+            {/* <View style={styles.eventContainer}>
                 <Text style={styles.listTitle}>To members who have not joined</Text>
                 <TouchableOpacity
                   style={styles.button}
@@ -223,8 +215,7 @@ export default class CreateEvent extends React.Component {
                 >
                   <Text style={AppStyles.buttonText}>Send Email Notification</Text>
                 </TouchableOpacity>
-            </View>
-
+            </View> */}
               <View style={styles.bottomView}>
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                   <TouchableOpacity style={[styles.cancelButton, {backgroundColor:'#A2a2a2'}]}

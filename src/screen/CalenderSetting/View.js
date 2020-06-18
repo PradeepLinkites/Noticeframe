@@ -1,33 +1,62 @@
 import React from 'react'
-import {Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {ActivityIndicator, Platform, StyleSheet, Text, View,  SafeAreaView, ScrollView, TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
-import { get } from 'lodash'
+import { get , isEmpty } from 'lodash'
+import AsyncStorage from '@react-native-community/async-storage'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import SwitchComponent from '../Common/Switch'
 
-const deviceWidth = Dimensions.get('window').width
-const deviceHeight = Dimensions.get('window').height
-
-export default class CreateEvent extends React.Component {
+export default class CalendarSetting extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      value: '',
-      importValue: true,
-      exportValue: true
+      userId: '',
+      import: false,
+      calendarHeader: '',
+      calendarBody: '',
+      calendarFont: '',
+      isLoading: false
     }
   }
-  OnChange=(value)=>{
-    this.setState({ value: value, importValue: value, exportValue: value})
+
+  componentDidMount() {
+    this.setState({ isLoading: true })
+    AsyncStorage.getItem('@user')
+    .then((user) => {
+      const user1 = JSON.parse(user)
+      if(!isEmpty(user1)){
+        this.setState({ userId: user1._id })
+        this.props.getSetting(user1._id)
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if(this.props.getSettingPhase){
+      this.setState({ 
+        import: get(this.props,'getSettingData.Calendar.import',false),
+        calendarHeader: get(this.props,'getSettingData.Calendar.calendarHeader',''),
+        calendarBody: get(this.props,'getSettingData.Calendar.calendarBody',''),
+        calendarFont: get(this.props,'getSettingData.Calendar.calendarFont',''),
+        isLoading: false
+      })
+    }
+    // if(this.props.updateSettingPhase){
+    //   this.props.getSetting(this.state.userId)
+    //   this.setState({ isLoading: false })
+    // }
+    this.props.resetEventPhase()
   }
 
   render() {
-    const { selectedColor  } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'CalendarSetting' ? 'Calendar Settings' : ''
     return (
-      <SafeAreaView style={AppStyles.container}>
+      <SafeAreaView style={[AppStyles.container,{backgroundColor: '#fff'}]}>
+        {this.state.isLoading ? 
+        <ActivityIndicator color = {'#3b5261'} size = "large" style = {AppStyles.activityIndicator} />
+        :
         <ScrollView style={styles.container}>
           <Navbar 
             navigation={this.props.navigation} 
@@ -38,14 +67,13 @@ export default class CreateEvent extends React.Component {
           <View style={styles.topContainer}>
             <View style={styles.firstView}>
               <Text style={styles.text}>Import</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.importValue}/>
+              <SwitchComponent onChange={(value)=>this.setState({ import: value})} value={this.state.import}/>
             </View>
-            <View style={styles.secondView}>
+            {/* <View style={styles.secondView}>
               <Text style={styles.text}>Export</Text>
               <SwitchComponent OnChange={this.OnChange} value={this.state.exportValue}/>
-            </View>
+            </View> */}
           </View>       
-
           <View style={styles.bottomContainer}>
             <TouchableOpacity
               style={AppStyles.button}
@@ -65,9 +93,9 @@ export default class CreateEvent extends React.Component {
             >
               <Text style={AppStyles.buttonText}>Calendar Text Theme</Text>
             </TouchableOpacity>
-
           </View>                
         </ScrollView>
+        }
       </SafeAreaView>
     )
   }

@@ -1,31 +1,118 @@
 import React from 'react'
-import {Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {ActivityIndicator, StyleSheet, Text, View, SafeAreaView,ScrollView } from 'react-native'
 import Navbar from '../Common/commonNavbar'
-import { get } from 'lodash'
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
+import { get, isEmpty } from 'lodash'
 import SwitchComponent from '../Common/Switch'
+import AsyncStorage from '@react-native-community/async-storage'
+import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
+// import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+// const deviceWidth = Dimensions.get('window').width
+// const deviceHeight = Dimensions.get('window').height
 
-const deviceWidth = Dimensions.get('window').width
-const deviceHeight = Dimensions.get('window').height
-
-export default class CreateEvent extends React.Component {
+export default class ListOfCalendarComponent extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      value: ''
+      googleCalendar: 0,
+      microsoftOutLookCalendar: 0,
+      importCalendar: 0,
+      selectCalendar: [],
+      importDetails: [],
+      listOfCalendar: [],
+      userId: '',
+      isLoading: false
     }
   }
-  OnChange=(value)=>{
-     this.setState({ value: value})
+  
+  componentDidMount() {
+    this.setState({ isLoading: true })
+    AsyncStorage.getItem('@user')
+    .then((user) => {
+      const user1 = JSON.parse(user)
+      if(!isEmpty(user1)){
+        this.setState({ userId: user1._id })
+        this.props.getSetting(user1._id)
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if(this.props.getSettingPhase){
+      this.setState({ 
+        googleCalendar: get(this.props,'getSettingData.ListOfCalendar.googleCalendar',false),
+        microsoftOutLookCalendar: get(this.props,'getSettingData.ListOfCalendar.microsoftOutLookCalendar',false),
+        importCalendar: get(this.props,'getSettingData.Import.importCalendar',false),
+        selectCalendar: get(this.props,'getSettingData.Import.selectCalendar',[]),
+        importDetails: get(this.props,'getSettingData.Import.importDetails',[]),
+        listOfCalendar: get(this.props,'getSettingData.Import.listOfCalendar',[]),
+        isLoading: false
+      })
+    }
+    if(this.props.updateSettingPhase){
+      this.props.getSetting(this.state.userId)
+      this.setState({ isLoading: false })
+    }
+    this.props.resetEventPhase()
+  }
+
+  onChange(name, value){
+    const { userId, googleCalendar, microsoftOutLookCalendar, selectCalendar } = this.state
+    if(name === 'google'){
+      this.setState({ googleCalendar: value },()=>{
+        this.apiHit('Google Calendar', value)
+      })
+    }
+    if(name === 'microsoft'){
+      this.setState({ microsoftOutLookCalendar: value },()=>{
+        this.apiHit('Microsoft Calendar', value)
+      })
+    }
+  }
+
+  apiHit = (name, value) => {
+    const { googleCalendar, microsoftOutLookCalendar, selectCalendar, userId } =this.state
+    const list = []
+    if(googleCalendar){
+      list.push('Google Calendar')
+    }
+    if(microsoftOutLookCalendar){
+      list.push('Microsoft Calendar')
+    }
+    if(selectCalendar){
+      selectCalendar.forEach((val,i)=>{
+        list.forEach((value,j)=>{
+          if(val === value){
+            selectedCalendar.push(value)
+          }
+        })
+      })
+    } 
+    const data = {
+      id: userId,
+      value:{
+        ListOfCalendar: {
+          googleCalendar: this.state.googleCalendar,
+          microsoftOutLookCalendar : this.state.microsoftOutLookCalendar,
+          listOfCalendar: list
+        },
+        Import: {
+          importCalendar: this.state.importCalendar,
+          selectCalendar: selectCalendar,
+          importDetails: this.state.importDetails
+        }
+      }
+    }
+    this.props.updateSetting(data)
   }
 
   render() {
-    const { selectedColor  } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'EventSetting' ? 'Event Settings' : ''
     return (
-      <SafeAreaView style={[styles.container,{backgroundColor: '#3b5261'}]}>
+      <SafeAreaView style={[styles.container,{backgroundColor: '#fff'}]}>
+        {this.state.isLoading ? 
+          <ActivityIndicator color = {'#3b5261'} size = "large" style = {AppStyles.activityIndicator} />
+          :
         <ScrollView style={styles.container}>
           <Navbar 
             navigation={this.props.navigation} 
@@ -36,40 +123,16 @@ export default class CreateEvent extends React.Component {
           <View style={styles.topContainer}>
             <Text style={styles.headerText}>List of calendars</Text>
             <View style={styles.mainView}>
-              <Text style={styles.text}>My NoticeFrame Calendar</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
-            </View>
-            <View style={styles.mainView}>
-            <Text style={styles.text}>Samsung Calendar</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
-            </View>
-            <View style={styles.mainView}>
-            <Text style={styles.text}>Google Calendar</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
-            </View>
-            <View style={styles.mainView}>
-            <Text style={styles.text}>Holidays in UK</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
-            </View>
-            <View style={styles.mainView}>
-              <Text style={styles.text}>Apple Calendar</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
+              <Text style={styles.text}>Google Calendar</Text>
+              <SwitchComponent onChange={this.onChange.bind(this, 'google')} value={this.state.googleCalendar}/>
             </View>
             <View style={styles.mainView}>
               <Text style={styles.text}>Microsoft Outlook Calendar</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
+              <SwitchComponent onChange={this.onChange.bind(this, 'microsoft')} value={this.state.microsoftOutLookCalendar}/>
             </View>
-            <View style={styles.mainView}>
-              <Text style={styles.text}>Any.do</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
-            </View>
-            <View style={styles.mainView}>
-              <Text style={styles.text}>Other Calendar</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
-            </View>
-
           </View>       
         </ScrollView>
+        }
       </SafeAreaView>
     )
   }

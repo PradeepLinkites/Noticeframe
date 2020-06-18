@@ -15,10 +15,10 @@ const settingArray = [
 	  title: 'Import Settings',
 	  icon: require('../../assets/icons/Arrow.png')
 	},
-	{ route:'ExportSetting',
-	  title: 'Export Settings',
-	  icon: require('../../assets/icons/Arrow.png')
-	},
+	// { route:'ExportSetting',
+	//   title: 'Export Settings',
+	//   icon: require('../../assets/icons/Arrow.png')
+	// },
 	{ route:'SlideShowSetting',
 	  title: 'Slideshow Settings',
 	  icon: require('../../assets/icons/Arrow.png')

@@ -83,7 +83,7 @@ export default class ImportSetting extends React.Component {
           />
           <View style={styles.topContainer}>
             <View style={styles.firstView}>
-              <Text style={styles.text}>Import from Calender</Text>
+              <Text style={styles.text}>Import from Calendar</Text>
               <SwitchComponent OnChange={this.OnChange} value={this.state.importValue}/>
             </View>
           </View> 

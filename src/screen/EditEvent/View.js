@@ -519,15 +519,15 @@ export default class EditEvent extends React.Component {
                   <SwitchComponent onChange = {this.toggleSwitch2.bind(this)}  value={this.state.showEventInSlideShow}/>
               </View>
             </View>
-              <View style={styles.statusContainer}>
-                {/* <View style={{flexDirection:'row'}}> */}
-                  {/* <TouchableOpacity style={styles.statusButton}>
+              {/* <View style={styles.statusContainer}>
+                <View style={{flexDirection:'row'}}>
+                  <TouchableOpacity style={styles.statusButton}>
                     <Text style={[styles.statusButtonText,{color:'#FFF'}]}>BUSY</Text>
                   </TouchableOpacity>
                   <TouchableOpacity style={[styles.statusButton,{backgroundColor:'#fff',borderRightWidth:.3,borderTopWidth:.3,borderBottomWidth:.3}]}>
                     <Text style={[styles.statusButtonText,{color:'#A2a2a2'}]}>AVAILABLE</Text>
                   </TouchableOpacity>
-                </View> */}
+                </View>
                 <View style={{flexDirection:'row'}}>
                   <TouchableOpacity style={[styles.statusButton, {backgroundColor: this.state.private ? '#ff6600': '#fff'}]}
                     onPress={()=>this.setState({ private: true, public: false })}
@@ -540,7 +540,7 @@ export default class EditEvent extends React.Component {
                     <Text style={[styles.statusButtonText,{color: this.state.public ? '#fff': '#A2a2a2'}]}>PUBLIC</Text>
                   </TouchableOpacity>
                 </View>
-              </View>
+              </View> */}
               
               <View style={styles.bottomContainer}>
                 <View style={{flexDirection:'row',justifyContent:'space-between'}}>
