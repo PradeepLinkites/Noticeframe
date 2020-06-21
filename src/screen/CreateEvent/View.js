@@ -15,17 +15,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
-
-let index = 0;
-const colorItem = [
-    { key: index++, label: 'White' },
-    { key: index++, label: 'Hawkes Blue' },
-    { key: index++, label: 'Milk Punch' },
-    { key: index++, label: 'Coral Candy'},
-    { key: index++, label: 'Cruise' },
-    { key: index++, label: 'Swirl'},
-    { key: index++, label: 'Tusk' },
-]
+let index = 0
 
 export default class CreateEvent extends React.Component {
   constructor(props) {
@@ -33,7 +23,7 @@ export default class CreateEvent extends React.Component {
     this.state = {
       eventPicture: '',
       eventName: '',
-      category: 'GROUP',
+      category: 'PERSONAL',
       personal: false,
       business: false,
       group: true,
@@ -85,7 +75,6 @@ export default class CreateEvent extends React.Component {
     this.createEvent = this.createEvent.bind(this)
   }
 
-
   componentDidMount() {
     AsyncStorage.getItem('@user')
     .then((user) => {
@@ -115,7 +104,7 @@ export default class CreateEvent extends React.Component {
     }
     if (this.props.getSettingData !== prevProps.getSettingData) {
       if(this.props.getSettingPhase) {
-        this.props.resetEventPhase()
+        this.props.resetSettingPhase()
         this.setState({
           personal: get(this.props, 'getSettingData.Event.personal', false),
           business: get(this.props, 'getSettingData.Event.business', false),
@@ -366,9 +355,10 @@ export default class CreateEvent extends React.Component {
                     initValueTextStyle={[styles.listTitle,{color: "#000"}]}
                     selectStyle={{borderColor: "transparent"}}
                     style={{marginTop: 2,marginRight: 25}}
-                    // selectTextStyle={{color: "blue"}}
+                    initValue="Select Color!"
                     data={colorItem}
                     initValue={defaultFillColor}
+                    animationType = "fade"
                     onChange={(option)=>this.setState({ defaultFillColor: option.label })} 
                   />
                  <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.colorDropdownStyle}/>
@@ -710,9 +700,6 @@ const styles = StyleSheet.create({
   },
   checkBoxContainer: {
     marginTop: 25,
-    // backgroundColor:'red',
-    // fontSize: 12,
-    // height: 44,
   },
   reminderContainer: {
     paddingLeft: 20,
@@ -841,18 +828,18 @@ const styles = StyleSheet.create({
   },
 })
 
-const categoryList = [
-  { value: 'GROUP' },
-  { value: 'PERSONAL' },
-  { value: 'BUSINESS' },
-]
-const recurrence = [
-  { value: 'Everyday' },
-  { value: 'Weekly' },
-  { value: 'Monthly' },
-]
-
+const categoryList = [{ value: 'GROUP' },{ value: 'PERSONAL' },{ value: 'BUSINESS' }]
+const recurrence = [{ value: 'Everyday' },{ value: 'Weekly' },{ value: 'Monthly' }]
 const alarmData = ['Before 15 Min', 'Before 30 Min', 'Before 45 Min','Before 1 hour']
+const colorItem = [
+    { key: index++, label: 'White' },
+    { key: index++, label: 'Hawkes Blue' },
+    { key: index++, label: 'Milk Punch' },
+    { key: index++, label: 'Coral Candy'},
+    { key: index++, label: 'Cruise' },
+    { key: index++, label: 'Swirl'},
+    { key: index++, label: 'Tusk' },
+]
 
 {/*const colorData =[
   { value: 'White' },

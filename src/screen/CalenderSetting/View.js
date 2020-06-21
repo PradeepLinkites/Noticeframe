@@ -46,7 +46,7 @@ export default class CalendarSetting extends React.Component {
     //   this.props.getSetting(this.state.userId)
     //   this.setState({ isLoading: false })
     // }
-    this.props.resetEventPhase()
+    this.props.resetSettingPhase()
   }
 
   render() {

@@ -4,6 +4,7 @@ import { combineReducers } from 'redux';
 // We need to import each one here and add them to the combiner at the bottom
 import user from './user/reducer';
 import event from './event/reducer';
+import setting from './setting/reducer';
 import category from './category/reducer';
 
 
@@ -11,7 +12,8 @@ import category from './category/reducer';
 const appReducer = combineReducers({
   user,
   event,
-  category
+  setting,
+  category,
 });
 
 // Setup root reducer

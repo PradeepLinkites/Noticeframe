@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack'
 import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer'
 import { StackActions, NavigationActions } from 'react-navigation'
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
-import { LoginManager } from 'react-native-fbsdk'
+import { get, isEmpty } from 'lodash'
 
 //TabsNavar
 import Navbar from '../screen/Common/TabNavbar'
@@ -30,7 +30,6 @@ import ExportSetting from '../screen/ExportSetting//Container'
 import EditEvent from '../screen/EditEvent/Container'
 import CreateGroup from '../screen/CreateGroup/Container'
 import AsyncStorage from '@react-native-community/async-storage'
-import { get } from 'lodash'
 import { AppFonts, AppSizes, AppColors } from '../theme'
 
 //Tabs Screens
@@ -38,7 +37,6 @@ import DailyScreen from '../screen/DailyScreen/Container'
 import WeeklyScreen from '../screen/WeeklyScreen/Container' 
 import MonthlyScreen from '../screen/MonthlyScreen/Container' 
 import EventsView from '../screen/EventsScreen/Container'
-
 const data = ['Daily', 'Weekly','Monthly', 'Calender List']
 
 const drawerStacks = [
@@ -196,25 +194,22 @@ const drawerStacks = [
 	}
   })
 
-  const DrawerContent = ((props => 
-  	{
-	const loginUser = AsyncStorage.getItem('@user')
-	const loginUser1 = JSON.parse(JSON.stringify(loginUser))
-
+  const DrawerContent = ((props => {
 	const [value, setValue] = useState(false)
 	const [isSelected , handleSelected] = useState(false)
 	const handleToggleValue = () => {
 		const newValue = !value
 		setValue(newValue);
-	 }
-
+	}
+	let firstName = get(props, `screenProps.user.firstName`, 'Your Name here')
+	let lastName = get(props, `screenProps.user.lastName`, '')
 	return (
 	  <View style={styles.drawerContainer}>
 		<View style={styles.drawerHead}>
 		  <Image source={require('../assets/sidemenuAssets/Logo_white.png')} style={styles.logoStyle}/>
 		<View style={styles.userView}>
 		  <Text style={styles.userName}>
-			{get(props, `screenProps.user.name`, 'Your Name here')}
+			{firstName.charAt(0).toUpperCase() + firstName.slice(1)} {lastName.charAt(0).toUpperCase() + lastName.slice(1)}
 		  </Text>
 		  <Text style={[styles.drawerEmailText]}>{get(props, 'screenProps.user.email', 'Example@example.com')}</Text>
 		</View>

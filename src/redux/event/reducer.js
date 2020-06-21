@@ -1,9 +1,9 @@
 
 // Set initial state
 const initialState = {
-  getSettingPhase: false,
-  getSettingMessage: '',
-  getSettingData: {},
+  // getSettingPhase: false,
+  // getSettingMessage: '',
+  // getSettingData: {},
   getGroupListForShowPhase: false,
   getGroupListForShowMessgae: '',
   getGroupListForShowData: {},
@@ -26,22 +26,22 @@ const initialState = {
   updateSlideShowMessage: '',
   createGroupPhase: false,
   createGroupMessage: '',
-  updateSettingPhase: false,
+  // updateSettingPhase: false,
 };
 
 export default function userReducer(state = initialState, action) {
   switch (action.type) {   
-    case 'GET_SETTING': {
-      const input = action.data
-      if(input.status){
-        return {
-          ...state,
-          getSettingPhase: input.status,
-          getSettingMessage: input.message,
-          getSettingData: input.data
-        };  
-      }
-    }
+    // case 'GET_SETTING': {
+    //   const input = action.data
+    //   if(input.status){
+    //     return {
+    //       ...state,
+    //       getSettingPhase: input.status,
+    //       getSettingMessage: input.message,
+    //       getSettingData: input.data
+    //     };  
+    //   }
+    // }
 
     case 'GET_GROUPLISTFORSHOW': {
       const input = action.data
@@ -149,15 +149,15 @@ export default function userReducer(state = initialState, action) {
       }
     }
 
-    case 'UPDATE_SETTING': {
-      const input = action.data
-      if(input.status){
-        return {
-          ...state,
-          updateSettingPhase: input.status,
-        };  
-      }
-    }
+    // case 'UPDATE_SETTING': {
+    //   const input = action.data
+    //   if(input.status){
+    //     return {
+    //       ...state,
+    //       updateSettingPhase: input.status,
+    //     };  
+    //   }
+    // }
 
     case 'RESET_PHASE': {
       return {

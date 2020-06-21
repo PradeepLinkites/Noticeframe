@@ -1,15 +1,11 @@
 import React from 'react'
-import { Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import { get , isEmpty } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import moment from 'moment'
 import {Calendar} from 'react-native-calendars'
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-community/async-storage'
-
-const deviceWidth = Dimensions.get('window').width
-const deviceHeight = Dimensions.get('window').height
-
 
 const sampleEvents = [
   { 'date': '2020-06-23','startTime': '09:00:00', 'endTime': '09:20:00','duration': '00:20:00', 'note': 'Walk my dog' },
@@ -25,42 +21,80 @@ export default class Monthly extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected: '2020-05-29',
+      selectedDate: '2020-05-29',
       // markedData: ['2020-05-21', '2020-05-22', '2020-05-26'],
-      markedData: sampleEvents,
+      eventDetails: [],
       isModalVisible: false,
       currentDate: '',
-      getEventCalenderData: []
+      calendarHeader: '',
+      calendarBody: '',
+      calendarFont: '',
+      isLoading: false
     }
   }
 
   componentDidMount() {
+    this.setState({ isLoading: true })
     AsyncStorage.getItem('@user')
     .then((user) => {
       const user1 = JSON.parse(user)
       if(!isEmpty(user1)){
+        this.props.getSetting(user1._id)
         this.props.getEventCalender(user1._id)
       }
     })
   }
 
-  componentDidUpdate(prevProps) {
-    if (this.props.getEventCalenderData !== prevProps.getEventCalenderData) {
-      if(this.props.getEventCalenderPhase) {
-        this.props.resetEventPhase()
-        this.setState({ getEventCalenderData: this.props.getEventCalenderData })
-      }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.getEventCalenderPhase) {
+      this.props.resetEventPhase()
+      this.handleEvent(this.props.getEventCalenderData)
     }
+    if (this.props.getSettingPhase) {
+      this.props.resetSettingPhase()
+      this.setState({
+        calendarHeader: get(prevProps, 'getSettingData.Calendar.calendarHeader', 'default_header'),
+        calendarBody: get(prevProps, 'getSettingData.Calendar.calendarBody', 'default_body'),
+        calendarFont: get(prevProps, 'getSettingData.Calendar.calendarFont', 'default_body'),
+        isLoading: false
+      })
+    }
+  }
+
+  handleEvent(event) {
+    const calendarData = []
+    if (event) {
+      event.forEach((value, i) => {
+        // console.log('value==>>', value)
+        // console.log('date==>>', moment(get(value, 'eventDate', '')).format('YYYY-MM-DD'))
+        // console.log('startTime==>>', moment(get(value, 'startTime', '')).format('LTS'))
+        // console.log('endTime==>>', moment(get(value, 'endTime', '')).format('LTS'))
+        // console.log('duration==>>', moment(moment(get(value, 'startTime', '')).diff(moment(get(value, 'endTime', ''))).format("hh:mm:ss")))
+
+        calendarData.push({
+          id: get(value, '_id', ''),
+          date: get(value, 'eventDate', ''),
+          startTime: get(value, 'startTime', ''),
+          endTime: get(value, 'endTime', ''),
+          note: get(value, 'eventName', ''),
+          hexColor: get(value, 'defaultFillColor', '')
+        })
+      })
+    }
+    this.setState({
+      eventDetails: calendarData,
+      isLoading: false
+    })
   }
 
   onDayPress = (day, newDates) => {
     let eventDate = newDates.dateString
-    this.state.markedData.map(item=> {
+    this.state.eventDetails.map(item=> {
       if(item.date === eventDate){
         this.setState({ isModalVisible: !this.state.isModalVisible ,currentDate : eventDate })
       }
     })
-    this.setState({ selected: day.dateString })
+    this.setState({ selectedDate: day.dateString })
   }
 
   toggleModal = () => {
@@ -74,8 +108,9 @@ export default class Monthly extends React.Component {
 
   render() {
     let dates = {}
-    this.state.markedData.forEach((val) => {
+    this.state.eventDetails.forEach((val) => {
       dates[val.date] = { marked: true }  
+      // console.log('dates===>>',dates )
     })
     return (
       <SafeAreaView style={AppStyles.container}>
@@ -99,7 +134,6 @@ export default class Monthly extends React.Component {
               fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(18), 
               textMonthFontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14), 
               textDayHeaderFontSize: 14,
-
               'stylesheet.calendar.header': {
                 week: {
                   marginTop: 6,
@@ -108,14 +142,13 @@ export default class Monthly extends React.Component {
                   justifyContent: 'space-between'
                 }
               }
-  
             }}
           />
 
         <Modal isVisible={this.state.isModalVisible}>
           <View style={{ backgroundColor:'#fff', paddingTop: 10 }}>
               <Text style={{ alignSelf:'center',fontSize: 20, top: 3}}>List of Events</Text>
-              {this.state.markedData.map((item,ind) => {
+              {this.state.eventDetails.map((item,ind) => {
                 if(item.date === this.state.currentDate){
                   return(
                   <View>

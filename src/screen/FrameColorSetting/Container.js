@@ -1,24 +1,24 @@
 import { connect } from 'react-redux';
 
 // Actions
-import { getSetting, updateSetting, resetEventPhase } from '@redux/event/actions';
+import { getSetting, updateSetting, resetSettingPhase } from '@redux/setting/actions';
 
 // The component we're mapping to
 import FormRender from './View';
 
 // What data from the store shall we send to the component?
 const mapStateToProps = state => ({
-  getSettingPhase: state.event.getSettingPhase,
-  getSettingMessage: state.event.getSettingMessage,
-  getSettingData: state.event.getSettingData,
-  updateSettingPhase: state.event.updateSettingPhase
+  getSettingPhase: state.setting.getSettingPhase,
+  getSettingMessage: state.setting.getSettingMessage,
+  getSettingData: state.setting.getSettingData,
+  updateSettingPhase: state.setting.updateSettingPhase
 });
 
 // Any actions to map to the component?
 const mapDispatchToProps = {
   getSetting: getSetting,
   updateSetting: updateSetting,
-  resetEventPhase: resetEventPhase
+  resetSettingPhase: resetSettingPhase
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormRender);

@@ -39,7 +39,7 @@ export default class FrameColorSetting extends React.Component {
 
   componentDidUpdate(prevProps, prevState){
       if(this.props.getSettingPhase){
-        this.props.resetEventPhase()
+        this.props.resetSettingPhase()
         this.setState({ 
           settingDetails: get(this.props,'getSettingData',''),
           urgent: get(this.props,'getSettingData.FrameColor.red',''),
@@ -52,7 +52,7 @@ export default class FrameColorSetting extends React.Component {
         })
       }
     if(this.props.updateSettingPhase){
-      this.props.resetEventPhase()
+      this.props.resetSettingPhase()
       this.setState({ isLoading : false })
       this.props.getSetting(this.state.userId)
     }

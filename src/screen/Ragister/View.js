@@ -14,6 +14,7 @@ export default class Login extends React.Component {
     super(props);
     this.state = {
       showPassword: true,
+      showConfirmPassword: true,
       firstName: '',
       lastName: '',
       mobileNumber: '',
@@ -131,6 +132,7 @@ export default class Login extends React.Component {
     const route = get(state, 'routeName', '')  === 'Signup' ? 'SIGN UP' : ''
      const {
       showPassword,
+      showConfirmPassword,
       firstName,
       lastName,
       mobileNumber,
@@ -237,8 +239,9 @@ export default class Login extends React.Component {
             {passwordError && (
               <Text style={AppStyles.error}>Please enter at least 8 letters which should contain 1 UpperCase, 1 LowerCase, 1 Number and 1 Symbol</Text>
             )}
+         <View style={styles.passwordContainer}>
             <TextInput style = {[AppStyles.textinput,{flex: 1}]}
-              secureTextEntry={true}
+              secureTextEntry={showConfirmPassword}
               underlineColorAndroid = "transparent"
               placeholder = "Re-Enter Your Password"
               placeholderTextColor = "#A2a2a2"
@@ -250,6 +253,10 @@ export default class Login extends React.Component {
               onFocus={this.onFocus.bind(this, 'confirmPassword')}
               value={confirmPassword}
             />
+            <TouchableOpacity onPress={()=>this.setState({ showConfirmPassword: !showConfirmPassword })} style={styles.eyeContainer}>
+              <Image source={showConfirmPassword ? require('../../assets/icons/Eye.png') :require('../../assets/icons/Eye_cross.png') } style={showConfirmPassword ? styles.eyeImage : [styles.eyeImage,{height: 28,marginTop: 0}]} />
+            </TouchableOpacity>
+          </View>
           {confirmPassError && (
             <Text style={AppStyles.error}>Please enter confirm password</Text>
           )}

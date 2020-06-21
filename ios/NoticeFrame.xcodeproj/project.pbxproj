@@ -24,7 +24,6 @@
 		32E24CF92A0F4546A152F1AD /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BBC0F86D26454CD5855F0684 /* FontAwesome5_Brands.ttf */; };
 		44B9A2704AD7448CA651A32C /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A74C40FAFF14F79818ACEA1 /* Zocial.ttf */; };
 		4A268383D77B4A83B3FA137C /* Roboto-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3CAE906F1CE74758AE62AA57 /* Roboto-LightItalic.ttf */; };
-		4AECFAE007DC271E82E0AA86 /* libPods-NoticeFrame.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9723F80DDCF99DC706F32843 /* libPods-NoticeFrame.a */; };
 		4F2EFBDA89344F79894A4BEE /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B1BEF394EB1D467DBDFBD376 /* EvilIcons.ttf */; };
 		51109BE0684D420B98E58EA3 /* AntDesign.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 746BBF91274E4F4080F9A2C2 /* AntDesign.ttf */; };
 		6135C850171444B38AE35E42 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3FF0737FC3F64239AC967832 /* MaterialCommunityIcons.ttf */; };
@@ -144,7 +143,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4AECFAE007DC271E82E0AA86 /* libPods-NoticeFrame.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

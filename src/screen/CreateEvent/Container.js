@@ -2,7 +2,8 @@ import { connect } from 'react-redux';
 
 // Actions
 import { getUser, resetPhase } from '@redux/user/actions';
-import { getSetting, getGroupListForShow, createEvent, getEvent, resetEventPhase } from '@redux/event/actions';
+import { getGroupListForShow, createEvent, getEvent, resetEventPhase } from '@redux/event/actions';
+import { getSetting , resetSettingPhase} from '@redux/setting/actions';
 
 
 // The component we're mapping to
@@ -13,15 +14,15 @@ const mapStateToProps = state => ({
   getUserPhase: state.user.getUserPhase,
   getUserMessage: state.user.getUserMessage,
   getUserData: state.user.getUserData,
-
-  getSettingPhase: state.event.getSettingPhase,
-  getSettingMessage: state.event.getSettingMessage,
-  getSettingData: state.event.getSettingData,
   getGroupListForShowPhase: state.event.getGroupListForShowPhase,
   getGroupListForShowMessgae: state.event.getGroupListForShowMessgae,
   getGroupListForShowData: state.event.getGroupListForShowData,
   createEventPhase: state.event.createEventPhase,
   createEventMessage: state.event.createEventMessage,
+
+  getSettingPhase: state.setting.getSettingPhase,
+  getSettingMessage: state.setting.getSettingMessage,
+  getSettingData: state.setting.getSettingData,
 });
 
 // Any actions to map to the component?
@@ -29,12 +30,13 @@ const mapDispatchToProps = {
   getUser: getUser,
   resetPhase: resetPhase,
   getEvent: getEvent,
-  getSetting: getSetting,
   getGroupListForShow: getGroupListForShow,
   createEvent: createEvent,
   getEvent: getEvent,
   resetEventPhase: resetEventPhase,
 
+  getSetting: getSetting,
+  resetSettingPhase: resetSettingPhase
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormRender);

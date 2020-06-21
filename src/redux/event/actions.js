@@ -1,28 +1,4 @@
 
-
-  export function getSetting(userId) {
-    return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/setting/?data=${userId}`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        }
-      })
-      .then((res) => {
-        return res.json()
-      })
-      .then((data) => {
-          return dispatch({
-            type: 'GET_SETTING',
-            data
-          });
-        })
-        .catch((error) => {
-            throw error
-        })
-    }
-  }
-
   export function getGroupListForShow(userId) {
     return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/groupListForShow/?id=${userId}`, {
         method: 'GET',
@@ -259,29 +235,54 @@
     }
   }
 
-  export function updateSetting(data){
-    return dispatch => { fetch("https://notice-frame-backend.herokuapp.com/api/put/setting", {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-      })
-      .then((res) => {
-        return res.json()
-      })
-     .then((data) => {
-        return dispatch({
-          type: 'UPDATE_SETTING',
-          data
-        });
-      })
-      .catch((error) => {
-        throw error
-      })
-    }
-  }
+  // export function getSetting(userId) {
+  //   return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/setting/?data=${userId}`, {
+  //       method: 'GET',
+  //       headers: {
+  //         'Accept': 'application/json',
+  //         'Content-Type': 'application/json',
+  //       }
+  //     })
+  //     .then((res) => {
+  //       return res.json()
+  //     })
+  //     .then((data) => {
+  //         return dispatch({
+  //           type: 'GET_SETTING',
+  //           data
+  //         });
+  //       })
+  //       .catch((error) => {
+  //           throw error
+  //       })
+  //   }
+  // }
+
+
+
+  // export function updateSetting(data){
+  //   return dispatch => { fetch("https://notice-frame-backend.herokuapp.com/api/put/setting", {
+  //     method: 'PUT',
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(data)
+  //     })
+  //     .then((res) => {
+  //       return res.json()
+  //     })
+  //    .then((data) => {
+  //       return dispatch({
+  //         type: 'UPDATE_SETTING',
+  //         data
+  //       });
+  //     })
+  //     .catch((error) => {
+  //       throw error
+  //     })
+  //   }
+  // }
 
   export function resetEventPhase() {
     return {

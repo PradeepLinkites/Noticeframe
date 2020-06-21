@@ -77,7 +77,7 @@ export default class SlideShowSetting extends React.Component {
       this.props.getSetting(this.state.userId)
       this.setState({ loading: false })
     }
-    this.props.resetEventPhase()
+    this.props.resetSettingPhase()
   }
 
   onChange(name, value){
