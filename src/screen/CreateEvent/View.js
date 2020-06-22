@@ -371,6 +371,7 @@ export default class CreateEvent extends React.Component {
             <View style={[styles.selectGroupView,{marginTop: 10}]}>
               <Text style={styles.listTitle}>Event Date</Text>
               <DateTimePickerModal
+                minimumDate={new Date()}
                 isVisible={isDatePickerVisible}
                 mode="date"
                 onConfirm={this.handleDate}
@@ -388,6 +389,7 @@ export default class CreateEvent extends React.Component {
                   <Text style={styles.timeText} >START TIME</Text>
                   {/* <Button title="Show Date Picker" onPress={this.showDatePicker} color='#fff'/> */}
                     <DateTimePickerModal
+                      minimumDate={new Date()}
                       isVisible={isStartPickerVisible}
                       mode="time"
                       onConfirm={this.handleStartTime}

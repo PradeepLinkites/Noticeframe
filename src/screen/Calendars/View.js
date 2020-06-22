@@ -56,7 +56,6 @@ export default class ListOfCalendarComponent extends React.Component {
   }
 
   onChange(name, value){
-    const { userId, googleCalendar, microsoftOutLookCalendar, selectCalendar } = this.state
     if(name === 'google'){
       this.setState({ googleCalendar: value },()=>{
         this.apiHit('Google Calendar', value)

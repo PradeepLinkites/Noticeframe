@@ -1,7 +1,7 @@
 import React from 'react'
 import {ActivityIndicator, Modal,  TextInput, Platform, Alert, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
-import { get ,isEmpty } from 'lodash'
+import { get ,isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import CheckBox from 'react-native-checkbox'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -12,6 +12,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker"
 import moment from "moment"
 import ModalSelector from 'react-native-modal-selector'
 import AsyncStorage from '@react-native-community/async-storage'
+import sizes from '../../theme/sizes'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -28,6 +29,9 @@ export default class EditEvent extends React.Component {
       personal: false,
       business: false,
       group: true,
+      groupList:[],
+      groupListName: [],
+      groupNameShow:[],
       memberList: [],
       defaultFillColor: '',
       eventDate: '',
@@ -89,8 +93,16 @@ export default class EditEvent extends React.Component {
   }
 
   componentDidUpdate = async (prevProps, prevState) => {
+    // console.log(this.props==>>, this.props)
     if(this.props.getEventDetailPhase){
-      this.props.resetEventPhase()
+      this.props.resetEventPhase()    
+      let arr = []
+      get(this.props, 'getEventDetailData.selectContacts', '').map(item=>{
+      let obj = {}
+      obj['value'] = get(item, 'groupName', '')
+      arr.push(obj)
+      this.setState({ groupNameShow: arr })
+    })
       this.setState({
         event_id: get(prevProps, 'getEventDetailData._id', ''),
         // eventPicture: get(prevProps, 'getEventDetailData.eventPicture', ''),
@@ -98,9 +110,9 @@ export default class EditEvent extends React.Component {
         memberList: get(prevProps, 'getEventDetailData.selectContacts', ''),
         texts: get(prevProps, 'getEventDetailData.texts', ''),
         defaultFillColor: get(prevProps, 'getEventDetailData.defaultFillColor', ''),
-        eventDate: (get(prevProps, 'getEventDetailData.eventDateLocal', '')),
-        startTime: moment(get(prevProps, 'getEventDetailData.startTime', '')).format("HH:mm"),
-        endTime: moment(get(prevProps, 'getEventDetailData.endTime', '')).format("HH:mm"),
+        eventDate: get(prevProps, 'getEventDetailData.eventDate', ''),
+        startTime: get(prevProps, 'getEventDetailData.startTime', ''),
+        endTime: get(prevProps, 'getEventDetailData.endTime', ''),
         checked: get(prevProps, 'getEventDetailData.setReminderAlarm', ''),  
         notes: get(prevProps, 'getEventDetailData.note', ''),
         location: get(prevProps, 'getEventDetailData.location', ''),
@@ -120,27 +132,16 @@ export default class EditEvent extends React.Component {
         isLoading: false
       })
     }
-    // if (prevProps.getSettingPhase === "success") {
-    //   this.setState({
-    //     red: _.get(prevProps, 'getSettingData.FrameColor.red', []),
-    //     yellow: _.get(prevProps, 'getSettingData.FrameColor.yellow', []),
-    //     green: _.get(prevProps, 'getSettingData.FrameColor.green', []),
-    //     redHour: _.get(prevProps, 'getSettingData.FrameColor.redHour', []),
-    //     yellowHour: _.get(prevProps, 'getSettingData.FrameColor.yellowHour', []),
-    //     greenHour: _.get(prevProps, 'getSettingData.FrameColor.greenHour', []),
-    //     loading: false
-    //   })
-    // }
-    // if (prevProps.getGroupListForShowPhase === "success") {
-    //   if (prevProps.getGroupListForShowData.status === true) {
-    //     this.setState({ groupList: _.get(prevProps, 'getGroupListForShowData.data', []) })
-    //   }
-    // }
-    // if (prevProps.getGroupListPhase === "success") {
-    //   if (prevProps.getGroupListData.status === true) {
-    //     this.setState({ groupList: _.get(prevProps, 'getGroupListData.data', []) })
-    //   }
-    // }
+    if (this.props.getGroupListForShowPhase) {
+      this.props.resetEventPhase()
+      let arr = []
+        get(this.props, 'getGroupListForShowData', []).map(item=>{
+        let obj = {}
+        obj['value'] = get(item, 'groupName', '')
+        arr.push(obj)
+      })
+      this.setState({ groupList: get(this.props, 'getGroupListForShowData', []), groupListName: arr })
+    }
     if (this.props.updateEventPhase) {
       this.props.resetEventPhase()
       this.props.navigation.navigate('Event')
@@ -165,35 +166,40 @@ export default class EditEvent extends React.Component {
   }
 
   handleDate = (date) => {
-    let eventDate1 = new Date(date).toString() 
     let newDate = moment(date).utcOffset('+05:30').format('DD-MMMM-YYYY')
-    this.setState({ eventDate: newDate , isDatePickerVisible : false, eventDate1: eventDate1 })
+    this.setState({ eventDate: date , isDatePickerVisible : false, eventDate1: newDate })
   } 
 
   handleStartTime = (date) => {    
-    let start_time = new Date(date).toString()  
-    let time = moment(date).utcOffset('+05:30').format('hh:mm a')
-    this.setState({ startTime: time , isStartPickerVisible: false, start_time: start_time })
+    this.setState({ startTime: date , isStartPickerVisible: false })
   } 
 
   handleEndTime = (date) => {  
-    let end_time = new Date(date).toString()      
-    let time = moment(date).utcOffset('+05:30').format('hh:mm a')
-    this.setState({ endTime : time , isEndPickerVisible: false , end_time: end_time })
+    this.setState({ endTime : date , isEndPickerVisible: false })
   }
 
-  onLocationChange =(text)=>{
+  onReminder(value){
+    this.setState({ checked: !this.state.checked, modalVisible: this.state.checked ? this.state.modalVisible : !this.state.modalVisible })
+    if(value){
+      this.setState({ setTime: '',  setReminderAlarm: false })
+    }
+  }
+
+  onLocationChange = (text) => {
      this.setState({ location: text })
   }
 
-  onNotesChange =(text)=>{
+  onNotesChange = (text) => {
     this.setState({ notes: text })
- }
-  onEventChange =(text)=>{
+  }
+  onEventChange = (text) => {
     this.setState({ eventName: text })
   }
-  onGroupNameChange =(text)=>{
-    this.setState({ groupName: text })
+
+  selectGroupName = (name) => {
+    const { groupList } = this.state
+    const newArray = groupList.filter(item =>item.groupName === name)
+    this.setState({ memberList: newArray, groupName: name  })
   }
  
   toggleSwitch1 = (value) => {
@@ -230,7 +236,7 @@ export default class EditEvent extends React.Component {
   }
 
   updateEvent(){
-    const{ isLoading, eventPicture, eventName, memberList, defaultFillColor, eventDate, eventDate1, start_time, end_time, notes, userEmail,
+    const{ isLoading, eventPicture, eventName, memberList, defaultFillColor, eventDate, eventDate1, startTime, endTime, notes, userEmail,
         location, personal, business, group, setReminderAlarm, showNotesInSlideShow, showEventInSlideShow, setTime,
         category, repeat, duration } = this.state
     var error = true
@@ -253,10 +259,10 @@ export default class EditEvent extends React.Component {
       data.selectContacts = memberList
       data.defaultFillColor = defaultFillColor
       data.frameBoundaryColor = defaultFillColor
-      data.eventDateLocal = eventDate
-      data.eventDate = eventDate1
-      data.startTime = start_time
-      data.endTime = end_time
+      data.eventDateLocal = moment(eventDate).format('DD-MMMM-YYYY')
+      data.eventDate = eventDate
+      data.startTime = startTime
+      data.endTime = endTime
       data.note = notes
       data.location = location
       data.personal = personal
@@ -278,14 +284,15 @@ export default class EditEvent extends React.Component {
         data: data,
         id: get(this.state, 'userId','')
       }
+      console.log('Details==>>', Details)
       this.props.updateEvent(Details)
     }
   }
 
   render() {
-  const {eventNameError, notesError, isLoading, checked, modalVisible, memberList, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
+  const {eventNameError, notesError, groupListName, isLoading, checked, modalVisible, memberList, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
   const { state } = this.props.navigation
-    const route = get(state, 'routeName', '')  === 'EditEvent' ? 'Edit Event' : ''
+  const route = get(state, 'routeName', '')  === 'EditEvent' ? 'Edit Event' : ''
     return (
       <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
       {isLoading ?
@@ -340,11 +347,11 @@ export default class EditEvent extends React.Component {
                 <Text style={styles.listTitle}>Select Group</Text>
                 <View style={{ marginTop: 10 }}>
                   <Dropdown
-                    value={'Select Member list'}
+                    value={this.state.groupNameShow[0].value}
                     selectedItemColor = '#000'
                     textColor = '#000'
-                    onChangeText={(item)=>this.onSelectRecurrence(item)}
-                    data={memberList}
+                    onChangeText={(item)=>this.selectGroupName(item)}
+                    data={groupListName}
                     fontSize={14}
                     dropdownOffset={{ top: 0, left: 0 }}
                   />
@@ -375,6 +382,7 @@ export default class EditEvent extends React.Component {
             <View style={[styles.selectGroupView,{marginTop: 10, borderBottomWidth:.3 }]}>
               <Text style={styles.listTitle}>Event Date</Text>
               <DateTimePickerModal
+                minimumDate={new Date()}
                 isVisible={isDatePickerVisible}
                 mode="date"
                 onConfirm={this.handleDate}
@@ -382,7 +390,7 @@ export default class EditEvent extends React.Component {
                 showIcon={false}
                 // locale="es-ES"
                />
-              <Text onPress={()=>this.setState({isDatePickerVisible : true})} style={[styles.selectedText,{marginTop: 8}]}>{get(this.state,'eventDate','')}</Text>
+              <Text onPress={()=>this.setState({isDatePickerVisible : true})} style={[styles.selectedText,{marginTop: 8}]}>{moment(get(this.state,'eventDate','')).format('DD-MM-YYYY')}</Text>
             </View>
             <View style={styles.eventContainer}>
               <Text style={styles.listTitle}>Event Time</Text>
@@ -391,6 +399,7 @@ export default class EditEvent extends React.Component {
                   <Text style={styles.timeText} >START TIME</Text>
                   {/* <Button title="Show Date Picker" onPress={this.showDatePicker} color='#fff'/> */}
                   <DateTimePickerModal
+                    minimumDate={new Date()}
                     isVisible={isStartPickerVisible}
                     mode="time"
                     onConfirm={this.handleStartTime}
@@ -402,11 +411,12 @@ export default class EditEvent extends React.Component {
                     cancelTextIOS="CANCEL"
                     date ={new Date(this.state.eventDate)}
                   />
-                  <Text style={styles.selectedText}>{get(this.state,'startTime','')}</Text>
+                  <Text style={styles.selectedText}>{moment(get(this.state,'startTime','')).format("HH:mm A")}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.setState({isEndPickerVisible : true})}> 
                    <Text style={styles.timeText}>END TIME</Text>
                    <DateTimePickerModal
+                      minimumDate={new Date()}
                       isVisible={isEndPickerVisible}
                       mode="time"
                       onConfirm={this.handleEndTime}
@@ -418,7 +428,7 @@ export default class EditEvent extends React.Component {
                       cancelTextIOS="CANCEL"
                       date ={new Date(this.state.eventDate)}
                     />
-                  <Text style={styles.selectedText}>{get(this.state,'endTime','')}</Text>
+                  <Text style={styles.selectedText}>{moment(get(this.state,'endTime','')).format("HH:mm A")}</Text>
                 </TouchableOpacity>
               </View>
               <View style={styles.checkBoxContainer}>
@@ -427,13 +437,13 @@ export default class EditEvent extends React.Component {
                   label={'send email notification when task is about to start'}
                   labelStyle={styles.checkboxText}
                   checked={checked}
-                  onChange={()=>this.setState({ checked: !this.state.checked, modalVisible: checked ? modalVisible : !this.state.modalVisible})}
+                  onChange={this.onReminder.bind(this)}
                   />
-                  {(get(this.state, 'setReminderAlarm', false) && checked ) &&
+                 {(get(this.state, 'setReminderAlarm', false) && checked ) &&
                   <Text style={{marginTop: 5}}>
                     Set Reminder: {this.state.setTime}
                   </Text>
-                  }
+                }
               </View>
             </View>
             <View style={styles.reminderContainer}>
@@ -560,7 +570,7 @@ export default class EditEvent extends React.Component {
                       <TouchableOpacity
                         key= {ind}
                         style={{ ...styles.openButton  }}
-                        onPress={() =>this.setState({ setTime: item, modalVisible: !modalVisible, setReminderAlarm: item, checked: true })}
+                        onPress={() =>this.setState({ setTime: item, modalVisible: !modalVisible, setReminderAlarm: checked, checked: true })}
                       >
                         <Text style={{color:'#fff'}}>{item}</Text>
                       </TouchableOpacity>

@@ -1,31 +1,71 @@
 import React from 'react'
-import {Picker, TextInput, Switch, Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {ActivityIndicator, StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions } from 'react-native'
 import Navbar from '../Common/commonNavbar'
-import { get } from 'lodash'
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { get, isEmpty } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import SwitchComponent from '../Common/Switch'
+import AsyncStorage from '@react-native-community/async-storage'
 
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
-export default class CreateEvent extends React.Component {
+export default class eventSetting extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      value: ''
+      importedInSlideShow: false,
+      userId: '',
+      isLoading: false
     }
   }
-  OnChange=(value)=>{
-     this.setState({ value: value})
+
+  componentDidMount() {
+    this.setState({ isLoading: true })
+    AsyncStorage.getItem('@user')
+    .then((user) => {
+      const user1 = JSON.parse(user)
+      if(!isEmpty(user1)){
+        this.props.getSetting(user1._id)
+        this.setState({ userId: user1._id})
+      }
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState){
+    if(this.props.getSettingPhase){
+      this.setState({ 
+        importedInSlideShow: get(this.props,'getSettingData.SlideShow.importedInSlideShow', false),
+        isLoading: false
+      })
+    }
+  if(this.props.updateSettingPhase){
+    this.props.getSetting(this.state.userId)
+  }
+  this.props.resetSettingPhase()
+}
+
+  onChange = (value) => {
+     this.setState({ importedInSlideShow: value},()=>{
+      const data = {
+        id: this.state.userId,
+        value:{
+          SlideShow: {
+            importedInSlideShow: this.state.importedInSlideShow,
+          }
+        }
+      }
+      this.props.updateSetting(data)
+     })
   }
 
   render() {
-    const { selectedColor  } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'EventSetting' ? 'Event Settings' : ''
     return (
-      <SafeAreaView style={[styles.container,{backgroundColor: '#3b5261'}]}>
+      <SafeAreaView style={[styles.container,{backgroundColor: 'fff'}]}>
+        {this.state.isLoading ? 
+          <ActivityIndicator color = {'#3b5261'} size = "large" style = {AppStyles.activityIndicator} />
+          :
         <ScrollView style={styles.container}>
           <Navbar 
             navigation={this.props.navigation} 
@@ -36,10 +76,11 @@ export default class CreateEvent extends React.Component {
           <View style={styles.topContainer}>
             <View style={styles.mainView}>
               <Text style={styles.text}>Show imported events in slideshow</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.value}/>
+              <SwitchComponent onChange={this.onChange} value={this.state.importedInSlideShow}/>
             </View>
           </View>       
         </ScrollView>
+        }
       </SafeAreaView>
     )
   }
