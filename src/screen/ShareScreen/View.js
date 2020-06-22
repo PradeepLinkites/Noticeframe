@@ -1,18 +1,17 @@
 import React from 'react'
-import { Platform, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { Platform,  StyleSheet, Text, View,  SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get } from 'lodash'
-import AwesomeButton from 'react-native-really-awesome-button'
-const deviceWidth = Dimensions.get('window').width
-const deviceHeight = Dimensions.get('window').height
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import AsyncStorage from '@react-native-community/async-storage'
+const deviceWidth = Dimensions.get('window').width
+const deviceHeight = Dimensions.get('window').height
 
 const socialArray = [
-	{
-	  title: 'Youtube Channel',
-	  icon: require('../../assets/Social/youtube.png')
-	},
+	// {
+	//   title: 'Youtube Channel',
+	//   icon: require('../../assets/Social/youtube.png')
+	// },
 	{
 	  title: 'Facebook',
 	  icon: require('../../assets/Social/facebook.png')
@@ -37,10 +36,10 @@ const socialArray = [
 		title: 'Other',
 	  icon: require('../../assets/Social/Other.png')
 	},
-	{
-		title: 'Newslatter',
-	  icon: require('../../assets/Social/Newsletter.png')
-	}
+	// {
+	// 	title: 'Newslatter',
+	//   icon: require('../../assets/Social/Newsletter.png')
+	// }
   ]
 
 export default class Share extends React.Component {
@@ -51,7 +50,6 @@ export default class Share extends React.Component {
   }
 
   render() {
-    const { getUserData } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'Share' ? 'Share' : ''
     return (

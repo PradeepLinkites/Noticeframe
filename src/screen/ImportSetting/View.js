@@ -8,45 +8,43 @@ import SwitchComponent from '../Common/Switch'
 import ModalSelector from 'react-native-modal-selector'
 import MultiSelect from 'react-native-multiple-select';
 
-
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
-
 let index = 0
 const data = [
     { key: index++, label: 'Google Calender' },
     { key: index++, label: 'OutLoook Calender' },
 ]
 
-const items = [{
-  id: '92iijs7yta',
-  name: 'Event Name'
-}, {
-  id: 'a0s0a8ssbsd',
-  name: 'Date'
-}, {
-  id: '16hbajsabsd',
-  name: 'Start Time'
-}, {
-  id: 'nahs75a5sg',
-  name: 'End Time '
-}, {
-  id: '667atsas',
-  name: 'Note(if any)'
-}, {
-  id: 'hsyasajs',
-  name: 'Recurrence(if any)'
-}, {
-  id: 'djsjudksjd',
-  name: 'Contacts(attached to event)'
-}, {
-  id: 'sdhyaysdj',
-  name: 'Reminder set'
-}, {
-  id: 'suudydjsjd',
-  name: 'Location'
-  }
-];
+// const items = [{
+//   id: '92iijs7yta',
+//   name: 'Event Name'
+// }, {
+//   id: 'a0s0a8ssbsd',
+//   name: 'Date'
+// }, {
+//   id: '16hbajsabsd',
+//   name: 'Start Time'
+// }, {
+//   id: 'nahs75a5sg',
+//   name: 'End Time '
+// }, {
+//   id: '667atsas',
+//   name: 'Note(if any)'
+// }, {
+//   id: 'hsyasajs',
+//   name: 'Recurrence(if any)'
+// }, {
+//   id: 'djsjudksjd',
+//   name: 'Contacts(attached to event)'
+// }, {
+//   id: 'sdhyaysdj',
+//   name: 'Reminder set'
+// }, {
+//   id: 'suudydjsjd',
+//   name: 'Location'
+//   }
+// ];
 
 export default class ImportSetting extends React.Component {
   constructor(props) {
@@ -55,12 +53,11 @@ export default class ImportSetting extends React.Component {
       value: '',
       importValue: true,
       selectCalender: 'Google Calender',
-      selectValue: 'select multiple',
       selectedItems : [],
-      modalVisible: false,
     }
   }
-  OnChange=(value)=>{
+
+  onChange = (value) => {
     this.setState({ value: value, importValue: value, exportValue: value})
   }
 
@@ -69,7 +66,7 @@ export default class ImportSetting extends React.Component {
   }
 
   render() {
-    const {modalVisible ,selectedItems, selectCalender, selectValue  } = this.state
+    const { selectedItems, selectCalender } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'ImportSetting' ? 'Import Settings' : ''
     return (
@@ -84,10 +81,9 @@ export default class ImportSetting extends React.Component {
           <View style={styles.topContainer}>
             <View style={styles.firstView}>
               <Text style={styles.text}>Import from Calendar</Text>
-              <SwitchComponent OnChange={this.OnChange} value={this.state.importValue}/>
+              <SwitchComponent onChange={this.onChange} value={this.state.importValue} />
             </View>
           </View> 
-
           <View style={[styles.topContainer,{flexDirection:'row',justifyContent:'space-between'}]}>
               <Text style={[styles.text,{marginTop: 10}]}>Select Calender</Text>
               <View style={{flexDirection:'row', justifyContent:'space-between'}}>
@@ -95,7 +91,6 @@ export default class ImportSetting extends React.Component {
                     initValueTextStyle={[styles.text,{color:'#000'}]}
                     selectStyle={{borderColor: "transparent"}}
                     style={{right:20}}
-                    // selectTextStyle={{color: "blue"}}
                     data={data}
                     initValue={selectCalender}
                     onChange={(option)=>this.setState({ selectCalender: option.label })} 
@@ -104,73 +99,44 @@ export default class ImportSetting extends React.Component {
               </View>
             </View>
 
-            <View style={styles.topContainer}>
-            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+            {/* <View style={styles.topContainer}>
+              <View style={{flexDirection:'row',justifyContent:'space-between'}}>
               <Text style={[styles.text,{marginTop: 10}]}>Import</Text>
-              <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                <View style={styles.multiSelectView}>
-                 <MultiSelect
-                    hideTags={true}
-                    canAddItems={false}
-                    items={items}
-                    uniqueKey="id"
-                    // ref={(component) => { this.multiSelect = component }}
-                    onSelectedItemsChange={this.onSelectedItemsChange}
-                    selectedItems={selectedItems}
-                    selectText="Select multiple"
-                    fontSize={Platform.OS === 'android' ? 12: 14}
-                    iconSearch={false}
-                    itemTextColor='green'
-                    searchInputPlaceholderText={'Select multiple'}
-                    onChangeInput={ (text)=> console.log(text)}
-                    // altFontFamily="ProximaNova-Light"
-                    // tagRemoveIconColor="#CCC"
-                    // tagBorderColor="#CCC"
-                    // tagTextColor="#CCC"
-                    itemFontSize={Platform.OS === 'android' ? 16 : 20}
-                    itemTextColor="green"
-                    selectedItemTextColor="#000"
-                    selectedItemIconColor="green"
-                    itemTextColor="#000"
-                    styleDropdownMenu={<View><Text>kk</Text></View>}
-                    // displayKey="name"
-                    // searchInputStyle={{ color: 'red',height:100 }}
-                    submitButtonColor="#A2a2a2"
-                    submitButtonText="Submit"
-                  />
-                  {/* <View>
-                    {this.multiSelect.getSelectedItemsExt(selectedItems)}
-                  </View> */}
+                <View style={{flexDirection:'row', justifyContent:'space-between'}}>
+                  <View style={styles.multiSelectView}>
+                  <MultiSelect
+                      hideTags={true}
+                      canAddItems={false}
+                      items={items}
+                      uniqueKey="id"
+                      // ref={(component) => { this.multiSelect = component }}
+                      onSelectedItemsChange={this.onSelectedItemsChange}
+                      selectedItems={selectedItems}
+                      selectText="Select multiple"
+                      fontSize={Platform.OS === 'android' ? 12: 14}
+                      iconSearch={false}
+                      itemTextColor='green'
+                      searchInputPlaceholderText={'Select multiple'}
+                      onChangeInput={ (text)=> console.log(text)}
+                      // altFontFamily="ProximaNova-Light"
+                      // tagRemoveIconColor="#CCC"
+                      // tagBorderColor="#CCC"
+                      // tagTextColor="#CCC"
+                      itemFontSize={Platform.OS === 'android' ? 16 : 20}
+                      itemTextColor="green"
+                      selectedItemTextColor="#000"
+                      selectedItemIconColor="green"
+                      itemTextColor="#000"
+                      styleDropdownMenu={<View><Text>kk</Text></View>}
+                      // displayKey="name"
+                      // searchInputStyle={{ color: 'red',height:100 }}
+                      submitButtonColor="#A2a2a2"
+                      submitButtonText="Submit"
+                    />
+                  </View> 
                 </View> 
-                  {/* <TouchableOpacity onPress={()=>this.setState({modalVisible: true})} style={{marginRight:30, marginTop:10}}>
-                   <Text style={[styles.text,{color:'#000'}]}>Select multiple</Text>
-                  </TouchableOpacity>
-                 <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/> */}
-              </View> 
               </View>
-              <Text style={{marginTop: 25}}>Interval (Minutes)</Text>
-            </View>
-            {/* <Modal
-              animationType="slide"
-              transparent={true}
-              visible={modalVisible}
-              onRequestClose={() => {
-                Alert.alert("Modal has been closed.");
-              }}
-            >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                  {items.map(item=>{
-                    return(
-                    <TouchableOpacity onPress={this.onSelect(item.name)} style={{paddingHorizontal:30,paddingVertical:20, justifyContent:'center',width:'100%',borderBottomWidth:.3}}>
-                      <Text style={styles.text}>{item.name}</Text>
-                    </TouchableOpacity>
-                    )
-                  })
-                  }
-              </View>
-            </View>
-          </Modal> */}
+            </View> */}
         </ScrollView>
       </SafeAreaView>
     )
@@ -217,13 +183,6 @@ const styles = StyleSheet.create({
     // marginLeft: 5 ,
     backgroundColor:'#fff'
   },
-  // bottomContainer:{
-  //   backgroundColor:'#fff',
-  //   paddingLeft: 20,
-  //   paddingRight: 20,
-  //   // paddingTop: 20,
-  //   paddingBottom: 80
-  // },
   centeredView: {
     flex: 1,
     justifyContent: "center",

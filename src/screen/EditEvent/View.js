@@ -359,27 +359,16 @@ export default class EditEvent extends React.Component {
                 <View style={{flexDirection:'row'}}>
                 <View style={ [styles.roundColorView, {backgroundColor : defaultFillColor === 'White' ? '#ffffff' : defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
                     : defaultFillColor === 'Coral Candy' ? '#f5d5cb': defaultFillColor === 'Cruise' ? '#b5dce1': defaultFillColor === 'Swirl' ? '#d6cdc8': defaultFillColor === 'Tusk' ? '#d7e0b1': ''}]} />
-                  {/* <ModalSelector
+                  <ModalSelector
                     initValueTextStyle={[styles.listTitle,{color: "#000"}]}
-                    selectStyle={{borderColor: "transparent"}}
-                    style={{marginTop: 2,marginRight: 25}}
+                    selectStyle={{borderColor: "black"}}
+                    style={{marginTop: 2,marginHorizontal: 15}}
                     selectTextStyle={{color: "blue"}}
                     data={colorItem}
                     initValue={defaultFillColor}
                     onChange={(option)=>this.setState({ defaultFillColor: option.label })} 
                   />                  
-                  <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.colorDropdownStyle}/> */}
-                  <View style={{ marginTop: 8 , marginLeft: 10, marginRight: 25, width: 115 }}>
-                    <Dropdown
-                      value={defaultFillColor}
-                      selectedItemColor = '#000'
-                      textColor = '#000'
-                      onChangeText={(item)=>this.setState({ defaultFillColor: item })}
-                      data={colorData}
-                      fontSize={14}
-                      dropdownOffset={{ top: 0, left: 0 }}
-                    />
-                </View>
+                  {/* <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.colorDropdownStyle}/>  */}               
                 </View>
               </View>
             </View>
@@ -628,6 +617,7 @@ const styles = StyleSheet.create({
     letterSpacing: .3,
   },
   selectedText: {
+    marginTop: 2,
 	  color: '#000',
 	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12),
     fontFamily: AppFonts.NRegular,
@@ -689,6 +679,14 @@ const styles = StyleSheet.create({
     borderRadius:9, 
     marginLeft: 86,
     borderWidth: .2
+  },
+  roundViewModal: {
+    height:18, 
+    width:18, 
+    borderRadius:9, 
+    borderWidth: .2,
+    marginLeft: 40, 
+    marginRight: 60
   },
   timeText: {
     marginRight: 10,
@@ -830,37 +828,41 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginBottom: 5,
   },
+  colorModalView: {
+    flexDirection: 'row',paddingVertical: 10 
+  }
 })
 
-const categoryList = [
-  { value: 'GROUP' },
-  { value: 'PERSONAL' },
-  { value: 'BUSINESS' },
-]
-const colorItem = [
-  { key: index++, label: 'White' },
-  { key: index++, label: 'Hawkes Blue' },
-  { key: index++, label: 'Milk Punch' },
-  { key: index++, label: 'Coral Candy'},
-  { key: index++, label: 'Cruise' },
-  { key: index++, label: 'Swirl'},
-  { key: index++, label: 'Tusk' },
-]
-
-const recurrence = [
-  { value: 'Everyday' },
-  { value: 'Weekly' },
-  { value: 'Monthly' },
-]
-
+const categoryList = [{ value: 'GROUP' },{ value: 'PERSONAL' },{ value: 'BUSINESS' }]
+const recurrence = [{ value: 'Everyday' },{ value: 'Weekly' },{ value: 'Monthly' }]
 const alarmData = ['Before 15 Min', 'Before 30 Min', 'Before 45 Min','Before 1 hour']
-
-const colorData =[
-  { value: 'White' },
-  { value: 'Hawkes Blue' },
-  { value: 'Milk Punch' },
-  { value: 'Coral Candy' },
-  { value: 'Cruise' },
-  { value: 'Swirl' },
-  { value: 'Tusk' },
+const colorItem = [
+  {
+    label: 'White', 
+    component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#ffffff'}]}/><Text style={styles.selectedText}>White</Text></View> 
+  },
+  {
+    label: 'Hawkes Blue', 
+    component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#d5d6ea'}]}/><Text style={styles.selectedText}>Hawkes Blue</Text></View> 
+  },
+  {
+    label: 'Milk Punch', 
+    component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#f4e3c9'}]}/><Text style={styles.selectedText}>Milk Punch</Text></View> 
+  },
+  {
+    label: 'Coral Candy', 
+    component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#f5d5cb'}]}/><Text style={styles.selectedText}>Coral Candy</Text></View> 
+  },
+  {
+    label: 'Cruise', 
+    component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#b5dce1'}]}/><Text style={styles.selectedText}>Cruise</Text></View> 
+  },
+  {
+    label: 'Swirl', 
+    component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#d6cdc8'}]}/><Text style={styles.selectedText}>Swirl</Text></View> 
+  },
+  {
+    label: 'Tusk', 
+    component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#d7e0b1'}]}/><Text style={styles.selectedText}>Tusk</Text></View> 
+  },
 ]
