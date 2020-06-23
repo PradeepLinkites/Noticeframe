@@ -1,10 +1,10 @@
 import React from 'react'
 import {Dimensions, ActivityIndicator, Platform, Button, StyleSheet, Text, View,  SafeAreaView, ScrollView, TouchableOpacity } from 'react-native'
-import Navbar from '../Common/commonNavbar'
+import Navbar from '../../Common/commonNavbar'
 import { get , isEmpty } from 'lodash'
 import AsyncStorage from '@react-native-community/async-storage'
-import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
-import SwitchComponent from '../Common/Switch'
+import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
+import SwitchComponent from '../../Common/Switch'
 import Modal from 'react-native-modal'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height

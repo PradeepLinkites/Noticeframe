@@ -1,10 +1,10 @@
 import React from 'react'
 import { ActivityIndicator, Platform, StyleSheet, Text, View, SafeAreaView, ScrollView, Dimensions,TouchableOpacity } from 'react-native'
-import Navbar from '../Common/commonNavbar'
+import Navbar from '../../Common/commonNavbar'
 import { get, isEmpty } from 'lodash'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
-import SwitchComponent from '../Common/Switch'
+import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
+import SwitchComponent from '../../Common/Switch'
 import AsyncStorage from '@react-native-community/async-storage'
 
 const deviceWidth = Dimensions.get('window').width

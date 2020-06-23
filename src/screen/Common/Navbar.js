@@ -14,10 +14,8 @@ import { get } from 'lodash'
 import { AppColors, AppSizes } from '../../theme'
 
 export default class Navbar extends React.Component {
-
     constructor(props) {
         super(props)
-
     }
 		
     back(){
@@ -84,12 +82,6 @@ const styles = StyleSheet.create({
         marginTop: 20,
         padding: 20,
         backgroundColor: 'green'
-    },
-    logoutBtnStyle: {
-        // position: 'absolute', 
-        // top: 20 , 
-        // alignSelf: 'flex-end',
-        // paddingRight: 15
     },
         logoutText: {
         fontSize:  20,

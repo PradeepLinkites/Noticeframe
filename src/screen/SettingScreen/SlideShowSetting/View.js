@@ -1,10 +1,10 @@
 import React from 'react'
 import {ActivityIndicator, Platform, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
-import Navbar from '../Common/commonNavbar'
+import Navbar from '../../Common/commonNavbar'
 import { get , isEmpty, size } from 'lodash'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
-import SwitchComponent from '../Common/Switch'
+import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
+import SwitchComponent from '../../Common/Switch'
 import ModalSelector from 'react-native-modal-selector'
 import AsyncStorage from '@react-native-community/async-storage'
 const deviceWidth = Dimensions.get('window').width
@@ -164,7 +164,7 @@ export default class SlideShowSetting extends React.Component {
                   initValue={transitions}
                   onChange={(option)=>this.setState({ transitions: option.label })} 
                   />
-                <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/>
+                <Image source={require('../../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/>
               </View>
             </View>
             <View style={styles.transitionView}>
@@ -172,12 +172,12 @@ export default class SlideShowSetting extends React.Component {
               <View style={styles.buttonView}>
                 {numberOfEventsInSlideshow == 5 ? <View style={{marginRight: 55}} />
                 :
-                <TouchableOpacity onPress={this.onChangeMinus}><Image source={require('../../assets/icons/-.png')} style={styles.image} /></TouchableOpacity>
+                <TouchableOpacity onPress={this.onChangeMinus}><Image source={require('../../../assets/icons/-.png')} style={styles.image} /></TouchableOpacity>
                 }
                   <View style={{justifyContent:'center'}}><Text style={styles.number}>{numberOfEventsInSlideshow}</Text></View>
                 {numberOfEventsInSlideshow == 15 ? <View style={{marginLeft: 55}} />
                 :
-                <TouchableOpacity onPress={this.onChangePlus}><Image source={require('../../assets/icons/+.png')} style={styles.image} /></TouchableOpacity>
+                <TouchableOpacity onPress={this.onChangePlus}><Image source={require('../../../assets/icons/+.png')} style={styles.image} /></TouchableOpacity>
                 }
               </View>
             </View>

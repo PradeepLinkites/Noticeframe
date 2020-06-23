@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { View, Text } from 'react-native'
-import DropdownMenu from 'react-native-dropdown-menu';
 
 export default class Calender extends Component {
 	constructor(props) {

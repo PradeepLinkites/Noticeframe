@@ -6,26 +6,24 @@ import { StackActions, NavigationActions } from 'react-navigation'
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import { get, isEmpty } from 'lodash'
 
-//TabsNavar
 import Navbar from '../screen/Common/TabNavbar'
-// import TopNavigator from '../screen/Common/TopTabNavigator'
 
 //Drawer Screens
 import Home from '../screen/HomeScreen/Container'
 import Events from '../screen/EventsScreen/Container'
-import Calendar from '../screen/Calendars/Container'
+import Calendar from '../screen/SettingScreen/Calendar/Container'
 import SlideShow from '../screen/SlideShowScreen/Container'
 import Setting from '../screen/SettingScreen/Container'
 import Support from '../screen/SupportScreen/Container'
 import Share from '../screen/ShareScreen/Container'
 import CreateEvent from '../screen/CreateEvent/Container'
 import EventDetail from '../screen/EventDetail/Container'
-import EventSetting from '../screen/EventSetting/Container'
-import CalendarSetting from '../screen/CalenderSetting/Container'
-import SlideShowSetting from '../screen/SlideShowSetting/Container'
-import FrameColorSetting from '../screen/FrameColorSetting/Container'
-import ImportSetting from '../screen/ImportSetting/Container'
-import ExportSetting from '../screen/ExportSetting//Container'
+import EventSetting from '../screen/SettingScreen/EventSetting/Container'
+import CalendarSetting from '../screen/SettingScreen/CalenderSetting/Container'
+import SlideShowSetting from '../screen/SettingScreen/SlideShowSetting/Container'
+import FrameColorSetting from '../screen/SettingScreen/FrameColorSetting/Container'
+import ImportSetting from '../screen/SettingScreen/ImportSetting/Container'
+// import ExportSetting from '../screen/ExportSetting//Container'
 
 import EditEvent from '../screen/EditEvent/Container'
 import CreateGroup from '../screen/CreateGroup/Container'
@@ -539,9 +537,9 @@ export default DrawerNavigator = createDrawerNavigator({
 	ImportSetting:{
 		screen: ImportSetting
 	},
-	ExportSetting:{
-		screen: ExportSetting
-	},
+	// ExportSetting:{
+	// 	screen: ExportSetting
+	// },
 	Logout: {
 		screen: Logout,
 		navigationOptions: {

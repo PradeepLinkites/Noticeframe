@@ -9,10 +9,8 @@ import {
   Animated,
   Text
 } from 'react-native'
-import AwesomeButton from 'react-native-really-awesome-button'
 import { DrawerActions } from 'react-navigation-drawer'
 import { get } from 'lodash'
-import Icon from 'react-native-vector-icons/Ionicons';
 import { AppFonts, AppSizes, AppColors } from '../../theme'
 
 export default class Navbar extends React.Component {
@@ -108,6 +106,5 @@ const styles = StyleSheet.create({
         height: Platform.OS === 'android' ? AppSizes.verticalScale(20) : AppSizes.verticalScale(18),
         width: 22,
         resizeMode: 'contain', 
-        // background
     }
 })

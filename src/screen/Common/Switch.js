@@ -1,17 +1,14 @@
 import React, { Component } from 'react'
-import {StyleSheet, View, Text, Switch } from 'react-native'
-import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
+import {Switch } from 'react-native'
 
 export default class SwitchComponent extends Component {
 	constructor(props) {
 	super(props);
-	this.state = {
-	};
+	    this.state = {}
 	}
 	render() {
 	   return (
 			<Switch
-				// onValueChange = {() => this.toggleSwitch(item, index)}
 				onValueChange = {(value) => this.props.onChange(value)}
 				value = {this.props.value}
 				disabled={false}
@@ -28,20 +25,3 @@ export default class SwitchComponent extends Component {
 	   );
 	}	
 }
-
-// const styles = StyleSheet.create({
-// 	container: {
-// 	  flex: 1
-// 	},
-// 	slideShowText: {
-// 	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
-// 		fontFamily: AppFonts.NRegular,
-// 	  marginTop: 5,
-// 	  letterSpacing: .2
-// 	},
-// 	slideShowView: {
-// 	  flexDirection:'row',
-// 	  justifyContent:'space-between',
-// 	  alignSelf:'center'
-// 	}
-//  })

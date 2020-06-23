@@ -11,8 +11,8 @@ import CreateEvent from '../screen/CreateEvent/Container'
 import CreateGroup from '../screen/CreateGroup/Container'
 import EventDetail from '../screen/EventDetail/Container'
 import EditEvent from '../screen/EditEvent/Container'
-import EventSetting from '../screen/EventSetting/Container'
-import CalendarSetting from '../screen/CalenderSetting/Container'
+// import EventSetting from '../screen/EventSetting/Container'
+// import CalendarSetting from '../screen/CalenderSetting/Container'
 import Signup from '../screen/Signup/Container'
 import Forgot from '../screen/Forgot/Container'
 import Tour from '../screen/Tour/Container'
@@ -68,12 +68,12 @@ const AppStack = createStackNavigator({
 	EditEvent:{
 		screen: EditEvent
 	},
-	EventSetting:{
-		screen: EventSetting
-	},
-	CalendarSetting:{
-		screen: CalendarSetting
-	},
+	// EventSetting:{
+	// 	screen: EventSetting
+	// },
+	// CalendarSetting:{
+	// 	screen: CalendarSetting
+	// },
 	CreateGroup:{
 		screen: CreateGroup
 	}

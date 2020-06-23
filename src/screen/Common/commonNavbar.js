@@ -9,7 +9,6 @@ import {
   Animated,
   Text
 } from 'react-native'
-import AwesomeButton from 'react-native-really-awesome-button'
 import { DrawerActions } from 'react-navigation-drawer'
 import { get } from 'lodash'
 import Icon from 'react-native-vector-icons/Ionicons';
