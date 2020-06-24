@@ -1,21 +1,13 @@
 import React from 'react'
 import { Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
-import { get , isEmpty } from 'lodash'
+import { get , isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import moment from 'moment'
 import {Calendar} from 'react-native-calendars'
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-community/async-storage'
-
-const sampleEvents = [
-  { 'date': '2020-06-23','startTime': '09:00:00', 'endTime': '09:20:00','duration': '00:20:00', 'note': 'Walk my dog' },
-  { 'date': '2020-06-24','startTime': '14:00:00', 'endTime': '15:00:00','duration': '01:00:00', 'note': 'Doctor\'s appointment' },
-  { 'date': '2020-06-25','startTime': '08:00:00', 'endTime': '08:30:00','duration': '00:30:00', 'note': 'Morning exercise' },
-  { 'date': '2020-06-25','startTime': '14:00:00', 'endTime': '16:00:00', 'duration': '02:00:00', 'note': 'Meeting with client' },
-  { 'date': '2020-06-25','startTime': '19:00:00', 'endTime': '20:00:00', 'duration': '01:00:00', 'note': 'Dinner with family' },
-  { 'date': '2020-06-26','startTime': '09:30:00', 'endTime': '10:30:00','duration':  '01:00:00', 'note': 'Schedule 1' },
-  { 'date': '2020-06-26','startTime': '11:00:00', 'endTime': '13:00:00', 'duration': '02:00:00', 'note': 'Schedule 2' },
-]
+import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
+// import sizes from '../../theme/sizes'
 
 export default class Monthly extends React.Component {
   constructor(props) {
@@ -29,7 +21,8 @@ export default class Monthly extends React.Component {
       calendarHeader: '',
       calendarBody: '',
       calendarFont: '',
-      isLoading: false
+      isLoading: false,
+      userId: ''
     }
   }
 
@@ -41,6 +34,7 @@ export default class Monthly extends React.Component {
       if(!isEmpty(user1)){
         this.props.getSetting(user1._id)
         this.props.getEventCalender(user1._id)
+        this.setState({userId: user1._id})
       }
     })
   }
@@ -68,8 +62,9 @@ export default class Monthly extends React.Component {
         calendarData.push({
           id: get(value, '_id', ''),
           date: moment(get(value, 'eventDate', '')).format('YYYY-MM-DD'),
-          startTime: moment(get(value, 'startTime', '')).format('hh:mm:ss'),
-          endTime: moment(get(value, 'endTime', '')).format('hh:mm:ss'),
+          eventDate: moment(get(value, 'eventDate', '')).format('DD-MM-YYYY'),
+          startTime: moment(get(value, 'startTime', '')).format('h:mm A'),
+          endTime: moment(get(value, 'endTime', '')).format('h:mm A'),
           note: get(value, 'eventName', ''),
           hexColor: get(value, 'defaultFillColor', '')
         })
@@ -101,8 +96,9 @@ export default class Monthly extends React.Component {
   }
 
   render() {
+    const { eventDetails } = this.state
     let dates = {}
-    this.state.eventDetails.forEach((val) => {
+    eventDetails.forEach((val) => {
       dates[val.date] = { marked: true }  
     })
     return (
@@ -137,40 +133,62 @@ export default class Monthly extends React.Component {
               }
             }}
           />
-
-        <Modal isVisible={this.state.isModalVisible}>
-          <View style={{ backgroundColor:'#fff', paddingTop: 10 }}>
-              <Text style={{ alignSelf:'center',fontSize: 20, top: 3}}>List of Events</Text>
-              {this.state.eventDetails.map((item,ind) => {
+          {/* <Modal isVisible={this.state.isModalVisible}>
+            <View style={{ backgroundColor:'#fff', paddingTop: 10 }}>
+                <Text style={{ alignSelf:'center',fontSize: 20, top: 3}}>List of Events</Text>
+                {this.state.eventDetails.map((item,ind) => {
+                  if(item.date === this.state.currentDate){
+                    return(
+                    <View>
+                      <TouchableOpacity style={styles.event} onPress={this.onNavigate.bind(this, get(item, 'id', ''))} key = {ind}>
+                        <View style={styles.eventDuration}>
+                          <View style={styles.durationContainer}>
+                            <View style={styles.durationDot} />
+                            <Text style={styles.durationText}>{item.startTime}</Text>
+                          </View>
+                          <View style={styles.durationContainer}>
+                            <View style={styles.durationDot} />
+                            <Text style={styles.durationText}>{item.endTime}</Text>
+                          </View>
+                          <View style={styles.durationDotConnector} />
+                        </View>
+                        <View>
+                          <Text numberOfLines={3} style={{color: '#fff'}}>{item.note}</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <View style={{height:2, backgroundColor:'#A2a2a2',width: '100%'}} /> 
+                    </View>
+                    )                 
+                  }
+                })}
+              <Button title="Cancel" onPress={this.toggleModal} color='#A2a2a2'/>
+            </View>
+          </Modal> */}
+          {this.state.isModalVisible &&
+            <View style={{paddingHorizontal: 20,marginTop: 20}}>
+              <Text style={{ alignSelf:'center',fontSize: 18, marginVertical: 3, fontWeight: '700'}}>List of Events</Text>
+              {size(get(this.state, 'eventDetails', [])) > 0 && eventDetails.map((item,ind) => {
                 if(item.date === this.state.currentDate){
                   return(
-                  <View>
-                    <TouchableOpacity style={styles.event} onPress={this.onNavigate.bind(this, get(item, 'id', ''))} key = {ind}>
-                      <View style={styles.eventDuration}>
-                        <View style={styles.durationContainer}>
-                          <View style={styles.durationDot} />
-                          <Text style={styles.durationText}>{item.startTime}</Text>
-                        </View>
-                        <View style={styles.durationContainer}>
-                          <View style={styles.durationDot} />
-                          <Text style={styles.durationText}>{item.endTime}</Text>
-                        </View>
-                        <View style={styles.durationDotConnector} />
-                      </View>
-                      <View>
-                        <Text numberOfLines={3} style={{color: '#fff'}}>{item.note}</Text>
-                      </View>
-                    </TouchableOpacity>
-                    <View style={{height:2, backgroundColor:'#A2a2a2',width: '100%'}} /> 
-                  </View>
-                  )                 
+                  <TouchableOpacity onPress={this.onNavigate.bind(this, get(item, 'id', ''))} key = {ind}>
+                    <Card style={{backgroundColor:'#fff',marginBottom: 5 }}>
+                      <Card.Content>
+                        <Title>{item.note}</Title>
+                        <Paragraph>{item.eventDate}</Paragraph>
+                        <Paragraph>{item.startTime} To {item.endTime}</Paragraph>
+                      </Card.Content>
+                    </Card>
+                  </TouchableOpacity>
+                  )
                 }
-              })}
-            <Button title="Cancel" onPress={this.toggleModal} color='#A2a2a2'/>
-          </View>
-        </Modal>
-
+                })
+              }
+            </View>  
+          } 
         </ScrollView>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
+          <Image source={require('../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
+        </TouchableOpacity>
       </SafeAreaView>
     )
   }
@@ -221,4 +239,12 @@ durationText: {
     color: '#fff',
     fontSize: 14
 },
+plusButtonStyle: {
+  width:  Platform.OS === 'android' ? AppSizes.verticalScale(50) : AppSizes.verticalScale(50), 
+  height: Platform.OS === 'android' ? AppSizes.verticalScale(50) : AppSizes.verticalScale(50),  
+  borderRadius: Platform.OS === 'android' ?  25 : 25 ,                                             
+  position: 'absolute',                                          
+  bottom: Platform.OS === 'android' ? 22 : 32,                                                    
+  right: Platform.OS === 'android' ? 26 : 15,  
+}
 })
