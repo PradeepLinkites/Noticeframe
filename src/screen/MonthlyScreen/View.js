@@ -65,17 +65,11 @@ export default class Monthly extends React.Component {
     const calendarData = []
     if (event) {
       event.forEach((value, i) => {
-        // console.log('value==>>', value)
-        // console.log('date==>>', moment(get(value, 'eventDate', '')).format('YYYY-MM-DD'))
-        // console.log('startTime==>>', moment(get(value, 'startTime', '')).format('LTS'))
-        // console.log('endTime==>>', moment(get(value, 'endTime', '')).format('LTS'))
-        // console.log('duration==>>', moment(moment(get(value, 'startTime', '')).diff(moment(get(value, 'endTime', ''))).format("hh:mm:ss")))
-
         calendarData.push({
           id: get(value, '_id', ''),
-          date: get(value, 'eventDate', ''),
-          startTime: get(value, 'startTime', ''),
-          endTime: get(value, 'endTime', ''),
+          date: moment(get(value, 'eventDate', '')).format('YYYY-MM-DD'),
+          startTime: moment(get(value, 'startTime', '')).format('hh:mm:ss'),
+          endTime: moment(get(value, 'endTime', '')).format('hh:mm:ss'),
           note: get(value, 'eventName', ''),
           hexColor: get(value, 'defaultFillColor', '')
         })
@@ -101,16 +95,15 @@ export default class Monthly extends React.Component {
     this.setState({isModalVisible: !this.state.isModalVisible});
   }
 
-  onNavigate =() => {
+  onNavigate = (id) => {
     this.setState({isModalVisible: !this.state.isModalVisible})
-    this.props.navigation.navigate('CreateEvent')
+    this.props.navigation.navigate('EventDetail',{id : id})
   }
 
   render() {
     let dates = {}
     this.state.eventDetails.forEach((val) => {
       dates[val.date] = { marked: true }  
-      // console.log('dates===>>',dates )
     })
     return (
       <SafeAreaView style={AppStyles.container}>
@@ -152,7 +145,7 @@ export default class Monthly extends React.Component {
                 if(item.date === this.state.currentDate){
                   return(
                   <View>
-                    <TouchableOpacity style={styles.event} onPress={this.onNavigate} key = {ind}>
+                    <TouchableOpacity style={styles.event} onPress={this.onNavigate.bind(this, get(item, 'id', ''))} key = {ind}>
                       <View style={styles.eventDuration}>
                         <View style={styles.durationContainer}>
                           <View style={styles.durationDot} />
