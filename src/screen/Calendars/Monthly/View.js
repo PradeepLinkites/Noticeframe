@@ -1,13 +1,12 @@
 import React from 'react'
 import { Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import { get , isEmpty, size } from 'lodash'
-import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
+import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
 import moment from 'moment'
 import {Calendar} from 'react-native-calendars'
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-community/async-storage'
 import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
-// import sizes from '../../theme/sizes'
 
 export default class Monthly extends React.Component {
   constructor(props) {
@@ -187,7 +186,7 @@ export default class Monthly extends React.Component {
           } 
         </ScrollView>
         <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
-          <Image source={require('../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
+          <Image source={require('../../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
         </TouchableOpacity>
       </SafeAreaView>
     )

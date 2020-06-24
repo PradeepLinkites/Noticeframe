@@ -5,7 +5,7 @@ import { createDrawerNavigator, DrawerActions } from 'react-navigation-drawer'
 import { StackActions, NavigationActions } from 'react-navigation'
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 import { get, isEmpty } from 'lodash'
-
+import AsyncStorage from '@react-native-community/async-storage'
 import Navbar from '../screen/Common/TabNavbar'
 
 //Drawer Screens
@@ -27,13 +27,12 @@ import ImportSetting from '../screen/SettingScreen/ImportSetting/Container'
 
 import EditEvent from '../screen/EditEvent/Container'
 import CreateGroup from '../screen/CreateGroup/Container'
-import AsyncStorage from '@react-native-community/async-storage'
 import { AppFonts, AppSizes, AppColors } from '../theme'
 
 //Tabs Screens
-import DailyScreen from '../screen/DailyScreen/Container'
-import WeeklyScreen from '../screen/WeeklyScreen/Container' 
-import MonthlyScreen from '../screen/MonthlyScreen/Container' 
+import DailyScreen from '../screen/Calendars/Daily/Container'
+import WeeklyScreen from '../screen/Calendars/Weekly/Container' 
+import MonthlyScreen from '../screen/Calendars/Monthly/Container' 
 import EventsView from '../screen/EventsScreen/Container'
 const data = ['Daily', 'Weekly','Monthly', 'Calender List']
 

@@ -1,7 +1,7 @@
 import React from 'react'
-import { Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import {  Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import { get } from 'lodash'
-import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
+import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import WeeklyCalendar from 'react-native-weekly-calendar';
 import styles from './styles'
@@ -86,7 +86,7 @@ export default class Daily extends React.Component {
                   </View>
                   {eventViews.length === 0 ?
                     <TouchableOpacity onPress={()=>this.props.navigation.navigate('CreateEvent')} style={{backgroundColor:'#3293ed', justifyContent:'center', alignItems: 'center', flex: 1,paddingVertical:22}}>
-                      <Image source={require('../../assets/icons/Plus2.png')} style={styles.plusIcon}/>
+                      <Image source={require('../../../assets/icons/Plus2.png')} style={styles.plusIcon}/>
                     </TouchableOpacity>
                     :
                     <View style={styles.allEvents}>
