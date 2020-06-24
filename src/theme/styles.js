@@ -200,7 +200,6 @@ export default {
   itemContainer: {
     borderRadius: 22,
     borderWidth: 4,
-    borderColor: 'red',
     height: Platform.OS === 'android' ? Sizes.verticalScale(140) : Sizes.verticalScale(130),
     width:  Platform.OS === 'android' ? Sizes.verticalScale(140) : Sizes.verticalScale(130),
     marginBottom: 2
@@ -208,7 +207,7 @@ export default {
   playButton: {
     position:'absolute',
     top: Platform.OS === 'android' ? 6 : 6,
-    right: Platform.OS === 'android' ? 26 : 30,
+    right: Platform.OS === 'android' ? 35 : 30,
   },
   eventBottomBar:{
     width: Platform.OS === 'android' ? Sizes.verticalScale(135) : Sizes.verticalScale(130),

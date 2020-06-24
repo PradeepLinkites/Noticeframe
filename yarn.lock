@@ -5935,6 +5935,11 @@ react-native-select-multiple@^2.1.0:
   dependencies:
     prop-types "^15.7.2"
 
+react-native-share@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-3.5.0.tgz#ef65ed8e1240584b2aa4be81773b6e7559c110b2"
+  integrity sha512-vWP0GRqrxQpB96GuTFT2ae+5d33BH0E3AqHZ/xL5YQLGXyG5Fdwr39FNUCFW4oYc328tY9QRuUPeVo45gGAhTQ==
+
 react-native-slider@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-native-slider/-/react-native-slider-0.11.0.tgz#b68a0bc43c8422b24cd57947cc5ac2bcdb58fadc"

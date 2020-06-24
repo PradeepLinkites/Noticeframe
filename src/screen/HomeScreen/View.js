@@ -27,7 +27,13 @@ export default class HomeScreen extends React.Component {
       tabIndex: 0,
       routeName: '',
       getEventData:[],
-      isLoading: false
+      isLoading: false,
+      red: 0,
+      yellow: 0,
+      green: 0,
+      redHour: 0,
+      yellowHour: 0,
+      greenHour: 0,
     }
   }
 
@@ -38,6 +44,7 @@ export default class HomeScreen extends React.Component {
       const user1 = JSON.parse(user)
       if(!isEmpty(user1)){
         this.props.getEvent(user1._id)
+        this.props.getSetting(user1._id)
       }
     })
   }
@@ -49,10 +56,21 @@ export default class HomeScreen extends React.Component {
         this.setState({ getEventData: get(this.props, 'getEventData', []) , isLoading: false })
       }
     }
+    if(this.props.getSettingPhase){
+      this.props.resetSettingPhase()
+      this.setState({
+        red: get(this.props, 'getSettingData.FrameColor.red', 0),
+        yellow: get(this.props, 'getSettingData.FrameColor.yellow', 0),
+        green: get(this.props, 'getSettingData.FrameColor.green', 0),
+        redHour: get(this.props, 'getSettingData.FrameColor.redHour', 0),
+        yellowHour: get(this.props, 'getSettingData.FrameColor.yellowHour', 0),
+        greenHour: get(this.props, 'getSettingData.FrameColor.greenHour', 0),
+      })
+    }
   }
 
   render(){
-    const { isLoading, getEventData } = this.state
+    const { isLoading, getEventData, red, yellow, green, redHour, yellowHour, greenHour, } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'Home' ? 'Home' : ''
     return (
@@ -69,10 +87,21 @@ export default class HomeScreen extends React.Component {
                   items={getEventData}
                   renderItem={({ item, index }) => {
                     let start_time = moment(item.startTime).format("h:mm A")
-                    let end_time = moment(item.endTime).format("h:mm A")      
+                    let end_time = moment(item.endTime).format("h:mm A")
+                    var diffInHours = Math.floor(Math.abs(new Date(item.startTime) - new Date()) / 36e5)
+                    let frameColor = '#00a651'
+                    if(red &&  diffInHours >= 12 && diffInHours <= redHour){
+                      frameColor = '#ed1c24'
+                    }
+                    if(yellow &&  diffInHours >= 24 && diffInHours <= yellowHour){
+                      frameColor = '#ff9900'
+                    }
+                    if(green && diffInHours >= 72){
+                      frameColor = '#00a651'
+                    }         
                     return(
                     <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
-                      <Image source={require('../../assets/images/event_thumb1.png')} style={AppStyles.itemContainer}/>
+                      <Image source={require('../../assets/images/event_thumb1.png')} style={[AppStyles.itemContainer, {borderColor: frameColor}]}/>
                       {get(item, 'showEventInSlideShow', false) && 
                         <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow')} style={AppStyles.playButton}>
                           <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>

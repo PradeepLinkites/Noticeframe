@@ -45,7 +45,7 @@ export default class SlideShow extends React.Component {
     const route = get(state, 'routeName', '')  === 'SlideShow' ? 'NOTICE FRAME' : ''
     return (
       <SafeAreaView style={AppStyles.container}>
-        {/* <ScrollView> */}
+        <ScrollView>
         <View style={styles.container}>
           {size(slideShowData) > 0 ?
           <Swiper
@@ -69,7 +69,6 @@ export default class SlideShow extends React.Component {
                   <Image source={require('../../assets/icons/Image_slideshow.png')} style={styles.backgroundImage}/>
                   <View style={styles.BigEventContainer}>
                     <View style={[styles.eventView,{backgroundColor:'rgba(248, 247, 216, 0.2)'}]}>
-                      {/* <Text style={styles.eventTitleText}>{Platform.OS === 'android' ? ind: ind}</Text> */}
                       <Text style={styles.eventTitleText}>{item.eventName}</Text>
                       <Text style={styles.eventDateText}>{date}</Text>
                     <Text style={styles.eventDateText}>{start_time} to {end_time}</Text>
@@ -106,7 +105,7 @@ export default class SlideShow extends React.Component {
           </View>
           }
         </View>
-        {/* </ScrollView> */}
+        </ScrollView>
       </SafeAreaView>
     )
   }
@@ -124,7 +123,7 @@ const styles = StyleSheet.create({
   BigEventContainer: {
     flex:1,
     position: 'absolute',
-    top: Platform.OS === 'android' ? 150 : 200 ,
+    marginTop: Platform.OS === 'android' ? 100 : 140 ,
     width: '100%',
     height: deviceHeight,
     backgroundColor: 'transparent',

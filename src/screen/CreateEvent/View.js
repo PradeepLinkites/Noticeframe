@@ -1,5 +1,5 @@
 import React from 'react'
-import {Modal, TextInput, Platform, Alert, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
+import {Modal, TextInput, Platform, Alert, Picker, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get, isEmpty } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
@@ -13,7 +13,7 @@ import moment from "moment"
 import ModalSelector from 'react-native-modal-selector'
 import AsyncStorage from '@react-native-community/async-storage'
 import sizes from '../../theme/sizes'
-
+import { Button } from 'react-native-paper';
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 let index = 0
@@ -33,13 +33,13 @@ export default class CreateEvent extends React.Component {
       groupList:[],
       groupListName: [],
       defaultFillColor: 'Tusk',
-      eventDate: moment().format('DD MMMM, YYYY'),
-      eventDate1: new Date,
-      startTime: moment().add(1, 'hours').format('hh:mm a'),
-      startTime1: new Date,
+      eventDate: '',
+      eventDate1: new Date(),
+      startTime: '',
+      startTime1: new Date(),
       isStartPickerVisible: false,
-      endTime: moment().add(3, 'hours').format('hh:mm a'),
-      endTime1: new Date,
+      endTime: '',
+      endTime1: new Date(),
       isEndPickerVisible: false,
       isDatePickerVisible: false,
       setReminderAlarm: false,
@@ -62,6 +62,9 @@ export default class CreateEvent extends React.Component {
       isLoading: false,
       eventNameError :false,
       notesError: false,
+      eventDateError: false,
+      startTimeError: false,
+      endTimeError: false,
       red: 0,
       yellow: 0,
       green: 0,
@@ -95,6 +98,7 @@ export default class CreateEvent extends React.Component {
       this.setState({ isLoading: false , createEventMessage: this.props.createEventMessage })
       this.props.navigation.navigate('Home')
       alert('Event Created Successfully')
+      this._resetState()
       this.props.getEvent(this.state.userId)
     }
     if (this.props.getUserData !== prevProps.getUserData) {
@@ -147,18 +151,18 @@ export default class CreateEvent extends React.Component {
   }
 
   handleDate = (date) => {
-    let newDate = moment(date).utcOffset('+05:30').format('DD-MMMM-YYYY')
-    this.setState({ eventDate: newDate , isDatePickerVisible : false , eventDate1: date})
+    let newDate = moment(date).utcOffset('+05:30').format('DD-MM-YYYY')
+    this.setState({ eventDate: date , isDatePickerVisible : false , eventDate1: newDate})
   }
  
   handleStartTime = (date) => { 
     let time = moment(date).utcOffset('+05:30').format('hh:mm a')
-    this.setState({ startTime: time , isStartPickerVisible: false, startTime1: date})
+    this.setState({ startTime: date , isStartPickerVisible: false, startTime1: date})
   }
   
   handleEndTime = (date) => {    
     let time = moment(date).utcOffset('+05:30').format('hh:mm a')
-    this.setState({ endTime : time , isEndPickerVisible: false, endTime1: date})
+    this.setState({ endTime : date , isEndPickerVisible: false, endTime1: date})
   }
 
   onLocationChange = (text) => {
@@ -227,13 +231,16 @@ export default class CreateEvent extends React.Component {
 
 
   createEvent(){
-    const{ eventPicture, eventName, groupName, memberList, defaultFillColor, eventDate, eventDate1, startTime1, endTime1, notes, 
+    const{ eventPicture, eventName, groupName, memberList, defaultFillColor, eventDate, eventDate1, startTime, endTime, notes, 
       location, personal, business, group, setReminderAlarm, showNotesInSlideShow, showEventInSlideShow, setTime,
       category, repeat, duration, isLoading } = this.state
     let error = true
     this.setState({
       eventNameError: false,
       notesError: false,
+      eventDateError: false,
+      startTimeError: false,
+      endTimeError: false
     })
     if (eventName.trim() === '') {
       error = false
@@ -243,6 +250,18 @@ export default class CreateEvent extends React.Component {
       error = false
       this.setState({ notesError: true })
     } 
+    if (get(this.state,'eventDate','') === '') {
+      error = false
+      this.setState({ eventDateError: true })
+    } 
+    if (get(this.state,'startTime','') === '') {
+      error = false
+      this.setState({ startTimeError: true })
+    } 
+    if (get(this.state,'endTime','') === '') {
+      error = false
+      this.setState({ endTimeError: true })
+    } 
     if (error) {
     this.setState({ isLoading: true })
     const data = {}
@@ -251,10 +270,10 @@ export default class CreateEvent extends React.Component {
       data.selectContacts = memberList
       data.defaultFillColor = defaultFillColor
       data.frameBoundaryColor = defaultFillColor
-      data.eventDateLocal = moment(eventDate).format("DD-MM-YYYY")
-      data.eventDate = eventDate1
-      data.startTime = startTime1
-      data.endTime = endTime1
+      data.eventDateLocal = eventDate1
+      data.eventDate = eventDate
+      data.startTime = startTime
+      data.endTime = endTime
       data.note = notes
       data.location = location
       data.personal = personal
@@ -276,6 +295,7 @@ export default class CreateEvent extends React.Component {
         data: data,
         id: get(this.state, 'userId','')
       }
+      console.log('Details==>>', Details)
       this.props.createEvent(Details)
     }
   }
@@ -317,16 +337,25 @@ export default class CreateEvent extends React.Component {
                   value={this.state.eventName}
                   />
               <View style={{ width: 125, paddingHorizontal: 5}}>
-                <Dropdown
+                {/* <Dropdown
                   value={category}
                   selectedItemColor = '#000'
                   textColor = '#3293ed'
                   onChangeText={(item)=>this.onSelectCategory(item)}
                   data={categoryList}
                   dropdownOffset={{ top: 10, left: 0 }}
-                />
-              </View>
-              </View>
+                /> */}
+                <Picker
+                  selectedValue={category}
+                  style={{ height: 50, width: 150 }}
+                  onValueChange={(itemValue, itemIndex) => this.onSelectCategory(itemValue)}
+                >
+                  <Picker.Item label="PERSONAL" value="PERSONAL" />
+                  <Picker.Item label="GROUP" value="GROUP" />
+                  <Picker.Item label="BUSINESS" value="BUSINESS" />
+               </Picker>
+            </View>
+            </View>
               {eventNameError && <Text style={AppStyles.error}>Please enter the event name</Text>}
             </View>
               {category === 'GROUP' &&
@@ -354,9 +383,9 @@ export default class CreateEvent extends React.Component {
                   <View style={ [styles.roundColorView, {backgroundColor : defaultFillColor === 'White' ? '#ffffff' : defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
                     : defaultFillColor === 'Coral Candy' ? '#f5d5cb': defaultFillColor === 'Cruise' ? '#b5dce1': defaultFillColor === 'Swirl' ? '#d6cdc8': defaultFillColor === 'Tusk' ? '#d7e0b1': ''}]} />
                   <ModalSelector
+                    keyExtractor= {item => item.id}
                     initValueTextStyle={[styles.listTitle,{color: "#000"}]}
                     selectStyle={{borderColor: "black"}}
-                    // selectStyle={{borderColor: "transparent"}}
                     style={{marginTop: 2,marginHorizontal: 15 }}
                     initValue="Select Color!"
                     data={colorItem}
@@ -369,7 +398,15 @@ export default class CreateEvent extends React.Component {
               </View>
             </View>
             <View style={[styles.selectGroupView,{marginTop: 10}]}>
-              <Text style={styles.listTitle}>Event Date</Text>
+              <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                <Text style={[styles.listTitle, {marginTop: 7}]}>Event Date</Text>
+                <Button mode="outlined" uppercase = {false}color = '#000' style={{marginLeft: 10 ,width: 120}}
+                  onPress={()=>this.setState({isDatePickerVisible : true})}                 
+                >
+                  {get(this.state,'eventDate','') !== '' ? moment(get(this.state,'eventDate','')).format('DD-MM-YYYY') : 'Date picker' }
+                </Button>
+              </View>
+              {this.state.eventDateError && <Text style={AppStyles.error}>Please select the event date</Text>}
               <DateTimePickerModal
                 minimumDate={new Date()}
                 isVisible={isDatePickerVisible}
@@ -377,34 +414,41 @@ export default class CreateEvent extends React.Component {
                 onConfirm={this.handleDate}
                 onCancel={()=>this.setState({isDatePickerVisible : false})}
                 showIcon={false}
-                // locale="es-ES"
               />
-              <Text onPress={()=>this.setState({isDatePickerVisible : true})} style={[styles.selectedText,{marginTop: 8}]}>{get(this.state,'eventDate','')}</Text>
             </View>
-
             <View style={styles.eventContainer}>
-               <Text style={styles.listTitle}>Event Time</Text>
-              <View style={{flexDirection:'row',marginTop:8,justifyContent:'space-between'}}>
-                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.setState({isStartPickerVisible : true})}>               
+              <Text style={styles.listTitle}>Event Time</Text>
+              <View style={{flexDirection:'row', marginTop:8, justifyContent:'space-between'}}>
+                <View style={{flexDirection:'row'}} >               
                   <Text style={styles.timeText} >START TIME</Text>
-                  {/* <Button title="Show Date Picker" onPress={this.showDatePicker} color='#fff'/> */}
-                    <DateTimePickerModal
-                      minimumDate={new Date()}
-                      isVisible={isStartPickerVisible}
-                      mode="time"
-                      onConfirm={this.handleStartTime}
-                      onCancel={()=>this.setState({isStartPickerVisible : false})}
-                      showIcon={false}
-                      locale="es-ES"
-                      headerTextIOS="START TIME"
-                      confirmTextIOS="DONE"
-                      cancelTextIOS="CANCEL"
-                      date ={new Date(this.state.eventDate)}
-                    />
-                  <Text style={styles.selectedText}>{get(this.state,'startTime','')}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.setState({isEndPickerVisible : true})}> 
+                  <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginHorizontal: 3 }}
+                    onPress={()=>this.setState({isStartPickerVisible : true})}  
+                    disabled ={get(this.state,'eventDate','') === '' ? true : false}               
+                  >
+                    {get(this.state,'startTime','') !== '' ? moment(get(this.state,'startTime','')).format('h:mm A') : 'Time picker' }
+                  </Button>
+                  <DateTimePickerModal
+                    minimumDate={new Date()}
+                    isVisible={isStartPickerVisible}
+                    mode="time"
+                    onConfirm={this.handleStartTime}
+                    onCancel={()=>this.setState({isStartPickerVisible : false})}
+                    showIcon={false}
+                    locale="es-ES"
+                    headerTextIOS="START TIME"
+                    confirmTextIOS="DONE"
+                    cancelTextIOS="CANCEL"
+                    date ={new Date(get(this.state,'eventDate',''))}
+                  />
+                </View>
+                <View style={{flexDirection:'row'}}> 
                    <Text style={styles.timeText}>END TIME</Text>
+                   <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginHorizontal: 3}}
+                    onPress={()=>this.setState({isEndPickerVisible : true})} 
+                    disabled ={get(this.state,'eventDate','') === '' ? true : false}                 
+                  >
+                    {get(this.state,'endTime','') !== '' ? moment(get(this.state,'endTime','')).format('h:mm A') : 'Time picker' }
+                  </Button>
                    <DateTimePickerModal
                       isVisible={isEndPickerVisible}
                       mode="time"
@@ -415,27 +459,29 @@ export default class CreateEvent extends React.Component {
                       headerTextIOS="END TIME"
                       confirmTextIOS="DONE"
                       cancelTextIOS="CANCEL"
-                      date ={new Date(this.state.eventDate)}
+                      date ={new Date(get(this.state,'eventDate',''))}
                     />
-                  <Text style={styles.selectedText}>{get(this.state,'endTime','')}</Text>
-                </TouchableOpacity>
+                </View>
               </View>
-              <View style={styles.checkBoxContainer}>
-                <CheckBox
-                  checkboxStyle={{tintColor:'#000'}}
-                  label={'send email notification when task is about to start'}
-                  labelStyle={styles.checkboxText}
-                  checked={checked}
-                  // onChange={()=>this.setState({ checked: !this.state.checked, modalVisible: checked ? modalVisible : !this.state.modalVisible })}
-                  onChange={this.onReminder.bind(this)}
-                />
-                {(get(this.state, 'setReminderAlarm','') !== '' && checked ) &&
-                <Text style={{marginTop: 5}}>
-                  Set Reminder: {this.state.setTime}
-                </Text>
-                }
+              {this.state.startTimeError && <Text style={AppStyles.error}>Please select the event start time</Text>}
+              {this.state.endTimeError && <Text style={AppStyles.error}>Please select the event end time</Text>}
+                <View style={styles.checkBoxContainer}>
+                  <CheckBox
+                    checkboxStyle={{tintColor:'#000'}}
+                    label={'send email notification when task is about to start'}
+                    labelStyle={styles.checkboxText}
+                    checked={checked}
+                    // onChange={()=>this.setState({ checked: !this.state.checked, modalVisible: checked ? modalVisible : !this.state.modalVisible })}
+                    onChange={this.onReminder.bind(this)}
+                  />
+                  {(get(this.state, 'setReminderAlarm','') !== '' && checked ) &&
+                  <Text style={{marginTop: 5}}>
+                    Set Reminder: {this.state.setTime}
+                  </Text>
+                  }
+              </View>
             </View>
-            </View>
+
             <View style={styles.reminderContainer}>
               <TouchableOpacity
                 style={styles.reminderButton}
@@ -447,12 +493,12 @@ export default class CreateEvent extends React.Component {
             <View style={[styles.eventContainer,{borderBottomWidth : 0 }]}>
                <Text style={styles.listTitle} >Every Recurrence</Text>
               <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                <Text style={styles.repeatText}>Repeat</Text>
+                <Text style={[styles.repeatText,{marginTop: 15}]}>Repeat</Text>
                 {/* <View style={{flexDirection:'row'}}>
                    <Text style={[styles.selectedText,{marginLeft:0}]}>Everyday</Text>
                    <Image source={require('../../assets/icons/Arrow.png')} style={{height: 10,width: 10, marginTop: 6}}/>
                 </View> */}
-                <View style={{ width: 125 }}>
+                {/* <View style={{ width: 125 }}>
                   <Dropdown
                     value={repeat}
                     selectedItemColor = '#000'
@@ -462,7 +508,16 @@ export default class CreateEvent extends React.Component {
                     fontSize={14}
                     dropdownOffset={{ top: 0, left: 0 }}
                   />
-                </View>
+               </View> */}
+                  <Picker
+                    selectedValue={repeat}
+                    style={{ width: 140}}
+                    onValueChange={(itemValue, itemIndex) => this.onSelectRecurrence(itemValue)}
+                  >
+                    <Picker.Item label="Everyday" value="Everyday" />
+                    <Picker.Item label="Weekly" value="Weekly" />
+                    <Picker.Item label="Monthly" value="Monthly" />
+                  </Picker>
               </View>
             </View>
             <View style={styles.selectGroupView}>
@@ -478,7 +533,7 @@ export default class CreateEvent extends React.Component {
                     value={this.state.notes}
                   />
               </View>
-              {notesError && <Text style={AppStyles.error}>Please enter the notes</Text>}
+              {notesError && <Text style={AppStyles.error}>Please enter the note</Text>}
             </View>
 
             <View style={styles.selectGroupView}>
@@ -693,8 +748,8 @@ const styles = StyleSheet.create({
     marginRight: 60
   },
   timeText: {
-    marginRight: 10,
-    marginTop: 4,
+    marginRight: 5,
+    marginTop: 12,
     color: '#939393',
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(10) : AppSizes.verticalScale(8),
     fontFamily: AppFonts.NRegular,
@@ -783,7 +838,7 @@ const styles = StyleSheet.create({
   repeatText: {
     marginTop: 5,
     color: '#A2a2a2',
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(13) : AppSizes.verticalScale(11),
     fontFamily: AppFonts.NRegular,
     fontWeight: '700'
   },
@@ -839,30 +894,32 @@ const recurrence = [{ value: 'Everyday' },{ value: 'Weekly' },{ value: 'Monthly'
 const alarmData = ['Before 15 Min', 'Before 30 Min', 'Before 45 Min','Before 1 hour']
 const colorItem = [
   {
+    id: 1,
     label: 'White', 
     component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#ffffff'}]}/><Text style={styles.selectedText}>White</Text></View> 
   },
   {
+    id: 2,
     label: 'Hawkes Blue', 
     component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#d5d6ea'}]}/><Text style={styles.selectedText}>Hawkes Blue</Text></View> 
   },
-  {
+  { id: 3,
     label: 'Milk Punch', 
     component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#f4e3c9'}]}/><Text style={styles.selectedText}>Milk Punch</Text></View> 
   },
-  {
+  {  id: 4,
     label: 'Coral Candy', 
     component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#f5d5cb'}]}/><Text style={styles.selectedText}>Coral Candy</Text></View> 
   },
-  {
+  { id: 5,
     label: 'Cruise', 
     component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#b5dce1'}]}/><Text style={styles.selectedText}>Cruise</Text></View> 
   },
-  {
+  { id: 6,
     label: 'Swirl', 
     component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#d6cdc8'}]}/><Text style={styles.selectedText}>Swirl</Text></View> 
   },
-  {
+  { id: 7,
     label: 'Tusk', 
     component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#d7e0b1'}]}/><Text style={styles.selectedText}>Tusk</Text></View> 
   },

@@ -1,5 +1,5 @@
 import React from 'react'
-import {ActivityIndicator, Modal,  TextInput, Platform, Alert, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
+import {ActivityIndicator, Modal,  TextInput, Picker, Platform, Alert, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get ,isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
@@ -13,6 +13,8 @@ import moment from "moment"
 import ModalSelector from 'react-native-modal-selector'
 import AsyncStorage from '@react-native-community/async-storage'
 import sizes from '../../theme/sizes'
+import { Button } from 'react-native-paper';
+
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -22,7 +24,7 @@ export default class EditEvent extends React.Component {
     super(props);
     this.state = {
       event_id: '',
-      eventPicture: '',
+      eventPicture: [],
       eventName: '',
       eventNameError: false,
       category: '',
@@ -57,7 +59,7 @@ export default class EditEvent extends React.Component {
       checked: false,
       getEventDetailData: {},
       texts: [],
-      count: '',
+      count: 0,
       setTime: '',
       userEmail: '',
       isLoading: false
@@ -105,7 +107,7 @@ export default class EditEvent extends React.Component {
     })
       this.setState({
         event_id: get(prevProps, 'getEventDetailData._id', ''),
-        // eventPicture: get(prevProps, 'getEventDetailData.eventPicture', ''),
+        // eventPicture: get(prevProps, 'getEventDetailData.eventPicture', []),
         eventName: get(prevProps, 'getEventDetailData.eventName', ''),
         memberList: get(prevProps, 'getEventDetailData.selectContacts', ''),
         texts: get(prevProps, 'getEventDetailData.texts', ''),
@@ -143,6 +145,7 @@ export default class EditEvent extends React.Component {
       this.setState({ groupList: get(this.props, 'getGroupListForShowData', []), groupListName: arr })
     }
     if (this.props.updateEventPhase) {
+      console.log('callll==>')
       this.props.resetEventPhase()
       this.props.navigation.navigate('Event')
       this.setState({ isLoading: false })
@@ -166,7 +169,7 @@ export default class EditEvent extends React.Component {
   }
 
   handleDate = (date) => {
-    let newDate = moment(date).utcOffset('+05:30').format('DD-MMMM-YYYY')
+    let newDate = moment(date).utcOffset('+05:30').format('DD-MM-YYYY')
     this.setState({ eventDate: date , isDatePickerVisible : false, eventDate1: newDate })
   } 
 
@@ -259,7 +262,7 @@ export default class EditEvent extends React.Component {
       data.selectContacts = memberList
       data.defaultFillColor = defaultFillColor
       data.frameBoundaryColor = defaultFillColor
-      data.eventDateLocal = moment(eventDate).format('DD-MMMM-YYYY')
+      data.eventDateLocal = moment(eventDate).format('DD-MM-YYYY')
       data.eventDate = eventDate
       data.startTime = startTime
       data.endTime = endTime
@@ -277,9 +280,9 @@ export default class EditEvent extends React.Component {
       // data.texts = this.state.texts
       data.eventRecurrence = {
         repeat: repeat,
-        duration: duration
+        duration: ''
       }
-      data.count = 1
+      data.count = this.state.count
       const Details = {
         data: data,
         id: get(this.state, 'userId','')
@@ -306,7 +309,7 @@ export default class EditEvent extends React.Component {
             routeKey={'EditEvent'} 
           />        
             <View style={styles.topContainer}>
-              {get(this.state, 'eventPicture','') === '' ?
+              {get(this.state, 'eventPicture',[]) === '' ?
                 <TouchableOpacity
                   style={styles.addPictureButton}
                   onPress={this.selectPhotoTapped.bind(this)}
@@ -328,7 +331,16 @@ export default class EditEvent extends React.Component {
                     onChangeText={text => this.onEventChange(text)}
                     value={this.state.eventName}
                   />
-                <View style={{ width: 125, paddingHorizontal: 5}}>
+                  <Picker
+                    selectedValue={category}
+                    style={{ height: 50, width: 150 }}
+                    onValueChange={(itemValue, itemIndex) => this.onSelectCategory(itemValue)}
+                  >
+                    <Picker.Item label="PERSONAL" value="PERSONAL" />
+                    <Picker.Item label="GROUP" value="GROUP" />
+                    <Picker.Item label="BUSINESS" value="BUSINESS" />
+                </Picker>
+                {/* <View style={{ width: 125, paddingHorizontal: 5}}>
                   <Dropdown
                     value={category}
                     selectedItemColor = '#000'
@@ -337,7 +349,7 @@ export default class EditEvent extends React.Component {
                     data={categoryList}
                     dropdownOffset={{ top: 10, left: 0 }}
                   />
-                </View>
+                </View> */}
                  {/* <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/> */}
               </View>
               {eventNameError && <Text style={AppStyles.error}>Please enter the event name</Text>}
@@ -380,7 +392,15 @@ export default class EditEvent extends React.Component {
               </View>
             </View>
             <View style={[styles.selectGroupView,{marginTop: 10, borderBottomWidth:.3 }]}>
-              <Text style={styles.listTitle}>Event Date</Text>
+              <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+                <Text style={[styles.listTitle, {marginTop: 7}]}>Event Date</Text>
+                <Button mode="outlined" uppercase = {false}color = '#000' style={{marginLeft: 10 ,width: 120}}
+                  onPress={()=>this.setState({isDatePickerVisible : true})}                 
+                >
+                  {get(this.state,'eventDate','') !== '' ? moment(get(this.state,'eventDate','')).format('DD-MM-YYYY') : 'Date picker' }
+                </Button>
+              </View>
+              {/* {this.state.eventDateError && <Text style={AppStyles.error}>Please select the event date</Text>} */}
               <DateTimePickerModal
                 minimumDate={new Date()}
                 isVisible={isDatePickerVisible}
@@ -390,14 +410,20 @@ export default class EditEvent extends React.Component {
                 showIcon={false}
                 // locale="es-ES"
                />
-              <Text onPress={()=>this.setState({isDatePickerVisible : true})} style={[styles.selectedText,{marginTop: 8}]}>{moment(get(this.state,'eventDate','')).format('DD-MM-YYYY')}</Text>
+              {/* <Text onPress={()=>this.setState({isDatePickerVisible : true})} style={[styles.selectedText,{marginTop: 8}]}>{moment(get(this.state,'eventDate','')).format('DD-MM-YYYY')}</Text> */}
             </View>
+            
             <View style={styles.eventContainer}>
               <Text style={styles.listTitle}>Event Time</Text>
               <View style={{flexDirection:'row',marginTop:8,justifyContent:'space-between'}}>
-                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.setState({isStartPickerVisible : true})}>               
+                <View style={{flexDirection:'row'}} >               
                   <Text style={styles.timeText} >START TIME</Text>
-                  {/* <Button title="Show Date Picker" onPress={this.showDatePicker} color='#fff'/> */}
+                  <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginHorizontal: 3 }}
+                    onPress={()=>this.setState({isStartPickerVisible : true})}  
+                    disabled ={get(this.state,'eventDate','') === '' ? true : false}               
+                  >
+                    {get(this.state,'startTime','') !== '' ? moment(get(this.state,'startTime','')).format('h:mm A') : 'Time picker' }
+                  </Button>
                   <DateTimePickerModal
                     minimumDate={new Date()}
                     isVisible={isStartPickerVisible}
@@ -411,10 +437,16 @@ export default class EditEvent extends React.Component {
                     cancelTextIOS="CANCEL"
                     date ={new Date(this.state.eventDate)}
                   />
-                  <Text style={styles.selectedText}>{moment(get(this.state,'startTime','')).format("HH:mm A")}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{flexDirection:'row'}} onPress={()=>this.setState({isEndPickerVisible : true})}> 
+                  {/* <Text style={styles.selectedText}>{moment(get(this.state,'startTime','')).format("HH:mm A")}</Text> */}
+                </View>
+                <View style={{flexDirection:'row'}}> 
                    <Text style={styles.timeText}>END TIME</Text>
+                   <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginHorizontal: 3}}
+                    onPress={()=>this.setState({isEndPickerVisible : true})} 
+                    disabled ={get(this.state,'eventDate','') === '' ? true : false}                 
+                  >
+                    {get(this.state,'endTime','') !== '' ? moment(get(this.state,'endTime','')).format('h:mm A') : 'Time picker' }
+                  </Button>
                    <DateTimePickerModal
                       minimumDate={new Date()}
                       isVisible={isEndPickerVisible}
@@ -428,8 +460,8 @@ export default class EditEvent extends React.Component {
                       cancelTextIOS="CANCEL"
                       date ={new Date(this.state.eventDate)}
                     />
-                  <Text style={styles.selectedText}>{moment(get(this.state,'endTime','')).format("HH:mm A")}</Text>
-                </TouchableOpacity>
+                  {/* <Text style={styles.selectedText}>{moment(get(this.state,'endTime','')).format("HH:mm A")}</Text> */}
+                </View>
               </View>
               <View style={styles.checkBoxContainer}>
                 <CheckBox
@@ -457,12 +489,12 @@ export default class EditEvent extends React.Component {
             <View style={[styles.eventContainer,{borderBottomWidth : 0 }]}>
                <Text style={styles.listTitle} >Every Recurrence</Text>
               <View style={{flexDirection:'row', justifyContent:'space-between'}}>
-                <Text style={styles.repeatText}>Repeat</Text>
+              <Text style={[styles.repeatText,{marginTop: 15}]}>Repeat</Text>
                 {/* <View style={{flexDirection:'row'}}>
                    <Text style={[styles.selectedText,{marginLeft:0}]}>Everyday</Text>
                    <Image source={require('../../assets/icons/Arrow.png')} style={{height: 10,width: 10, marginTop: 6}}/>
                 </View> */}
-                <View style={{ width: 125 }}>
+                {/* <View style={{ width: 125 }}>
                   <Dropdown
                     value={repeat}
                     selectedItemColor = '#000'
@@ -472,7 +504,16 @@ export default class EditEvent extends React.Component {
                     fontSize={14}
                     dropdownOffset={{ top: 0, left: 0 }}
                   />
-                </View>
+                </View> */}
+                  <Picker
+                    selectedValue={repeat}
+                    style={{ width: 140}}
+                    onValueChange={(itemValue, itemIndex) => this.onSelectRecurrence(itemValue)}
+                  >
+                    <Picker.Item label="Everyday" value="Everyday" />
+                    <Picker.Item label="Weekly" value="Weekly" />
+                    <Picker.Item label="Monthly" value="Monthly" />
+                  </Picker>
               </View>
             </View>
             <View style={styles.selectGroupView}>
@@ -699,8 +740,7 @@ const styles = StyleSheet.create({
     marginRight: 60
   },
   timeText: {
-    marginRight: 10,
-    marginTop: 4,
+    marginTop: 10,
     color: '#939393',
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
     fontFamily: AppFonts.NRegular,
