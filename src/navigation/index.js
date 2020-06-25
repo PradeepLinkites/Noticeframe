@@ -9,21 +9,14 @@ import ForgotPassword from '../screen/ForgotScreen/Container'
 import HomePage from '../screen/HomeScreen/Container'
 import CreateEvent from '../screen/CreateEvent/Container'
 import CreateGroup from '../screen/CreateGroup/Container'
-import EventDetail from '../screen/EventDetail/Container'
 import EditEvent from '../screen/EditEvent/Container'
 import Signup from '../screen/Signup/Container'
 import Forgot from '../screen/Forgot/Container'
-import Tour from '../screen/Tour/Container'
-import Home from '../screen/Home/Container'
 import { get, size } from 'lodash'
-import AsyncStorage from '@react-native-community/async-storage'
 
 const AuthStack = createStackNavigator({
 	Welcome: {
 		screen: Welcome
-	},
-	Tour: {
-		screen: Tour
 	},
 	Forgot: {
 		screen: Forgot,

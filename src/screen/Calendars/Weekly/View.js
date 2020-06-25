@@ -9,14 +9,11 @@ const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
 const sampleEvents2 = [
-  {date: "2020-06-09",
-  endTime: "10:30:41",
-  hexColor: "Green",
-  id: "5ede85ab97e1700017baa7df",
-  note: "meeting3",
-  start: "2020-06-09 12:06:41",
-  duration: '00:20:00',
-  startTime: "09:30:41",
+  {
+    duration: "01:00:00",
+    note: "morning walk",
+    start: "2020-06-08 09:00:57",
+    startTime: "09:00:57 AM",
   },
   { 
     start: "2020-06-08 09:00:57",
@@ -28,9 +25,9 @@ const sampleEvents2 = [
   {
     date: "2020-06-09",
     duration: "01:00:00",
-    endTime: "10:00:57 AM",
-    hexColor: "Red",
-    id: "5ede494b97e1700017baa7d9",
+    // endTime: "10:00:57 AM",
+    // hexColor: "Red",
+    // id: "5ede494b97e1700017baa7d9",
     note: "morning walk",
     start: "2020-06-08 09:00:57",
     startTime: "09:00:57 AM",
@@ -38,9 +35,9 @@ const sampleEvents2 = [
   {
     date: "2020-06-09",
     duration: "01:00:00",
-    endTime: "10:00:57 AM",
-    hexColor: "Red",
-    id: "5ede494b97e1700017baa7d9",
+    // endTime: "10:00:57 AM",
+    // hexColor: "Red",
+    // id: "5ede494b97e1700017baa7d9",
     note: "morning walk888888888",
     start: "2020-06-08 09:00:57",
     startTime: "09:00:57 AM",
@@ -48,9 +45,9 @@ const sampleEvents2 = [
   {
     date: "Invalid date",
     duration: "00:05:00",
-    endTime: "05:20:00 PM",
-    hexColor: "Swirl",
-    id: "5ee4bb6bd835560017bc9a9a",
+    // endTime: "05:20:00 PM",
+    // hexColor: "Swirl",
+    // id: "5ee4bb6bd835560017bc9a9a",
     note: "testing",
     start: "2020-06-10 05:15:00",
     startTime: "05:15:00 PM",
@@ -135,7 +132,7 @@ export default class Weekly extends React.Component {
       <SafeAreaView style={AppStyles.container}>
         <ScrollView style={styles.container}>
           <WeeklyCalendar 
-            events={sampleEvents2}
+            events={get(this.state, 'eventDetails', [])}
             selected={moment().format('YYYY-MM-DD')}
             themeColor='#ff6600'
             style={styles.weeklyCalendar}

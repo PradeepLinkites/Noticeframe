@@ -3,7 +3,11 @@ import { Platform,  StyleSheet, Text, View,  SafeAreaView, Image, ScrollView, Di
 import Navbar from '../Common/commonNavbar'
 import { get } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
-import AsyncStorage from '@react-native-community/async-storage'
+import {
+  shareOnFacebook,
+  shareOnTwitter,
+} from 'react-native-social-share'
+
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -40,12 +44,41 @@ const socialArray = [
 	// 	title: 'Newslatter',
 	//   icon: require('../../assets/Social/Newsletter.png')
 	// }
-  ]
+]
 
-export default class Share extends React.Component {
+export default class ShareScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+    }
+  }
+
+  onSocialShare(name){
+    if( name === 'Twitter') {
+        shareOnTwitter({
+          'text':'Global democratized marketplace for art',
+          'link':'https://artboost.com/',
+          'imagelink':'https://artboost.com/apple-touch-icon-144x144.png',
+          //or use image
+          'image': 'artboost-icon',
+        },
+        (results) => {
+          console.log(results);
+        }
+      )
+    }
+    if( name === 'Facebook') {
+      shareOnFacebook({
+        'text':'Global democratized marketplace for art',
+        'link':'https://artboost.com/',
+        'imagelink':'https://artboost.com/apple-touch-icon-144x144.png',
+        //or use image
+        'image': 'artboost-icon',
+      },
+      (results) => {
+        console.log(results);
+      }
+     )
     }
   }
 
@@ -67,7 +100,7 @@ export default class Share extends React.Component {
               <View style={styles.socialContainer} key={ind}>
                 <TouchableOpacity
                   style={{flexDirection:'row'}}
-                  onPress={() => alert('call')}
+                  onPress={this.onSocialShare.bind(this, item.title)}
                 >
                   <Image source={item.icon} style={{height: 25, width: 25 }}/>
                   <Text style={styles.socialText}>{item.title}</Text>

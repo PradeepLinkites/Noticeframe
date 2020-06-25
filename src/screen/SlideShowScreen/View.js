@@ -99,7 +99,7 @@ export default class SlideShow extends React.Component {
             })}         
           </Swiper>
           : 
-          <View style={{justifyContent: 'center',alignItems: 'center',flex: 1}}>
+          <View style={{justifyContent: 'center',alignItems: 'center',flex: 1,backgroundColor:'#fff', height: deviceHeight}}>
             <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
             <Text>No Events Created Yet Create One Now!</Text>
           </View>
