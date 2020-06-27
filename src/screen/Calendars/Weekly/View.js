@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, SafeAreaView, ScrollView, Dimensions } from 'react-native'
+import { ActivityIndicator, StyleSheet, SafeAreaView, ScrollView, Dimensions } from 'react-native'
 import { get , isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
 import WeeklyCalendar from 'react-native-weekly-calendar'
@@ -12,53 +12,32 @@ const sampleEvents2 = [
   {
     duration: "01:00:00",
     note: "morning walk",
-    start: "2020-06-08 09:00:57",
+    start: "2020-06-25 09:00:57",
     startTime: "09:00:57 AM",
   },
   { 
-    start: "2020-06-08 09:00:57",
-    startTime: "09:00:57 AM",
-    endTime: "10:00:57 AM",
-    duration: "01:00:00",
-    note: 'Pradeep'
+    date: "2020-06-26",
+    duration: "03:00:00",
+    endTime: "08:30:00 AM",
+    note: "New Event",
+    start: "2020-06-26 05:30:00",
+    startTime: "05:30:00 AM"
   },
   {
-    date: "2020-06-09",
+    date: "2020-06-24",
     duration: "01:00:00",
-    // endTime: "10:00:57 AM",
-    // hexColor: "Red",
-    // id: "5ede494b97e1700017baa7d9",
-    note: "morning walk",
-    start: "2020-06-08 09:00:57",
-    startTime: "09:00:57 AM",
+    endTime: "06:30:05 AM",
+    note: "Test",
+    start: "2020-06-24 05:30:05",
+    startTime: "05:30:05 AM"
   },
-  {
-    date: "2020-06-09",
-    duration: "01:00:00",
-    // endTime: "10:00:57 AM",
-    // hexColor: "Red",
-    // id: "5ede494b97e1700017baa7d9",
-    note: "morning walk888888888",
-    start: "2020-06-08 09:00:57",
-    startTime: "09:00:57 AM",
-  },
-  {
-    date: "Invalid date",
-    duration: "00:05:00",
-    // endTime: "05:20:00 PM",
-    // hexColor: "Swirl",
-    // id: "5ee4bb6bd835560017bc9a9a",
-    note: "testing",
-    start: "2020-06-10 05:15:00",
-    startTime: "05:15:00 PM",
-  }
 ]
 
 export default class Weekly extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      eventDetails: [],
+      allEvents: [],
       calendarHeader: '',
       calendarBody: '',
       calendarFont: '',
@@ -84,6 +63,7 @@ export default class Weekly extends React.Component {
     if (this.props.getEventCalenderPhase) {
       this.props.resetEventPhase()
       this.handleEvent(get(this.props, 'getEventCalenderData',[]))
+      this.setState({ isLoading: false })
     }
     if (this.props.getSettingPhase) {
       this.props.resetSettingPhase()
@@ -118,29 +98,34 @@ export default class Weekly extends React.Component {
       })
     }
     this.setState({
-      eventDetails: calendarData,
+      allEvents: calendarData,
       isLoading: false
     })
   }
 
   render() {
-    const { eventDetails } = this.state
-    console.log('eventDetails==>>', eventDetails)
+    const { allEvents, isLoading } = this.state
+    console.log('allEvents==>>', get(this.state, 'allEvents', []))
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'Setting' ? '' : ''
     return (
-      <SafeAreaView style={AppStyles.container}>
+      <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
+        {isLoading ?
+        <ActivityIndicator color = {'#3b5261'} size = "large" style = {AppStyles.activityIndicator} />
+        :
         <ScrollView style={styles.container}>
           <WeeklyCalendar 
-            events={get(this.state, 'eventDetails', [])}
+            events={get(this.state, 'allEvents', [])}
             selected={moment().format('YYYY-MM-DD')}
             themeColor='#ff6600'
             style={styles.weeklyCalendar}
             titleStyle={styles.title}
             dayLabelStyle={styles.dayLableStyle}
             monthDateText={{ fontSize: 10 }}
+            startWeekday={7}
           />
         </ScrollView>
+        }
       </SafeAreaView>
     )
   }

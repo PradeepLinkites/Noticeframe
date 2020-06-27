@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions } from 'react-native'
+import { ActivityIndicator, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions } from 'react-native'
 import { get , isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import Swiper from 'react-native-swiper'
@@ -14,11 +14,13 @@ export default class SlideShow extends React.Component {
     this.state = {
       swiperIndex: 0,
       getEventSlideShowData: [],
-      slideShowData: []
+      slideShowData: [],
+      isLoading: false
     }
   }
 
-  componentDidMount() {
+  onFocusFunction = () => {
+    this.setState({ isLoading: true })
     AsyncStorage.getItem('@user')
     .then((user) => {
       const user1 = JSON.parse(user)
@@ -28,35 +30,56 @@ export default class SlideShow extends React.Component {
     })
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidMount(){
+    this.setState({ isLoading: true })
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+
+  componentWillUnmount(){
+    this.focusListener.remove()
+  }
+
+  componentDidUpdate(prevProps) { 
     if (this.props.getEventSlideShowData !== prevProps.getEventSlideShowData) {
       if(this.props.getEventSlideShowPhase) {
         this.props.resetEventPhase()
         let newArray =  get(this.props, 'getEventSlideShowData', [])
         const newArray2 = newArray.filter(item => item.showEventInSlideShow)
-        this.setState({ getEventSlideShowData: get(this.props, 'getEventSlideShowData', []), slideShowData: newArray2 })
+        const paramId = this.props.navigation.dangerouslyGetParent().state.params.id
+        newArray2.map((item, ind )=>{
+          if(paramId === item._id){
+            this.setState({ swiperIndex: ind })
+          }
+        })
+        this.setState({ getEventSlideShowData: get(this.props, 'getEventSlideShowData', []), slideShowData: newArray2, isLoading: false})
       }
     }
   }
 
   render() {
-    const { slideShowData, getEventSlideShowData, swiperIndex } = this.state
+    const { slideShowData, swiperIndex, isLoading } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'SlideShow' ? 'NOTICE FRAME' : ''
     return (
-      <SafeAreaView style={AppStyles.container}>
+      <SafeAreaView style={[AppStyles.container, {backgroundColor:'#fff'}]}>
+      {isLoading ?
+        <ActivityIndicator color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
+        :
         <ScrollView>
         <View style={styles.container}>
           {size(slideShowData) > 0 ?
           <Swiper
-            autoplay={true}
             dot={<View style={{backgroundColor: '#A2a2a2', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3}} />}
             activeDot={<View style={{backgroundColor: '#ff6600', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3}} />} 
             paginationStyle={{
               bottom: 40
             }}
-            autoplayTimeout={2}
+            autoplay={true}
+            autoplayTimeout={6}
             loop={true}
+            index={swiperIndex}
             onIndexChanged={(index)=> this.setState({swiperIndex: index})}
             key={this.state.slideShowData.length}
           >        
@@ -106,6 +129,7 @@ export default class SlideShow extends React.Component {
           }
         </View>
         </ScrollView>
+      }
       </SafeAreaView>
     )
   }

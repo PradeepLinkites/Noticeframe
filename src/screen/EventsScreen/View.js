@@ -6,6 +6,7 @@ import { FlatGrid } from 'react-native-super-grid';
 import SwitchComponent from '../Common/Switch'
 import AsyncStorage from '@react-native-community/async-storage'
 import moment from "moment"
+import Share from "react-native-share"
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -105,13 +106,30 @@ export default class EventScreen extends React.Component {
     }
     this.setState({ isGridView : !this.state.isGridView})
   }
+
+  onShare = async (data) => {
+    const shareOptions = {
+      title: 'Share file',
+      failOnCancel: false,
+      saveToFiles: true,
+    };
+    // If you want, you can use a try catch, to parse
+    // the share response. If the user cancels, etc.  
+    try {
+      const ShareResponse = await Share.open(shareOptions);
+      // setResult(JSON.stringify(ShareResponse, null, 2));
+    } catch (error) {
+      console.log('Error =>', error);
+      // setResult('error: '.concat(getErrorString(error)));
+    }
+  }
   
   render() {
     const { eventDetails, getEventData, isGridView, key, red, yellow, green, redHour, yellowHour, greenHour, isLoading } = this.state
     return (
       <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
        {isLoading ?
-        <ActivityIndicator color = {'#3b5261'} size = "large" style = {AppStyles.activityIndicator} />
+        <ActivityIndicator color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
         :
         <ScrollView style={styles.container}>
           <View style={styles.topContainer}> 
@@ -133,7 +151,7 @@ export default class EventScreen extends React.Component {
               let end_time = moment(data.endTime).format("h:mm A")
               return(
                 <TouchableOpacity 
-                  onPress={()=> this.props.navigation.navigate('EventDetail',{id : data._id})}b 
+                  onPress={()=> this.props.navigation.navigate('EventDetail',{id : data._id})}
                   style={[styles.eventListView,{backgroundColor : data.defaultFillColor === 'White' ? '#ffffff' : data.defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : data.defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
                       : data.defaultFillColor === 'Coral Candy' ? '#f5d5cb': data.defaultFillColor === 'Cruise' ? '#b5dce1': data.defaultFillColor === 'Swirl' ? '#d6cdc8': data.defaultFillColor === 'Tusk' ? '#d7e0b1': ''}]}>
                   <View style={{flex:1}}>
@@ -150,9 +168,9 @@ export default class EventScreen extends React.Component {
                     <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent',{id : data._id})}>
                       <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
                     </TouchableOpacity>
-                  <View style={styles.shareView}>
+                  <TouchableOpacity style={styles.shareView} onPress={this.onShare.bind(this, data)}>
                     <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
-                  </View>
+                  </TouchableOpacity>
                 </TouchableOpacity>
                 )
               })
@@ -191,7 +209,7 @@ export default class EventScreen extends React.Component {
                       <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
                         <Image source={require('../../assets/images/event_thumb1.png')} style={[AppStyles.itemContainer, {borderColor: frameColor}]}/>
                           {get(item, 'showEventInSlideShow', false) && 
-                          <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow')} style={AppStyles.playButton}>
+                          <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow',{id : item._id})} style={AppStyles.playButton}>
                             <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
                           </TouchableOpacity>
                           }

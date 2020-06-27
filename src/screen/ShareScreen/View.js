@@ -1,5 +1,5 @@
 import React from 'react'
-import { Platform,  StyleSheet, Text, View,  SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
+import { Platform,  StyleSheet, Text, View, Linking, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
@@ -50,6 +50,8 @@ export default class ShareScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      mobile_no: '9999999999',
+      msg: 'Hello',
     }
   }
 
@@ -80,8 +82,41 @@ export default class ShareScreen extends React.Component {
       }
      )
     }
+    if(name === 'Whatsapp'){
+      let msg = this.state.msg
+      let mobile = this.state.mobile_no
+      if(mobile){
+        if(msg){
+          let url = 'http://api.whatsapp.com/send?phone=91' + this.state.mobile_no
+          Linking.openURL(url).then((data) => {
+            console.log('WhatsApp Opened');
+          }).catch(() => {
+            alert('Make sure Whatsapp installed on your device')
+          })
+        }else{
+          alert('Please insert message to send')
+        }
+      }else{
+        alert('Please insert mobile no')
+      }
+    }
+    if(name === 'Instagram'){
+      const twitterUrlScheme = 'http://api.instagram://user?username=apple'
+        Linking.canOpenURL(twitterUrlScheme)
+        .then((supported) =>
+          Linking.openURL(
+              supported
+                  ? twitterUrlScheme
+                  : 'https://www.twitter.com/apple'
+              )
+          )
+        .catch((err) => console.error('An error occurred', err))
+    }
+    if(name === 'Email'){
+      Linking.openURL('mailto://somethingemail@gmail.com&subject=abcdefg&body=body')
+    }
   }
-
+ 
   render() {
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'Share' ? 'Share' : ''
