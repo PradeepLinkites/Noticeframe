@@ -76,7 +76,7 @@ export default class HomeScreen extends React.Component {
     return (
       <SafeAreaView style={{flex: 1, justifyContent: 'center',alignItems: 'center'}}>
         {isLoading ?
-        <ActivityIndicator animating = {isLoading} color = {'#3b5261'} size = "large" style = {AppStyles.activityIndicator} />
+        <ActivityIndicator animating = {isLoading} color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
         :
         <View style={{ paddingLeft: 25 }}>
           {size(getEventData) > 0 ?
@@ -103,7 +103,7 @@ export default class HomeScreen extends React.Component {
                     <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
                       <Image source={require('../../assets/images/event_thumb1.png')} style={[AppStyles.itemContainer, {borderColor: frameColor}]}/>
                       {get(item, 'showEventInSlideShow', false) && 
-                        <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow')} style={AppStyles.playButton}>
+                        <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow',{id : item._id})} style={AppStyles.playButton}>
                           <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
                         </TouchableOpacity>
                       }

@@ -13,8 +13,16 @@ export default class SlideShow extends React.Component {
     super(props);
     this.state = {
       swiperIndex: 0,
-      getEventSlideShowData: [],
       slideShowData: [],
+      transitions: '',
+      numberOfEventsInSlideshow: 0,
+      eventName: true,
+      eventDate: true,
+      startTime: true,
+      endTime: true,
+      note: true,
+      count: 0,
+      limit: 1,
       isLoading: false
     }
   }
@@ -25,6 +33,7 @@ export default class SlideShow extends React.Component {
     .then((user) => {
       const user1 = JSON.parse(user)
       if(!isEmpty(user1)){
+        this.props.getSetting(user1._id)
         this.props.getEventSlideShow(user1._id)
       }
     })
@@ -42,19 +51,29 @@ export default class SlideShow extends React.Component {
   }
 
   componentDidUpdate(prevProps) { 
-    if (this.props.getEventSlideShowData !== prevProps.getEventSlideShowData) {
       if(this.props.getEventSlideShowPhase) {
         this.props.resetEventPhase()
         let newArray =  get(this.props, 'getEventSlideShowData', [])
         const newArray2 = newArray.filter(item => item.showEventInSlideShow)
-        const paramId = this.props.navigation.dangerouslyGetParent().state.params.id
+        const paramId = get(this.props.navigation.dangerouslyGetParent().state.params, 'id', '')
         newArray2.map((item, ind )=>{
           if(paramId === item._id){
             this.setState({ swiperIndex: ind })
           }
         })
-        this.setState({ getEventSlideShowData: get(this.props, 'getEventSlideShowData', []), slideShowData: newArray2, isLoading: false})
+        this.setState({ slideShowData: newArray2, isLoading: false})
       }
+    if (this.props.getSettingPhase) {
+      this.props.resetSettingPhase()
+      this.setState({
+        transitions: get(this.props, 'getSettingData.SlideShow.transitions', ''),
+        importedInSlideShow: get(this.props, 'getSettingData.SlideShow.importedInSlideShow', 0),
+        eventName: get(this.props, 'getSettingData.SlideShow.eventName', true),
+        eventDate: get(this.props, 'getSettingData.SlideShow.eventDate', true),
+        startTime: get(this.props, 'getSettingData.SlideShow.startTime', true),
+        endTime: get(this.props, 'getSettingData.SlideShow.endTime', true),
+        note: get(this.props, 'getSettingData.SlideShow.note', true)
+      })
     }
   }
 
@@ -67,10 +86,10 @@ export default class SlideShow extends React.Component {
       {isLoading ?
         <ActivityIndicator color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
         :
-        <ScrollView>
         <View style={styles.container}>
           {size(slideShowData) > 0 ?
-          <Swiper
+          <ScrollView>
+            <Swiper
             dot={<View style={{backgroundColor: '#A2a2a2', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3}} />}
             activeDot={<View style={{backgroundColor: '#ff6600', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3}} />} 
             paginationStyle={{
@@ -119,8 +138,9 @@ export default class SlideShow extends React.Component {
                 </View>
               </View>
               )
-            })}         
+            })}      
           </Swiper>
+          </ScrollView>   
           : 
           <View style={{justifyContent: 'center',alignItems: 'center',flex: 1,backgroundColor:'#fff', height: deviceHeight}}>
             <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
@@ -128,7 +148,6 @@ export default class SlideShow extends React.Component {
           </View>
           }
         </View>
-        </ScrollView>
       }
       </SafeAreaView>
     )

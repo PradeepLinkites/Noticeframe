@@ -301,7 +301,7 @@ export default class CreateEvent extends React.Component {
   }
 
   render() {
-    const {eventNameError, notesError, checked, modalVisible, groupListName, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
+    const {eventNameError, notesError, startTimeError,endTimeError, checked, modalVisible, groupListName, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'CreateEvent' ? 'Create Event' : ''
     return (
@@ -463,8 +463,7 @@ export default class CreateEvent extends React.Component {
                     />
                 </View>
               </View>
-              {this.state.startTimeError && <Text style={AppStyles.error}>Please select the event start time</Text>}
-              {this.state.endTimeError && <Text style={AppStyles.error}>Please select the event end time</Text>}
+              {(startTimeError || endTimeError) && <Text style={AppStyles.error}>Please select the event {(startTimeError && endTimeError ) ? 'time' : startTimeError ? 'start time' : 'end time'}</Text>}
                 <View style={styles.checkBoxContainer}>
                   <CheckBox
                     checkboxStyle={{tintColor:'#000'}}

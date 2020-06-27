@@ -115,7 +115,13 @@ export default class Weekly extends React.Component {
         :
         <ScrollView style={styles.container}>
           <WeeklyCalendar 
-            events={get(this.state, 'allEvents', [])}
+            events={[{
+              duration: "01:00:00",
+              note: "morning walk",
+              start: "2020-06-25 09:00:57",
+              startTime: "09:00:57 AM",
+            }
+            ]}
             selected={moment().format('YYYY-MM-DD')}
             themeColor='#ff6600'
             style={styles.weeklyCalendar}

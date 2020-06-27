@@ -131,7 +131,7 @@ export default class EventScreen extends React.Component {
        {isLoading ?
         <ActivityIndicator color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
         :
-        <ScrollView style={styles.container}>
+        <>
           <View style={styles.topContainer}> 
             <Text style={{ fontSize: 18, marginLeft: 10 }}>Events</Text>
             <View style={{justifyContent: 'flex-end',flexDirection: 'row'}}>
@@ -144,13 +144,15 @@ export default class EventScreen extends React.Component {
             </View>
           </View>
           {!isGridView ?
-          <View>
-            {getEventData.map((data, ind)=>{
+          <>
+          <ScrollView>
+            {size(getEventData) > 0 && getEventData.map((data, ind)=>{
               let date = moment(data.eventDate).format("DD MMM, YYYY")
               let start_time = moment(data.startTime).format("h:mm A")
               let end_time = moment(data.endTime).format("h:mm A")
               return(
                 <TouchableOpacity 
+                  key={ind}
                   onPress={()=> this.props.navigation.navigate('EventDetail',{id : data._id})}
                   style={[styles.eventListView,{backgroundColor : data.defaultFillColor === 'White' ? '#ffffff' : data.defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : data.defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
                       : data.defaultFillColor === 'Coral Candy' ? '#f5d5cb': data.defaultFillColor === 'Cruise' ? '#b5dce1': data.defaultFillColor === 'Swirl' ? '#d6cdc8': data.defaultFillColor === 'Tusk' ? '#d7e0b1': ''}]}>
@@ -175,22 +177,25 @@ export default class EventScreen extends React.Component {
                 )
               })
             }
+          </ScrollView>
             {size(getEventData) == 0 && 
               <View style={{alignItems: 'center',marginTop: deviceHeight/5}}>
                 <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
                 <Text>No Events Created Yet Create One Now!</Text>
               </View>
             }
-          </View>
+          </>
           : 
           <>
-            {eventDetails.map((data,ind) => {
+          <ScrollView>
+            {size(eventDetails) > 0 && eventDetails.map((data,ind) => {
               return(
               <View style={AppStyles.gridView} key={ind}>
                 <Text style={styles.dateText}>{moment(data[0].eventDate).format("DD MMM YYYY")}</Text>
                 <FlatGrid
                   itemDimension={130}
                   items={data}
+                  keyExtractor={(item, rowItemIndex) => rowItemIndex}
                   renderItem={({ item, index }) => {
                     let start_time = moment(item.startTime).format("h:mm A")
                     let end_time = moment(item.endTime).format("h:mm A")  
@@ -225,6 +230,7 @@ export default class EventScreen extends React.Component {
               )
             })
             }
+          </ScrollView>
             {size(eventDetails) == 0 && 
               <View style={{alignItems: 'center',marginTop: deviceHeight/5}}>
                 <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
@@ -233,7 +239,7 @@ export default class EventScreen extends React.Component {
             }
           </>
           }
-        </ScrollView>
+        </>
         }
         <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
           <Image source={require('../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>

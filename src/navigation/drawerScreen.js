@@ -216,14 +216,14 @@ const drawerStacks = [
 		  contentContainerStyle={styles.drawerContentContainer}
 		  showsVerticalScrollIndicator={false}
 		>
-		  {drawerStacks.map(item => {
+		  {drawerStacks.map((item, index )=> {
 			return(
 			item.title === 'Calendars' 
 			?
-			<View style={{ flex: 1}}>
+			<View style={{ flex: 1}} key={index}>
 			   <View style={{flexDirection:'row', alignItems:'center'}}>
 					<TouchableOpacity
-						key={item.key}
+						// key={item.key}
 						style={styles.drawerContentItem}
 						onPress={() => {
 						props.navigation.navigate(item.route)
@@ -274,7 +274,7 @@ const drawerStacks = [
 			</View>
 			:
 			  <TouchableOpacity
-				key={item.key}
+				key={index}
 				style={styles.drawerContentItem}
 				onPress={() => {
 				  props.navigation.navigate(item.route,{ from: 'drawer'})
