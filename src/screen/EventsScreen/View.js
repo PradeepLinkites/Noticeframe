@@ -144,9 +144,10 @@ export default class EventScreen extends React.Component {
             </View>
           </View>
           {!isGridView ?
-          <>
+          <View>
+          {size(getEventData) > 0 ?
           <ScrollView>
-            {size(getEventData) > 0 && getEventData.map((data, ind)=>{
+            {getEventData.map((data, ind)=>{
               let date = moment(data.eventDate).format("DD MMM, YYYY")
               let start_time = moment(data.startTime).format("h:mm A")
               let end_time = moment(data.endTime).format("h:mm A")
@@ -178,67 +179,68 @@ export default class EventScreen extends React.Component {
               })
             }
           </ScrollView>
-            {size(getEventData) == 0 && 
-              <View style={{alignItems: 'center',marginTop: deviceHeight/5}}>
-                <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
-                <Text>No Events Created Yet Create One Now!</Text>
-              </View>
-            }
-          </>
-          : 
-          <>
-          <ScrollView>
-            {size(eventDetails) > 0 && eventDetails.map((data,ind) => {
-              return(
-              <View style={AppStyles.gridView} key={ind}>
-                <Text style={styles.dateText}>{moment(data[0].eventDate).format("DD MMM YYYY")}</Text>
-                <FlatGrid
-                  itemDimension={130}
-                  items={data}
-                  keyExtractor={(item, rowItemIndex) => rowItemIndex}
-                  renderItem={({ item, index }) => {
-                    let start_time = moment(item.startTime).format("h:mm A")
-                    let end_time = moment(item.endTime).format("h:mm A")  
-                    var diffInHours = Math.floor(Math.abs(new Date(item.startTime) - new Date()) / 36e5)
-                    let frameColor = '#00a651'
-                    if(red &&  diffInHours >= 12 && diffInHours <= redHour){
-                      frameColor = '#ed1c24'
-                    }
-                    if(yellow &&  diffInHours >= 24 && diffInHours <= yellowHour){
-                      frameColor = '#ff9900'
-                    }
-                    if(green && diffInHours >= 72){
-                      frameColor = '#00a651'
-                    }    
-                    return(
-                      <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
-                        <Image source={require('../../assets/images/event_thumb1.png')} style={[AppStyles.itemContainer, {borderColor: frameColor}]}/>
-                          {get(item, 'showEventInSlideShow', false) && 
-                          <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow',{id : item._id})} style={AppStyles.playButton}>
-                            <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
-                          </TouchableOpacity>
-                          }
-                        <View style={AppStyles.eventBottomBar}>
-                          <Text style={AppStyles.eventNameText}>{item.eventName}</Text>
-                          <Text style={AppStyles.eventTimeText}>{start_time}  to  {end_time}</Text>
-                        </View>
-                      </TouchableOpacity>
-                    )}
-                  }
-                />
-              </View>
-              )
-            })
-            }
-          </ScrollView>
-            {size(eventDetails) == 0 && 
-              <View style={{alignItems: 'center',marginTop: deviceHeight/5}}>
-                <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
-                <Text>No Events Created Yet Create One Now!</Text>
-              </View>
-            }
-          </>
+          :
+            <View style={{alignItems: 'center',marginTop: deviceHeight/5}}>
+              <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
+              <Text>No Events Created Yet Create One Now!</Text>
+            </View>
           }
+          </View>
+          : 
+          <View>
+          {size(eventDetails) > 0 ?
+            <ScrollView>
+              {eventDetails.map((data,ind) => {
+                return(
+                <View style={AppStyles.gridView} key={ind}>
+                  <Text style={styles.dateText}>{moment(data[0].eventDate).format("DD MMM YYYY")}</Text>
+                  <FlatGrid
+                    itemDimension={130}
+                    items={data}
+                    keyExtractor={(item, rowItemIndex) => rowItemIndex}
+                    renderItem={({ item, index }) => {
+                      let start_time = moment(item.startTime).format("h:mm A")
+                      let end_time = moment(item.endTime).format("h:mm A")  
+                      var diffInHours = Math.floor(Math.abs(new Date(item.startTime) - new Date()) / 36e5)
+                      let frameColor = '#00a651'
+                      if(red &&  diffInHours >= 12 && diffInHours <= redHour){
+                        frameColor = '#ed1c24'
+                      }
+                      if(yellow &&  diffInHours >= 24 && diffInHours <= yellowHour){
+                        frameColor = '#ff9900'
+                      }
+                      if(green && diffInHours >= 72){
+                        frameColor = '#00a651'
+                      }    
+                      return(
+                        <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
+                          <Image source={require('../../assets/images/event_thumb1.png')} style={[AppStyles.itemContainer, {borderColor: frameColor}]}/>
+                            {get(item, 'showEventInSlideShow', false) && 
+                            <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow',{id : item._id})} style={AppStyles.playButton}>
+                              <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
+                            </TouchableOpacity>
+                            }
+                          <View style={AppStyles.eventBottomBar}>
+                            <Text style={AppStyles.eventNameText}>{item.eventName}</Text>
+                            <Text style={AppStyles.eventTimeText}>{start_time}  to  {end_time}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      )}
+                    }
+                  />
+                </View>
+                )
+              })
+              }
+            </ScrollView>
+            :
+            <View style={{alignItems: 'center',marginTop: deviceHeight/5}}>
+              <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
+              <Text>No Events Created Yet Create One Now!</Text>
+            </View>
+            }
+          </View>
+        }
         </>
         }
         <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
