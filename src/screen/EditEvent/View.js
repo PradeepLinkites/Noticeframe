@@ -23,8 +23,9 @@ export default class EditEvent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      userId: '',
       event_id: '',
-      eventPicture: [],
+      eventPicture: '',
       eventName: '',
       eventNameError: false,
       category: '',
@@ -95,7 +96,6 @@ export default class EditEvent extends React.Component {
   }
 
   componentDidUpdate = async (prevProps, prevState) => {
-    // console.log(this.props==>>, this.props)
     if(this.props.getEventDetailPhase){
       this.props.resetEventPhase()    
       let arr = []
@@ -145,7 +145,6 @@ export default class EditEvent extends React.Component {
       this.setState({ groupList: get(this.props, 'getGroupListForShowData', []), groupListName: arr })
     }
     if (this.props.updateEventPhase) {
-      console.log('callll==>')
       this.props.resetEventPhase()
       this.props.navigation.navigate('Event')
       this.setState({ isLoading: false })

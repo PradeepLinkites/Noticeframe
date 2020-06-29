@@ -1,7 +1,7 @@
-
+import hostname  from '../../config'
 
   export function getSetting(userId) {
-    return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/setting/?data=${userId}`, {
+    return dispatch => { fetch(hostname +`/get/setting/?data=${userId}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -24,7 +24,7 @@
   }
 
   export function updateSetting(data){
-    return dispatch => { fetch("https://notice-frame-backend.herokuapp.com/api/put/setting", {
+    return dispatch => { fetch(hostname + `/put/setting`, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',

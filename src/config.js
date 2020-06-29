@@ -1,0 +1,1 @@
+export default hostname = 'http://77.68.13.230:3002/api'

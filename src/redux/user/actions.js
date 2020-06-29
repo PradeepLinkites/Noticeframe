@@ -1,8 +1,9 @@
 import { cos } from "react-native-reanimated";
-const HOSTNAME = process.env.HOSTNAME
+import hostname  from '../../config'
+
 
 export function createUser(user) {
-  return dispatch => { fetch('https://notice-frame-backend.herokuapp.com/api/sign-up', {
+  return dispatch => { fetch(hostname + `/sign-up`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -26,7 +27,7 @@ export function createUser(user) {
   }
  
   export function loginUser(user) {
-    return dispatch => { fetch('https://notice-frame-backend.herokuapp.com/api/login', {
+    return dispatch => { fetch( hostname + `/login`, {
       method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -50,7 +51,7 @@ export function createUser(user) {
   }
 
   export function forgotPassword(email) {
-    return dispatch => { fetch('https://notice-frame-backend.herokuapp.com/api/post/sendLink/ForUpdatePassword', {
+    return dispatch => { fetch(hostname + `/post/sendLink/ForUpdatePassword`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -75,7 +76,7 @@ export function createUser(user) {
   }
 
   export function getUser(userId) {
-      return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/user/?id=${userId}`, {
+      return dispatch => { fetch( hostname + `/get/user/?id=${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -98,7 +99,7 @@ export function createUser(user) {
     }
 
     export function getUserListForShow() {
-      return dispatch => { fetch(`https://notice-frame-backend.herokuapp.com/api/get/userListForShow`, {
+      return dispatch => { fetch( hostname + `/get/userListForShow`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',

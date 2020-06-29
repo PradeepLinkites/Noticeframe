@@ -79,17 +79,30 @@ export default class CreateEvent extends React.Component {
     this.createEvent = this.createEvent.bind(this)
   }
 
-  componentDidMount() {
+  onFocusFunction = () => {
+    const {state} = this.props.navigation
     AsyncStorage.getItem('@user')
     .then((user) => {
       const user1 = JSON.parse(user)
       if(!isEmpty(user1)){
+        console.log('user_id', user1)
         this.props.getUser(user1._id)
         this.props.getSetting(user1._id)
         this.props.getGroupListForShow(user1._id)
         this.setState({ userId: user1._id})
       }
     })
+  }
+
+  componentDidMount(){
+    this.setState({ isLoading: true })
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+
+  componentWillUnmount(){
+    this.focusListener.remove()
   }
 
   componentDidUpdate(prevProps) {
@@ -99,7 +112,7 @@ export default class CreateEvent extends React.Component {
       this.props.navigation.navigate('Home')
       alert('Event Created Successfully')
       this._resetState()
-      this.props.getEvent(this.state.userId)
+      this.props.getEvent(get(this.state, 'userId', ''))
     }
     if (this.props.getUserData !== prevProps.getUserData) {
       if(this.props.getUserPhase) {
@@ -285,7 +298,7 @@ export default class CreateEvent extends React.Component {
       data.setTime = setTime
       data.category = category
       data.userEmail = get(this.state, 'getUserData.email','')
-      // data.texts = this.state.texts
+      data.texts = ''
       data.eventRecurrence = {
         repeat: repeat,
         duration: duration

@@ -60,7 +60,7 @@ export default class CreateEvent extends React.Component {
       this.setState({isLoading: false })
       alert('Event deleted Successfully')
       this.props.navigation.navigate('Home')
-      this.props.getEvent(this.state.userId)     
+      this.props.getEvent(get(this.state, 'userId', ''))     
     }
   }
 

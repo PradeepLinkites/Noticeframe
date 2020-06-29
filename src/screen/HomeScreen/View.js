@@ -80,7 +80,7 @@ export default class HomeScreen extends React.Component {
         :
         <View style={{ paddingLeft: 25 }}>
           {size(getEventData) > 0 ?
-            <View>
+            <>
               <Text style={styles.text}>Recent Events</Text>
                 <FlatGrid
                   itemDimension={130}
@@ -115,7 +115,7 @@ export default class HomeScreen extends React.Component {
                   )}
                   }
                 />
-              </View>
+              </>
               :
               <View style={{alignItems: 'center'}}>
                 <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>

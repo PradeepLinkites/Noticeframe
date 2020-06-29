@@ -1,42 +1,20 @@
 import React from 'react'
-import { ActivityIndicator, StyleSheet, SafeAreaView, ScrollView, Dimensions } from 'react-native'
-import { get , isEmpty, size } from 'lodash'
+import {  Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
-import WeeklyCalendar from 'react-native-weekly-calendar'
-import AsyncStorage from '@react-native-community/async-storage'
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import WeeklyCalendar from 'react-native-weekly-calendar';
+import styles from './styles'
 import moment from 'moment'
+import AsyncStorage from '@react-native-community/async-storage'
+import { get , isEmpty, size } from 'lodash'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
-const sampleEvents2 = [
-  {
-    duration: "01:00:00",
-    note: "morning walk",
-    start: "2020-06-25 09:00:57",
-    startTime: "09:00:57 AM",
-  },
-  { 
-    date: "2020-06-26",
-    duration: "03:00:00",
-    endTime: "08:30:00 AM",
-    note: "New Event",
-    start: "2020-06-26 05:30:00",
-    startTime: "05:30:00 AM"
-  },
-  {
-    date: "2020-06-24",
-    duration: "01:00:00",
-    endTime: "06:30:05 AM",
-    note: "Test",
-    start: "2020-06-24 05:30:05",
-    startTime: "05:30:05 AM"
-  },
-]
-
-export default class Weekly extends React.Component {
+export default class Daily extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      date: '2020-03-23',
       allEvents: [],
       calendarHeader: '',
       calendarBody: '',
@@ -100,60 +78,87 @@ export default class Weekly extends React.Component {
     this.setState({
       allEvents: calendarData,
       isLoading: false
+    },()=>{
+      this.forceUpdate()
     })
+  }
+
+  showEvent =(day)=>{
+    this.setState({ date: day.format('yyyy-MM-DD') })
+  }
+
+  _eventTapped (id) {
+    this.props.navigation.navigate('EventDetail',{id : id})
   }
 
   render() {
     const { allEvents, isLoading } = this.state
-    console.log('allEvents==>>', get(this.state, 'allEvents', []))
-    const { state } = this.props.navigation
-    const route = get(state, 'routeName', '')  === 'Setting' ? '' : ''
     return (
-      <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
-        {isLoading ?
-        <ActivityIndicator color = {'#3b5261'} size = "large" style = {AppStyles.activityIndicator} />
-        :
+      <SafeAreaView style={AppStyles.container}>
         <ScrollView style={styles.container}>
-          <WeeklyCalendar 
-            events={[{
-              duration: "01:00:00",
-              note: "morning walk",
-              start: "2020-06-25 09:00:57",
-              startTime: "09:00:57 AM",
-            }
-            ]}
+        {allEvents.length > 0 && 
+          <WeeklyCalendar
+            events={allEvents} 
             selected={moment().format('YYYY-MM-DD')}
+            startWeekday={7}
+            weekdayFormat='ddd'
             themeColor='#ff6600'
-            style={styles.weeklyCalendar}
             titleStyle={styles.title}
             dayLabelStyle={styles.dayLableStyle}
-            monthDateText={{ fontSize: 10 }}
-            startWeekday={7}
-          />
-        </ScrollView>
-        }
+            titleFormat='DD MMM YYYY'
+            locale='en'
+            renderEvent={(event, j, i) => {
+              let newDate = event.start.split(" ")[0]
+              let startTime = moment(event.start).format('LT').toString()
+              let duration = event.duration.split(':')
+              let seconds = parseInt(duration[0]) * 3600 + parseInt(duration[1]) * 60 + parseInt(duration[2])
+              let endTime = moment(event.start).add(seconds, 'seconds').format('LT').toString()
+                return (
+                  <TouchableOpacity key={j} onPress={this._eventTapped.bind(this, event.id )}>
+                    <View style={styles.event}>
+                      <View style={styles.eventDuration}>
+                        <View style={styles.durationContainer}>
+                          <View style={styles.durationDot} />
+                          <Text style={styles.durationText}>{startTime}</Text>
+                        </View>
+                        <View style={styles.durationContainer}>
+                          <View style={styles.durationDot} />
+                          <Text style={styles.durationText}>{endTime}</Text>
+                        </View>
+                        <View style={styles.durationDotConnector} />
+                      </View>
+                      <View>
+                        <Text numberOfLines={3} style={styles.eventText}>{event.note}</Text>
+                      </View>
+                    </View>
+                  </TouchableOpacity>
+                )
+            }}
+            renderDay={(eventViews, weekdayToAdd, i) => {
+              return(
+                <View key={i.toString()} style={styles.day}>
+                  <View style={styles.dayLabel}>                   
+                    <Text style={[styles.monthDateText, { color: '#000' }]}>{weekdayToAdd.format('M/D').toString()}</Text>
+                    <Text style={[styles.dayText, { color: '#000' }]}>{weekdayToAdd.format('ddd').toString()}</Text>
+                  </View>
+                  {eventViews.length === 0 ?
+                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('CreateEvent')} style={{backgroundColor:'#fff', justifyContent:'center', alignItems: 'center', flex: 1,paddingVertical:22}}>
+                      <Image source={require('../../../assets/icons/Plus2.png')} style={styles.plusIcon}/>
+                    </TouchableOpacity>
+                    :
+                    <View style={styles.allEvents}>
+                      {eventViews}
+                    </View>
+                  }
+                </View>
+              )
+            }}    
+            onDayPress={(weekday, i) => this.showEvent(weekday)}
+            style={{ height: deviceHeight, width:'100%'}}
+          />  
+        }      
+       </ScrollView>
       </SafeAreaView>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',  
-  },
-  weeklyCalendar: {
-    height: deviceHeight, width:'100%'
-  },
-  title: {
-    color: '#000',
-    fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14), 
-    fontWeight: '300',
-    marginTop: 8
-  },
-  dayLableStyle: {
-    color: '#A2a2a2',
-    fontSize: 14, 
-    marginTop: Platform.OS === 'android' ? 10 : 15
-}
-});
