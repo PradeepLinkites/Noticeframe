@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {Switch } from 'react-native'
+import { get } from 'lodash'
 
 export default class SwitchComponent extends Component {
 	constructor(props) {
@@ -10,9 +11,9 @@ export default class SwitchComponent extends Component {
 	   return (
 			<Switch
 				onValueChange = {(value) => this.props.onChange(value)}
-				value = {this.props.value}
+				value = {get(this.props, 'value', false)}
 				disabled={false}
-				thumbColor={this.state.switch4Value ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
+				thumbColor={get(this.props, 'value', false) ? "#3b5261" : Platform.OS == 'android' ? 'lightgray' : '#fff'}
 				trackColor={{ true: '#939393', false : Platform.OS == 'android' ? '#A2a2a2': 'gray' }}
 				trackWidth={10}
 				style={
