@@ -128,7 +128,7 @@ export default class ImportSetting extends React.Component {
   }
 
   render() {
-    const { selectCalender } = this.state
+    const { selectCalendar } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'ImportSetting' ? 'Import Settings' : ''
     return (
@@ -153,8 +153,7 @@ export default class ImportSetting extends React.Component {
                   initValueTextStyle={[styles.text,{color:'#000'}]}
                   selectStyle={{borderColor: "black"}}
                   data={data}
-                  initValue={selectCalendar}
-                  // onChange={(option)=>this.setState({ selectCalender: option.label })} 
+                  initValue={get(this.state, 'selectCalendar', [])}
                   onChange={(option) => this.onSelect(option.label)}
                 />
                 {/* <Image source={require('../../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/> */}

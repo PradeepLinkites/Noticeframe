@@ -8,7 +8,7 @@ import {
   Dimensions, 
   TouchableOpacity, 
 } from 'react-native'
-import { get, find, isEmpty, size } from 'lodash'
+import { get,  isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import { ActivityIndicator } from 'react-native-paper'
 import { FlatGrid } from 'react-native-super-grid';
@@ -17,7 +17,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 import moment from "moment"
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
-const itemWidth = (deviceWidth - 15) / 2
+
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -74,13 +74,13 @@ export default class HomeScreen extends React.Component {
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'Home' ? 'Home' : ''
     return (
-      <SafeAreaView style={{flex: 1, justifyContent: 'center',alignItems: 'center'}}>
+      <SafeAreaView style={{flex: 1}}>
         {isLoading ?
         <ActivityIndicator animating = {isLoading} color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
         :
-        <View style={{ paddingLeft: 25 }}>
+        <View style={{paddingLeft: 25 }}>
           {size(getEventData) > 0 ?
-            <>
+            <ScrollView>
               <Text style={styles.text}>Recent Events</Text>
                 <FlatGrid
                   itemDimension={130}
@@ -115,12 +115,12 @@ export default class HomeScreen extends React.Component {
                   )}
                   }
                 />
-              </>
-              :
-              <View style={{alignItems: 'center'}}>
-                <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
-                <Text>Welcome to Notice Frame Please Create Event .</Text>
-              </View>
+            </ScrollView>
+            :
+            <View style={{alignItems: 'center', marginTop: deviceHeight/4 }}>
+              <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
+              <Text>Welcome to Notice Frame Please Create Event .</Text>
+            </View>
             }
         </View>
         }

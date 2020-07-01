@@ -215,6 +215,7 @@ const drawerStacks = [
 		<ScrollView
 		  contentContainerStyle={styles.drawerContentContainer}
 		  showsVerticalScrollIndicator={false}
+		  scrollEnabled={false}
 		>
 		  {drawerStacks.map((item, index )=> {
 			return(
@@ -223,7 +224,6 @@ const drawerStacks = [
 			<View style={{ flex: 1}} key={index}>
 			   <View style={{flexDirection:'row', alignItems:'center'}}>
 					<TouchableOpacity
-						// key={item.key}
 						style={styles.drawerContentItem}
 						onPress={() => {
 						props.navigation.navigate(item.route)

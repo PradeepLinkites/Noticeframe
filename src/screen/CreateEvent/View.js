@@ -22,7 +22,7 @@ export default class CreateEvent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      eventPicture: '',
+      eventPicture: [],
       eventName: '',
       category: 'PERSONAL',
       personal: false,

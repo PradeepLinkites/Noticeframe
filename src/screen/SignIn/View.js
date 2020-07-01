@@ -13,9 +13,7 @@ const deviceHeight = Dimensions.get('window').height
 export default class Login extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      apiMessage: {},
       email: '',
       password: '',
       emailError: false,

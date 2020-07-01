@@ -1,5 +1,5 @@
-import React from 'react'
-import { ActivityIndicator, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions } from 'react-native'
+import React, { useRef, useEffect } from 'react'
+import {Animated, ActivityIndicator, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions } from 'react-native'
 import { get , isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import Swiper from 'react-native-swiper'
@@ -7,6 +7,8 @@ import AsyncStorage from '@react-native-community/async-storage'
 import moment from "moment"
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
+
+const avtarImage = require('../../assets/icons/Image_slideshow.png')
 
 export default class SlideShow extends React.Component {
   constructor(props) {
@@ -16,6 +18,7 @@ export default class SlideShow extends React.Component {
       slideShowData: [],
       transitions: '',
       numberOfEventsInSlideshow: 0,
+      eventPicture: [],
       eventName: true,
       eventDate: true,
       startTime: true,
@@ -107,36 +110,36 @@ export default class SlideShow extends React.Component {
               const start_time = moment(item.startTime).format("h:mm A")
               const end_time = moment(item.endTime).format("h:mm A")
               return(
-                <View key={ind}>
-                  <Image source={require('../../assets/icons/Image_slideshow.png')} style={styles.backgroundImage}/>
+                <FadeInView key={ind}>
+                  <Image source={avtarImage} style={styles.backgroundImage}/>
                   <View style={styles.BigEventContainer}>
                     <View style={[styles.eventView,{backgroundColor:'rgba(248, 247, 216, 0.2)'}]}>
                       <Text style={styles.eventTitleText}>{item.eventName}</Text>
                       <Text style={styles.eventDateText}>{date}</Text>
                     <Text style={styles.eventDateText}>{start_time} to {end_time}</Text>
                     </View>
-                {slideShowData.map((item, ind)=>{
-                  const date = moment(item.eventDate).format("DD MMM, YYYY")
-                  const start_time = moment(item.startTime).format("hh:mm")
-                  const end_time = moment(item.endTime).format("hh:mm")
-                 return(
-                  <View style={{top : Platform.OS === 'android' ? 60 : 80 }} key={ind}>
-                    <View style={swiperIndex == ind ?  [styles.smallEventContainer,{borderRightWidth: 3,borderRightColor: '#ff9900'}] : styles.smallEventContainer}>
-                      <View style={styles.smallEventView}>
-                        <View style={{justifyContent:'flex-end'}}>
-                          <Text style={styles.smallEventDateText}>{date}</Text>
-                        </View>
-                        <View>
-                          <Text style={styles.smallEventTitleText}>{item.eventName}</Text>
-                          <Text style={styles.smallEventDateText}>{start_time} to {end_time}</Text>
+                    {slideShowData.map((item, ind)=>{
+                    const date = moment(item.eventDate).format("DD MMM, YYYY")
+                    const start_time = moment(item.startTime).format("hh:mm")
+                    const end_time = moment(item.endTime).format("hh:mm")
+                    return(
+                      <View style={{top : Platform.OS === 'android' ? 60 : 80 }} key={ind}>
+                        <View style={swiperIndex == ind ?  [styles.smallEventContainer,{borderRightWidth: 3,borderRightColor: '#ff9900'}] : styles.smallEventContainer}>
+                          <View style={styles.smallEventView}>
+                            <View style={{justifyContent:'flex-end'}}>
+                              <Text style={styles.smallEventDateText}>{date}</Text>
+                            </View>
+                            <View>
+                              <Text style={styles.smallEventTitleText}>{item.eventName}</Text>
+                              <Text style={styles.smallEventDateText}>{start_time} to {end_time}</Text>
+                            </View>
+                          </View>
                         </View>
                       </View>
-                    </View>
+                      )
+                  })}
                   </View>
-                  )
-                 })}
-                </View>
-              </View>
+                </FadeInView>
               )
             })}      
           </Swiper>
@@ -219,3 +222,29 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
 })
+
+
+const FadeInView = (props) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current  // Initial value for opacity: 0
+
+  React.useEffect(() => {
+    Animated.timing(
+      fadeAnim,
+      {
+        toValue: 1,
+        duration: 10000,
+      }
+    ).start();
+  }, [])
+
+  return (
+    <Animated.View                 // Special animatable View
+      style={{
+        ...props.style,
+        opacity: fadeAnim,         // Bind opacity to animated value
+      }}
+    >
+      {props.children}
+    </Animated.View>
+  );
+}

@@ -145,9 +145,11 @@ export default class EditEvent extends React.Component {
       this.setState({ groupList: get(this.props, 'getGroupListForShowData', []), groupListName: arr })
     }
     if (this.props.updateEventPhase) {
+      this.props.getEvent(this.state.userId)
       this.props.resetEventPhase()
-      this.props.navigation.navigate('Event')
       this.setState({ isLoading: false })
+      alert('Event Updated Successfully')
+      this.props.navigation.navigate('Home')
     }
   }
 
@@ -238,13 +240,14 @@ export default class EditEvent extends React.Component {
   }
 
   updateEvent(){
-    const{ isLoading, eventPicture, eventName, memberList, defaultFillColor, eventDate, eventDate1, startTime, endTime, notes, userEmail,
+    const{ event_id, isLoading, eventPicture, eventName, memberList, defaultFillColor, eventDate, eventDate1, startTime, endTime, notes, userEmail,
         location, personal, business, group, setReminderAlarm, showNotesInSlideShow, showEventInSlideShow, setTime,
         category, repeat, duration } = this.state
     var error = true
     this.setState({
       eventNameError: false,
       notesError: false,
+      isLoading: true
     })
     if(eventName.trim() === ''){
       error = false
@@ -284,9 +287,8 @@ export default class EditEvent extends React.Component {
       data.count = this.state.count
       const Details = {
         data: data,
-        id: get(this.state, 'userId','')
+        id: get(this.state, 'event_id','')
       }
-      console.log('Details==>>', Details)
       this.props.updateEvent(Details)
     }
   }
@@ -298,9 +300,9 @@ export default class EditEvent extends React.Component {
     return (
       <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
       {isLoading ?
-        <ActivityIndicator animating = {isLoading} color = 'red' size = "large" style = {styles.activityIndicator} />
+        <ActivityIndicator animating = {isLoading} color = '#3b5261' size = "large" style = {styles.activityIndicator} />
         :
-      <ScrollView style={styles.container}>
+        <ScrollView style={styles.container}>
           <Navbar 
             navigation={this.props.navigation} 
             navTitle={route} 
