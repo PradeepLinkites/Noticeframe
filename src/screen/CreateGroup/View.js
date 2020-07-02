@@ -1,5 +1,5 @@
 import React from 'react'
-import {Picker, TextInput, Platform, StyleSheet, Text, View,  SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
+import { TextInput, Platform, StyleSheet, Text, View,  SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get, isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
@@ -33,27 +33,36 @@ export default class CreateEvent extends React.Component {
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
   }
 
-  componentDidMount() {
+  onFocusFunction = () => {
     AsyncStorage.getItem('@user')
     .then((user) => {
       const user1 = JSON.parse(user)
       if(!isEmpty(user1)){
-        this.props.getUser(user1._id)
         this.props.getUserListForShow()
         this.setState({ userId: user1._id})
       }
     })
   }
 
+  componentDidMount(){
+    this.setState({ isLoading: true })
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+
+  componentWillUnmount(){
+    this.focusListener.remove()
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.createGroupPhase) {
-      this.setState({ selectedItems: [], groupName: '',  loading: false , message:  get(prevProps, 'createGroupMessage','')})
-      alert(get(prevProps, 'createGroupMessage',''))
+    if (this.props.createGroupPhase) {
+      this.setState({ selectedItems: [], groupName: '',  loading: false , message:  get(this.props, 'createGroupMessage','')})
+      alert('created group successfully')
     }
-    if (prevProps.getUserListForShowPhase) {
+    if (this.props.getUserListForShowPhase) {
       let arr = []
-      this.props.resetPhase()
-      get(prevProps, 'getUserListForShowData', []).map(item=>{
+      get(this.props, 'getUserListForShowData', []).map(item=>{
         let obj = {}
         obj['id'] = get(item, '_id', '')
         obj['firstName'] = get(item, 'firstName', '')
@@ -64,12 +73,6 @@ export default class CreateEvent extends React.Component {
         arr.push(obj)
       })
       this.setState({ userList: arr })
-    }
-    if (prevProps.getUserPhase) {
-      this.setState({ 
-        firstName: get(prevProps, 'getUserData.firstName', ''), 
-        lastName: get(prevProps, 'getUserData.lastName', ''),
-        loading: false })
     }
     this.props.resetPhase()
   }
@@ -188,7 +191,7 @@ export default class CreateEvent extends React.Component {
                   items={userList}
                   uniqueKey="id"
                   onSelectedItemsChange={this.onSelectedItemsChange}
-                  selectedItems={this.state.selectedItems}
+                  selectedItems={get(this.state, 'selectedItems', '')}
                   selectText="Pick Members"
                   searchInputPlaceholderText="Search Names ..."
                   onChangeInput={text => console.log(text)}
