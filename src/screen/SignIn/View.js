@@ -31,8 +31,8 @@ export default class Login extends React.Component {
   componentDidUpdate(prevProps) {
     if(this.props.loginUserData !== prevProps.loginUserData) {
       if(this.props.loginUserPhase) {
-        // this.props.resetPhase()
-        this.setState({ loginUserData: this.props.loginUserData, loading: false })
+        this.props.resetPhase()
+        this.setState({ loginUserData: this.props.loginUserData, loading: false, email: '', password: '' })
         // this.props.screenProps.User(this.props.loginUserData)
         AsyncStorage.setItem('@user',JSON.stringify(this.props.loginUserData))
         this.props.navigation.navigate('Home')

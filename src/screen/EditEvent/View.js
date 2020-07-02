@@ -103,7 +103,7 @@ export default class EditEvent extends React.Component {
       let obj = {}
       obj['value'] = get(item, 'groupName', '')
       arr.push(obj)
-      this.setState({ groupNameShow: arr })
+      this.setState({ groupNameShow: arr, groupName: get(item, 'groupName', '') })
     })
       this.setState({
         event_id: get(prevProps, 'getEventDetailData._id', ''),
@@ -174,12 +174,20 @@ export default class EditEvent extends React.Component {
     this.setState({ eventDate: date , isDatePickerVisible : false, eventDate1: newDate })
   } 
 
-  handleStartTime = (date) => {    
-    this.setState({ startTime: date , isStartPickerVisible: false })
-  } 
-
-  handleEndTime = (date) => {  
-    this.setState({ endTime : date , isEndPickerVisible: false })
+  handleStartTime = (date) => { 
+    if(date >= moment()._d){
+      this.setState({ startTime: date , isStartPickerVisible: false,  startTimeError: false})
+    }else{
+      this.setState({ startTime: moment()._d , isStartPickerVisible: false, startTime1: moment()._d})
+    }
+  }
+  
+  handleEndTime = (date) => {    
+    if((date >= moment()._d && date > this.state.startTime)){
+      this.setState({ endTime : date , isEndPickerVisible: false, endTimeError: false})
+    }else{
+      this.setState({ endTimeError: true , isEndPickerVisible: false })
+    }
   }
 
   onReminder(value){
@@ -289,6 +297,7 @@ export default class EditEvent extends React.Component {
         data: data,
         id: get(this.state, 'event_id','')
       }
+      console.log('Details==>>', Details)
       this.props.updateEvent(Details)
     }
   }
@@ -332,15 +341,17 @@ export default class EditEvent extends React.Component {
                     onChangeText={text => this.onEventChange(text)}
                     value={this.state.eventName}
                   />
+                <View style={{ width: 125, paddingHorizontal: 5, marginRight: 15}}>
                   <Picker
-                    selectedValue={category}
+                    selectedValue={get(this.state, 'category', '')}
                     style={{ height: 50, width: 150 }}
                     onValueChange={(itemValue, itemIndex) => this.onSelectCategory(itemValue)}
                   >
                     <Picker.Item label="PERSONAL" value="PERSONAL" />
                     <Picker.Item label="GROUP" value="GROUP" />
                     <Picker.Item label="BUSINESS" value="BUSINESS" />
-                </Picker>
+                  </Picker>
+                </View>
                 {/* <View style={{ width: 125, paddingHorizontal: 5}}>
                   <Dropdown
                     value={category}
@@ -360,7 +371,7 @@ export default class EditEvent extends React.Component {
                 <Text style={styles.listTitle}>Select Group</Text>
                 <View style={{ marginTop: 10 }}>
                   <Dropdown
-                    value={this.state.groupNameShow[0].value}
+                    value={this.state.groupName}
                     selectedItemColor = '#000'
                     textColor = '#000'
                     onChangeText={(item)=>this.selectGroupName(item)}
@@ -374,7 +385,7 @@ export default class EditEvent extends React.Component {
             <View style={styles.colorContainer}>
               <View style={{flexDirection:'row',justifyContent:'space-between',marginTop: 8}}>
                 <View>
-                  <Text style={[styles.listTitle,{fontWeight:'700',top: 10,marginLeft: 10 }]}>Default Fill colour</Text>
+                  <Text style={[styles.listTitle,{fontWeight:'700',top: 10 }]}>Default Fill colour</Text>
                 </View>
                 <View style={{flexDirection:'row'}}>
                 <View style={ [styles.roundColorView, {backgroundColor : defaultFillColor === 'White' ? '#ffffff' : defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
@@ -382,7 +393,7 @@ export default class EditEvent extends React.Component {
                   <ModalSelector
                     initValueTextStyle={[styles.listTitle,{color: "#000"}]}
                     selectStyle={{borderColor: "black"}}
-                    style={{marginTop: 2,marginHorizontal: 15}}
+                    style={{marginTop: 2,marginHorizontal: 10}}
                     selectTextStyle={{color: "blue"}}
                     data={colorItem}
                     initValue={defaultFillColor}
@@ -419,7 +430,7 @@ export default class EditEvent extends React.Component {
               <View style={{flexDirection:'row',marginTop:8,justifyContent:'space-between'}}>
                 <View style={{flexDirection:'row'}} >               
                   <Text style={styles.timeText} >START TIME</Text>
-                  <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginHorizontal: 3 }}
+                  <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginHorizontal: .5 }}
                     onPress={()=>this.setState({isStartPickerVisible : true})}  
                     disabled ={get(this.state,'eventDate','') === '' ? true : false}               
                   >
@@ -442,7 +453,7 @@ export default class EditEvent extends React.Component {
                 </View>
                 <View style={{flexDirection:'row'}}> 
                    <Text style={styles.timeText}>END TIME</Text>
-                   <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginHorizontal: 3}}
+                   <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginRight: 5}}
                     onPress={()=>this.setState({isEndPickerVisible : true})} 
                     disabled ={get(this.state,'eventDate','') === '' ? true : false}                 
                   >
@@ -677,9 +688,9 @@ const styles = StyleSheet.create({
   },
   eventContainer: {
     paddingVertical: Platform.OS === 'android' ? 15 : 20,
-    paddingHorizontal: Platform.OS === 'android' ? 25 : 25,
+    paddingHorizontal: Platform.OS === 'android' ? 15 : 25,
     backgroundColor:'#fff',
-    borderBottomWidth: .3
+    borderBottomWidth: .3,
   },
   eventInputBox: {
     flex: 1,
@@ -704,12 +715,9 @@ const styles = StyleSheet.create({
     right: Platform.OS === 'android' ? 28 : 28 ,
   },
   selectGroupView :{
-    paddingLeft: 25,
-    paddingRight: 25,
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingVertical: Platform.OS === 'android' ? 20 : 20,
+    paddingHorizontal: Platform.OS === 'android' ? 15 : 25,
     backgroundColor:'#fff',
-    // borderBottomWidth: .3
   },
   selectGroupBottomLine: {
     marginTop: 8,
@@ -718,18 +726,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#A2a2a2'
   },
   colorContainer: {
-    // paddingTop: 20,
+    flex: 1,
     paddingBottom: 15,
-    paddingLeft: 15,
+    paddingHorizontal: 15,
     backgroundColor:'#fff',
-    borderBottomWidth: .3
+    borderBottomWidth: .3,
+    justifyContent:'center'
   },
   roundColorView: {
-    marginTop: 15, 
+    marginTop: 13, 
+    marginRight: 8,
     height:18, 
     width:18, 
-    borderRadius:9, 
-    marginLeft: 86,
+    borderRadius: 9, 
     borderWidth: .2
   },
   roundViewModal: {

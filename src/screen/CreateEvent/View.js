@@ -169,13 +169,19 @@ export default class CreateEvent extends React.Component {
   }
  
   handleStartTime = (date) => { 
-    let time = moment(date).utcOffset('+05:30').format('hh:mm a')
-    this.setState({ startTime: date , isStartPickerVisible: false, startTime1: date})
+    if(date >= moment()._d){
+      this.setState({ startTime: date , isStartPickerVisible: false, startTime1: date, startTimeError: false})
+    }else{
+      this.setState({ startTime: moment()._d , isStartPickerVisible: false, startTime1: moment()._d})
+    }
   }
   
   handleEndTime = (date) => {    
-    let time = moment(date).utcOffset('+05:30').format('hh:mm a')
-    this.setState({ endTime : date , isEndPickerVisible: false, endTime1: date})
+    if((date >= moment()._d && date > this.state.startTime)){
+      this.setState({ endTime : date , isEndPickerVisible: false, endTime1: date, endTimeError: false})
+    }else{
+      this.setState({ endTimeError: true , isEndPickerVisible: false })
+    }
   }
 
   onLocationChange = (text) => {
@@ -349,7 +355,7 @@ export default class CreateEvent extends React.Component {
                   onChangeText={text => this.onEventChange(text)}
                   value={this.state.eventName}
                   />
-              <View style={{ width: 125, paddingHorizontal: 5}}>
+              <View style={{ width: 125, paddingHorizontal: 5, marginRight: 15}}>
                 {/* <Dropdown
                   value={category}
                   selectedItemColor = '#000'
@@ -388,9 +394,9 @@ export default class CreateEvent extends React.Component {
                 </View>
               }
             <View style={styles.colorContainer}>
-              <View style={{flexDirection:'row',justifyContent:'space-between',marginTop: 8}}>
+              <View style={{flexDirection:'row',justifyContent:'space-between', marginTop: 8}}>
                 <View>
-                  <Text style={[styles.listTitle,{fontWeight:'600',top: 10,marginLeft: 10 }]}>Default Fill colour</Text>
+                  <Text style={[styles.listTitle,{fontWeight:'600',top: 10 }]}>Default Fill colour</Text>
                 </View>
                 <View style={{flexDirection:'row'}}>
                   <View style={ [styles.roundColorView, {backgroundColor : defaultFillColor === 'White' ? '#ffffff' : defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
@@ -399,7 +405,7 @@ export default class CreateEvent extends React.Component {
                     keyExtractor= {item => item.id}
                     initValueTextStyle={[styles.listTitle,{color: "#000"}]}
                     selectStyle={{borderColor: "black"}}
-                    style={{marginTop: 2,marginHorizontal: 15 }}
+                    style={{marginTop: 2,marginRight: 10 }}
                     initValue="Select Color!"
                     data={colorItem}
                     initValue={defaultFillColor}
@@ -434,7 +440,7 @@ export default class CreateEvent extends React.Component {
               <View style={{flexDirection:'row', marginTop:8, justifyContent:'space-between'}}>
                 <View style={{flexDirection:'row'}} >               
                   <Text style={styles.timeText} >START TIME</Text>
-                  <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginHorizontal: 3 }}
+                  <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginHorizontal: .5 }}
                     onPress={()=>this.setState({isStartPickerVisible : true})}  
                     disabled ={get(this.state,'eventDate','') === '' ? true : false}               
                   >
@@ -456,13 +462,14 @@ export default class CreateEvent extends React.Component {
                 </View>
                 <View style={{flexDirection:'row'}}> 
                    <Text style={styles.timeText}>END TIME</Text>
-                   <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginHorizontal: 3}}
+                   <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginRight: 5}}
                     onPress={()=>this.setState({isEndPickerVisible : true})} 
                     disabled ={get(this.state,'eventDate','') === '' ? true : false}                 
                   >
                     {get(this.state,'endTime','') !== '' ? moment(get(this.state,'endTime','')).format('h:mm A') : 'Time picker' }
                   </Button>
                    <DateTimePickerModal
+                      minimumDate={new Date()}
                       isVisible={isEndPickerVisible}
                       mode="time"
                       onConfirm={this.handleEndTime}
@@ -476,7 +483,7 @@ export default class CreateEvent extends React.Component {
                     />
                 </View>
               </View>
-              {(startTimeError || endTimeError) && <Text style={AppStyles.error}>Please select the event {(startTimeError && endTimeError ) ? 'time' : startTimeError ? 'start time' : 'end time'}</Text>}
+              {(startTimeError || endTimeError) && <Text style={AppStyles.error}>Please select the valid {(startTimeError && endTimeError ) ? 'time' : startTimeError ? 'start time' : 'end time'}</Text>}
                 <View style={styles.checkBoxContainer}>
                   <CheckBox
                     checkboxStyle={{tintColor:'#000'}}
@@ -695,7 +702,7 @@ const styles = StyleSheet.create({
   },
   eventContainer: {
     paddingVertical: Platform.OS === 'android' ? 15 : 20,
-    paddingHorizontal: Platform.OS === 'android' ? 25 : 25,
+    paddingHorizontal: Platform.OS === 'android' ? 15 : 25,
     backgroundColor:'#fff',
     borderBottomWidth: .3,
   },
@@ -722,12 +729,9 @@ const styles = StyleSheet.create({
     right: Platform.OS === 'android' ? 28 : 28 ,
   },
   selectGroupView :{
-    paddingLeft: 25,
-    paddingRight: 25,
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingVertical: Platform.OS === 'android' ? 20 : 20,
+    paddingHorizontal: Platform.OS === 'android' ? 15 : 25,
     backgroundColor:'#fff',
-    // borderBottomWidth: .3
   },
   selectGroupBottomLine: {
     marginTop: 8,
@@ -736,19 +740,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#A2a2a2'
   },
   colorContainer: {
+    flex: 1,
     paddingBottom: 15,
-    paddingLeft: 15,
-    paddingRight: 15,
+    paddingHorizontal: 15,
     backgroundColor:'#fff',
     borderBottomWidth: .3,
     justifyContent:'center'
   },
   roundColorView: {
     marginTop: 13, 
+    marginRight: 8,
     height:18, 
     width:18, 
-    borderRadius:9, 
-    marginLeft: 86,
+    borderRadius: 9, 
     borderWidth: .2
   },
   roundViewModal: {

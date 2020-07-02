@@ -1,12 +1,8 @@
 import { connect } from 'react-redux';
 
-// Actions
-import { createUser, getUser, updateUser, resetPhase, socialLogin } from '@redux/user/actions';
-// import * as CategoryActions from '@redux/category/actions';
-
-// The component we're mapping to
+import { createUser, resetPhase } from '@redux/user/actions';
 import FormRender from './View';
-import { styles } from 'react-native-really-awesome-button/src/styles';
+
 
 // What data from the store shall we send to the component?
 const mapStateToProps = state => ({
@@ -17,7 +13,8 @@ const mapStateToProps = state => ({
 
 // Any actions to map to the component?
 const mapDispatchToProps = {
-  createUser: createUser
+  createUser: createUser,
+  resetPhase: resetPhase,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FormRender);
