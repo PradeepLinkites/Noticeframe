@@ -213,7 +213,7 @@ export default class EventScreen extends React.Component {
                       let start_time = moment(item.startTime).format("h:mm A")
                       let end_time = moment(item.endTime).format("h:mm A")  
                       var diffInHours = Math.floor(Math.abs(new Date(item.startTime) - new Date()) / 36e5)
-                      let frameColor = ''
+                      let frameColor = '#ed1c24'
                       if(red && diffInHours <= redHour){
                         console.log('red')
                         frameColor = '#ed1c24'
