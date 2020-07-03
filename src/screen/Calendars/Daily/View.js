@@ -16,7 +16,7 @@ export default class Daily extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: '2020-03-23',
+      date: '',
       allEvents: [],
       calendarHeader: '',
       calendarBody: '',
@@ -95,9 +95,8 @@ export default class Daily extends React.Component {
     return (
       <SafeAreaView style={AppStyles.container}>
         <ScrollView style={styles.container}>
-        {allEvents.length > 0 && 
           <EventCalendar
-            events={allEvents}
+            events={allEvents.length > 0 ? allEvents : []}
             scrollToFirst
             width={width}
             initDate={moment().format('YYYY-MM-DD')}
@@ -113,9 +112,8 @@ export default class Daily extends React.Component {
                 </TouchableOpacity>
               )
             }}
-          />
-        }      
-       </ScrollView>
+          /> 
+        </ScrollView>
       </SafeAreaView>
     )
   }

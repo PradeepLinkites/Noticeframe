@@ -12,7 +12,6 @@ import DateTimePickerModal from "react-native-modal-datetime-picker"
 import moment from "moment"
 import ModalSelector from 'react-native-modal-selector'
 import AsyncStorage from '@react-native-community/async-storage'
-import sizes from '../../theme/sizes'
 import { Button } from 'react-native-paper';
 
 const deviceWidth = Dimensions.get('window').width
@@ -182,8 +181,8 @@ export default class EditEvent extends React.Component {
     }
   }
   
-  handleEndTime = (date) => {    
-    if((date >= moment()._d && date > this.state.startTime)){
+  handleEndTime = (date) => {   
+    if((date >= moment()._d && date > moment(this.state.startTime)._d )){
       this.setState({ endTime : date , isEndPickerVisible: false, endTimeError: false})
     }else{
       this.setState({ endTimeError: true , isEndPickerVisible: false })
@@ -306,6 +305,7 @@ export default class EditEvent extends React.Component {
   const {eventNameError, notesError, groupListName, isLoading, checked, modalVisible, memberList, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
   const { state } = this.props.navigation
   const route = get(state, 'routeName', '')  === 'EditEvent' ? 'Edit Event' : ''
+  console.log('render===>>>', moment(get(this.state,'endTime','')).format('h:mm A'))
     return (
       <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
       {isLoading ?
@@ -319,7 +319,7 @@ export default class EditEvent extends React.Component {
             routeKey={'EditEvent'} 
           />        
             <View style={styles.topContainer}>
-              {get(this.state, 'eventPicture',[]) === '' ?
+              {size(get(this.state, 'eventPicture',[])) == 0 ?
                 <TouchableOpacity
                   style={styles.addPictureButton}
                   onPress={this.selectPhotoTapped.bind(this)}
@@ -460,7 +460,7 @@ export default class EditEvent extends React.Component {
                     {get(this.state,'endTime','') !== '' ? moment(get(this.state,'endTime','')).format('h:mm A') : 'Time picker' }
                   </Button>
                    <DateTimePickerModal
-                      minimumDate={new Date()}
+                      // minimumDate={new Date()}
                       isVisible={isEndPickerVisible}
                       mode="time"
                       onConfirm={this.handleEndTime}
@@ -475,6 +475,7 @@ export default class EditEvent extends React.Component {
                   {/* <Text style={styles.selectedText}>{moment(get(this.state,'endTime','')).format("HH:mm A")}</Text> */}
                 </View>
               </View>
+              {this.state.endTimeError && <Text style={AppStyles.error}>Please select the valid end time</Text>}
               <View style={styles.checkBoxContainer}>
                 <CheckBox
                   checkboxStyle={{tintColor:'#000'}}

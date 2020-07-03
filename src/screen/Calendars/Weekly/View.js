@@ -96,9 +96,8 @@ export default class Daily extends React.Component {
     return (
       <SafeAreaView style={AppStyles.container}>
         <ScrollView style={styles.container}>
-        {allEvents.length > 0 && 
           <WeeklyCalendar
-            events={allEvents} 
+            events={allEvents.length > 0 ? allEvents : []} 
             selected={moment().format('YYYY-MM-DD')}
             startWeekday={7}
             weekdayFormat='ddd'
@@ -156,7 +155,6 @@ export default class Daily extends React.Component {
             onDayPress={(weekday, i) => this.showEvent(weekday)}
             style={{ height: deviceHeight, width:'100%'}}
           />  
-        }      
        </ScrollView>
       </SafeAreaView>
     )

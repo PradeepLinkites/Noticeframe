@@ -1,7 +1,7 @@
 import React from 'react'
 import {Modal, TextInput, Platform, Alert, Picker, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
-import { get, isEmpty } from 'lodash'
+import { get, isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import CheckBox from 'react-native-checkbox'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
@@ -12,8 +12,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker"
 import moment from "moment"
 import ModalSelector from 'react-native-modal-selector'
 import AsyncStorage from '@react-native-community/async-storage'
-import sizes from '../../theme/sizes'
 import { Button } from 'react-native-paper';
+import sizes from '../../theme/sizes'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 let index = 0
@@ -333,7 +333,7 @@ export default class CreateEvent extends React.Component {
             routeKey={'CreateEvent'} 
           />        
             <View style={styles.topContainer}>
-              {get(this.state, 'eventPicture','') === '' ?
+              {size(get(this.state, 'eventPicture', [])) == 0 ?
                 <TouchableOpacity
                   style={styles.addPictureButton}
                   onPress={this.selectPhotoTapped.bind(this)}
@@ -382,12 +382,14 @@ export default class CreateEvent extends React.Component {
                   <Text style={styles.listTitle}>Select Group</Text>
                   <View style={{ marginTop: 10 }}>
                     <Dropdown
-                      value={'Select Group Name'}
+                      // label='Select Group'
+                      containerStyle={{marginRight: 10}}
+                      value={'Select Group'}
                       selectedItemColor = '#000'
                       textColor = '#000'
                       onChangeText={(item)=>this.selectGroupName(item)}
                       data={groupListName}
-                      fontSize={14}
+                      fontSize={16}
                       dropdownOffset={{ top: 0, left: 0 }}
                     />
                 </View>
@@ -408,7 +410,7 @@ export default class CreateEvent extends React.Component {
                     style={{marginTop: 2,marginRight: 10 }}
                     initValue="Select Color!"
                     data={colorItem}
-                    initValue={defaultFillColor}
+                    // initValue={defaultFillColor}
                     animationType = "fade"
                     onChange={(option)=>this.setState({ defaultFillColor: option.label })} 
                   />
