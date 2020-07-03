@@ -7,6 +7,7 @@ import styles from './styles'
 import moment from 'moment'
 import AsyncStorage from '@react-native-community/async-storage'
 import { get , isEmpty, size } from 'lodash'
+import sizes from '../../../theme/sizes';
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -24,7 +25,7 @@ export default class Daily extends React.Component {
     }
   }
 
-  componentDidMount() {
+  onFocusFunction = () => {
     this.setState({ isLoading: true })
     AsyncStorage.getItem('@user')
     .then((user) => {
@@ -35,6 +36,17 @@ export default class Daily extends React.Component {
         this.setState({userId: user1._id})
       }
     })
+  }
+  
+  componentDidMount() {
+    this.setState({ isLoading: true })
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+
+  componentWillUnmount () {
+    this.focusListener.remove()
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -75,6 +87,7 @@ export default class Daily extends React.Component {
         }
       })
     }
+    console.log('calendarData===>>', calendarData)
     this.setState({
       allEvents: calendarData,
       isLoading: false
@@ -84,7 +97,7 @@ export default class Daily extends React.Component {
   }
 
   showEvent =(day)=>{
-    this.setState({ date: day.format('yyyy-MM-DD') })
+    this.setState({ date: day.format('YYYY-MM-DD') })
   }
 
   _eventTapped (id) {
@@ -96,8 +109,9 @@ export default class Daily extends React.Component {
     return (
       <SafeAreaView style={AppStyles.container}>
         <ScrollView style={styles.container}>
+          {allEvents.length > 0 &&
           <WeeklyCalendar
-            events={allEvents.length > 0 ? allEvents : []} 
+            events={allEvents.length > 0 ? allEvents : []}
             selected={moment().format('YYYY-MM-DD')}
             startWeekday={7}
             weekdayFormat='ddd'
@@ -154,7 +168,8 @@ export default class Daily extends React.Component {
             }}    
             onDayPress={(weekday, i) => this.showEvent(weekday)}
             style={{ height: deviceHeight, width:'100%'}}
-          />  
+          /> 
+         }
        </ScrollView>
       </SafeAreaView>
     )

@@ -1846,6 +1846,11 @@ ci-info@^2.0.0:
   resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-2.0.0.tgz#67a9e964be31a51e15e5010d58e6f12834002f46"
   integrity sha512-5tK7EtrZ0N+OLFMthtqOj4fI2Jeb88C4CAZPu25LDVUgXJ0A3Js4PMGqrn0JU1W0Mh1/Z8wZzYPxqUrXeBboCQ==
 
+clamp@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/clamp/-/clamp-1.0.1.tgz#66a0e64011816e37196828fdc8c8c147312c8634"
+  integrity sha1-ZqDmQBGBbjcZaCj9yMjBRzEshjQ=
+
 class-utils@^0.3.5:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/class-utils/-/class-utils-0.3.6.tgz#f93369ae8b9a7ce02fd41faad0ca83033190c463"
@@ -5993,6 +5998,13 @@ react-native-super-grid@^3.2.0:
   integrity sha512-jsDnHJ4H+Qas/PUlBOWrSQ6HgYRmmOBLDFg+k2UWVew2pI5EOWF+3/U577ypMrowUaurmeRsP8VCXHCH2mdnDQ==
   dependencies:
     prop-types "^15.6.0"
+
+react-native-swiper-animated@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/react-native-swiper-animated/-/react-native-swiper-animated-1.5.3.tgz#3c7d029703c0e42b670360872085ebe63d87edde"
+  integrity sha512-LECyD6ay8jelDHXFCU4X1Jz1TzyjTROIaBfw5uGGfaTPtuk3I4AO3/zvQFCc0ALp6IsoWqawWTvTrJNzZdgHQw==
+  dependencies:
+    clamp "^1.0.1"
 
 react-native-swiper@^1.6.0:
   version "1.6.0"

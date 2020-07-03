@@ -170,7 +170,7 @@ export default class EditEvent extends React.Component {
 
   handleDate = (date) => {
     let newDate = moment(date).utcOffset('+05:30').format('DD-MM-YYYY')
-    this.setState({ eventDate: date , isDatePickerVisible : false, eventDate1: newDate })
+    this.setState({ eventDate: date , isDatePickerVisible : false, eventDate1: newDate , startTime: ''  , endTime : '' })
   } 
 
   handleStartTime = (date) => { 
@@ -305,7 +305,6 @@ export default class EditEvent extends React.Component {
   const {eventNameError, notesError, groupListName, isLoading, checked, modalVisible, memberList, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
   const { state } = this.props.navigation
   const route = get(state, 'routeName', '')  === 'EditEvent' ? 'Edit Event' : ''
-  console.log('render===>>>', moment(get(this.state,'endTime','')).format('h:mm A'))
     return (
       <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
       {isLoading ?

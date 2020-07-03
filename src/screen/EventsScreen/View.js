@@ -36,7 +36,7 @@ export default class EventScreen extends React.Component {
     }
   }
 
-  componentDidMount() {
+  onFocusFunction = () => {
     this.setState({ isLoading: true })
     AsyncStorage.getItem('@user')
     .then((user) => {
@@ -47,6 +47,17 @@ export default class EventScreen extends React.Component {
         this.setState({ userId: user1._id})
       }
     })
+  }
+
+  componentDidMount(){
+    this.setState({ isLoading: true })
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+
+  componentWillUnmount(){
+    this.focusListener.remove()
   }
 
   componentDidUpdate(prevProps) {
@@ -202,14 +213,17 @@ export default class EventScreen extends React.Component {
                       let start_time = moment(item.startTime).format("h:mm A")
                       let end_time = moment(item.endTime).format("h:mm A")  
                       var diffInHours = Math.floor(Math.abs(new Date(item.startTime) - new Date()) / 36e5)
-                      let frameColor = '#00a651'
-                      if(red &&  diffInHours >= 12 && diffInHours <= redHour){
+                      let frameColor = ''
+                      if(red && diffInHours <= redHour){
+                        console.log('red')
                         frameColor = '#ed1c24'
                       }
                       if(yellow &&  diffInHours >= 24 && diffInHours <= yellowHour){
+                        console.log('yellow')
                         frameColor = '#ff9900'
                       }
                       if(green && diffInHours >= 72){
+                        console.log('green')
                         frameColor = '#00a651'
                       }    
                       return(
