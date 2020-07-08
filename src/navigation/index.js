@@ -10,7 +10,7 @@ import HomePage from '../screen/HomeScreen/Container'
 import CreateEvent from '../screen/CreateEvent/Container'
 import CreateGroup from '../screen/CreateGroup/Container'
 import EditEvent from '../screen/EditEvent/Container'
-import Signup from '../screen/Signup/Container'
+// import Signup from '../screen/Signup/Container'
 import Forgot from '../screen/Forgot/Container'
 import { get, size } from 'lodash'
 
@@ -36,17 +36,17 @@ const AuthStack = createStackNavigator({
     // mode: 'modal'
 });
 
-const SignupStack = createStackNavigator({
-	Signup:{
-		screen: Signup,
-	},
-},{
-	initialRoute: 'Signup',
-    headerMode: 'none',
-    navigationOptions: {
-        headerVisible: false,
-    }
-});
+// const SignupStack = createStackNavigator({
+// 	Signup:{
+// 		screen: Signup,
+// 	},
+// },{
+// 	initialRoute: 'Signup',
+//     headerMode: 'none',
+//     navigationOptions: {
+//         headerVisible: false,
+//     }
+// });
 
 const AppStack = createStackNavigator({
 	Home:{
@@ -79,9 +79,9 @@ const mainStack = createStackNavigator({
 	AppStack:{
 		screen: AppStack,
 	},
-	SignupStack:{
-		screen: SignupStack,
-	}
+	// SignupStack:{
+	// 	screen: SignupStack,
+	// }
 
 },{
     headerMode: 'none',

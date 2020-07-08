@@ -3,10 +3,10 @@ import { Platform,  StyleSheet, Text, View, Linking, SafeAreaView, Image, Scroll
 import Navbar from '../Common/commonNavbar'
 import { get } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
-import {
-  shareOnFacebook,
-  shareOnTwitter,
-} from 'react-native-social-share'
+// import {
+//   shareOnFacebook,
+//   shareOnTwitter,
+// } from 'react-native-social-share'
 
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
@@ -56,32 +56,32 @@ export default class ShareScreen extends React.Component {
   }
 
   onSocialShare(name){
-    if( name === 'Twitter') {
-        shareOnTwitter({
-          'text':'Global democratized marketplace for art',
-          'link':'https://artboost.com/',
-          'imagelink':'https://artboost.com/apple-touch-icon-144x144.png',
-          //or use image
-          'image': 'artboost-icon',
-        },
-        (results) => {
-          console.log(results);
-        }
-      )
-    }
-    if( name === 'Facebook') {
-      shareOnFacebook({
-        'text':'Global democratized marketplace for art',
-        'link':'https://artboost.com/',
-        'imagelink':'https://artboost.com/apple-touch-icon-144x144.png',
-        //or use image
-        'image': 'artboost-icon',
-      },
-      (results) => {
-        console.log(results);
-      }
-     )
-    }
+    // if( name === 'Twitter') {
+    //     shareOnTwitter({
+    //       'text':'Global democratized marketplace for art',
+    //       'link':'https://artboost.com/',
+    //       'imagelink':'https://artboost.com/apple-touch-icon-144x144.png',
+    //       //or use image
+    //       'image': 'artboost-icon',
+    //     },
+    //     (results) => {
+    //       console.log(results);
+    //     }
+    //   )
+    // }
+    // if( name === 'Facebook') {
+    //   shareOnFacebook({
+    //     'text':'Global democratized marketplace for art',
+    //     'link':'https://artboost.com/',
+    //     'imagelink':'https://artboost.com/apple-touch-icon-144x144.png',
+    //     //or use image
+    //     'image': 'artboost-icon',
+    //   },
+    //   (results) => {
+    //     console.log(results);
+    //   }
+    //  )
+    // }
     if(name === 'Whatsapp'){
       let msg = this.state.msg
       let mobile = this.state.mobile_no

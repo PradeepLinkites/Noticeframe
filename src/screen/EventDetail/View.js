@@ -91,7 +91,7 @@ export default class CreateEvent extends React.Component {
     return (
         <SafeAreaView style={[styles.container,{backgroundColor: '#fff'}]}>
           {isLoading ?
-            <ActivityIndicator animating = {isLoading} color = {selectedColor} size = "large" style = {styles.activityIndicator} />
+            <ActivityIndicator animating = {isLoading} color = {selectedColor} size = "small" style = {styles.activityIndicator} />
             :
           <ScrollView style={styles.container}>
             <Navbar 

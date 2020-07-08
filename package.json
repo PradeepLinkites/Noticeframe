@@ -10,7 +10,6 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@invertase/react-native-apple-authentication": "^0.2.0",
     "@react-native-community/async-storage": "^1.7.1",
     "@react-native-community/datetimepicker": "^2.3.2",
     "@react-native-community/masked-view": "^0.1.6",
@@ -37,7 +36,6 @@
     "react-native-gridview": "^0.1.2",
     "react-native-hide-show-password-input": "^1.1.0",
     "react-native-image-picker": "1.1.0",
-    "react-native-instagram-share": "^0.0.8",
     "react-native-keyboard-spacer": "^0.4.1",
     "react-native-lightbox": "^0.8.1",
     "react-native-masonry-layout": "^1.0.6",
@@ -61,7 +59,6 @@
     "react-native-select-multiple": "^2.1.0",
     "react-native-share": "^3.5.0",
     "react-native-slider": "^0.11.0",
-    "react-native-social-share": "^1.6.5",
     "react-native-sortable-grid": "^2.0.0",
     "react-native-step-indicator": "^0.0.11",
     "react-native-super-grid": "^3.2.0",

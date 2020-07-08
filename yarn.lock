@@ -712,11 +712,6 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@invertase/react-native-apple-authentication@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@invertase/react-native-apple-authentication/-/react-native-apple-authentication-0.2.0.tgz#b1bda7aa449d24eefaf5fa1e5bf338a7a904dc0d"
-  integrity sha512-SdbLXfL3krsxd5hfsIGQIpgnQWEwJPx1TgVaNN2bs7K40O7oNP7GD1W80hsqvl7+akNIQHy5It+0Mcz3NPaUSQ==
-
 "@jest/console@^24.7.1", "@jest/console@^24.9.0":
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/@jest/console/-/console-24.9.0.tgz#79b1bc06fb74a8cfb01cbdedf945584b1b9707f0"
@@ -5758,11 +5753,6 @@ react-native-image-picker@1.1.0:
   resolved "https://registry.yarnpkg.com/react-native-image-picker/-/react-native-image-picker-1.1.0.tgz#c2a0523886edb4cf2cdc008ad0a71433142a4d53"
   integrity sha512-/KjHf4NNAjl6XM7FQuqvGDz1wB9sRdLf86+2yksLW/QTRR7CitX4TLCM8ZF9CX6Y0MsCTndkZia3zWE+nt/GiA==
 
-react-native-instagram-share@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/react-native-instagram-share/-/react-native-instagram-share-0.0.8.tgz#14312171e0f84dfc33496228c6671728191e96a4"
-  integrity sha1-FDEhceD4TfwzSWIoxmcXKBkelqQ=
-
 react-native-iphone-x-helper@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.2.1.tgz#645e2ffbbb49e80844bb4cbbe34a126fda1e6772"
@@ -5969,11 +5959,6 @@ react-native-slider@^0.11.0:
   integrity sha512-jV9K87eu9uWr0uJIyrSpBLnCKvVlOySC2wynq9TFCdV9oGgjt7Niq8Q1A8R8v+5GHsuBw/s8vEj1AAkkUi+u+w==
   dependencies:
     prop-types "^15.5.6"
-
-react-native-social-share@^1.6.5:
-  version "1.6.5"
-  resolved "https://registry.yarnpkg.com/react-native-social-share/-/react-native-social-share-1.6.5.tgz#c3c9cb0152efc3dfa0472c5f67d051540b505d9d"
-  integrity sha512-S61aHlAj9AelpHR4ZJ3w+42UFI5DkqP+hZLfx2/fY2By7QTn+nD0OHeEBrRKWYuabA+XAz8PSaeI9r2LZN8JWw==
 
 react-native-sortable-grid@^2.0.0:
   version "2.0.0"

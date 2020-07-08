@@ -296,7 +296,7 @@ export default class EditEvent extends React.Component {
         data: data,
         id: get(this.state, 'event_id','')
       }
-      console.log('Details==>>', Details)
+      // console.log('Details==>>', Details)
       this.props.updateEvent(Details)
     }
   }
@@ -308,7 +308,7 @@ export default class EditEvent extends React.Component {
     return (
       <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
       {isLoading ?
-        <ActivityIndicator animating = {isLoading} color = '#3b5261' size = "large" style = {styles.activityIndicator} />
+        <ActivityIndicator animating = {isLoading} color = '#3b5261' size = "small" style = {styles.activityIndicator} />
         :
         <ScrollView style={styles.container}>
           <Navbar 
@@ -340,7 +340,8 @@ export default class EditEvent extends React.Component {
                     onChangeText={text => this.onEventChange(text)}
                     value={this.state.eventName}
                   />
-                <View style={{ width: 125, paddingHorizontal: 5, marginRight: 15}}>
+                <View style={{ width: Platform.OS === 'android' ? 125 : 135,  marginRight: Platform.OS === 'android' ? 15 : 0, paddingHorizontal: 3}}>
+                {Platform.OS === 'android' ? 
                   <Picker
                     selectedValue={get(this.state, 'category', '')}
                     style={{ height: 50, width: 150 }}
@@ -350,17 +351,17 @@ export default class EditEvent extends React.Component {
                     <Picker.Item label="GROUP" value="GROUP" />
                     <Picker.Item label="BUSINESS" value="BUSINESS" />
                   </Picker>
-                </View>
-                {/* <View style={{ width: 125, paddingHorizontal: 5}}>
+                  :
                   <Dropdown
                     value={category}
                     selectedItemColor = '#000'
                     textColor = '#3293ed'
                     onChangeText={(item)=>this.onSelectCategory(item)}
                     data={categoryList}
-                    dropdownOffset={{ top: 10, left: 0 }}
+                    dropdownOffset={{ top: 10, left: 0}} 
                   />
-                </View> */}
+                }
+                </View>
                  {/* <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/> */}
               </View>
               {eventNameError && <Text style={AppStyles.error}>Please enter the event name</Text>}
@@ -375,14 +376,14 @@ export default class EditEvent extends React.Component {
                     textColor = '#000'
                     onChangeText={(item)=>this.selectGroupName(item)}
                     data={groupListName}
-                    fontSize={14}
+                    fontSize={16}
                     dropdownOffset={{ top: 0, left: 0 }}
                   />
                 </View>
               </View>
             }
             <View style={styles.colorContainer}>
-              <View style={{flexDirection:'row',justifyContent:'space-between',marginTop: 8}}>
+              <View style={{flexDirection:'row',justifyContent:'space-between',marginTop: 8 ,paddingLeft: 10}}>
                 <View>
                   <Text style={[styles.listTitle,{fontWeight:'700',top: 10 }]}>Default Fill colour</Text>
                 </View>
@@ -405,7 +406,7 @@ export default class EditEvent extends React.Component {
             <View style={[styles.selectGroupView,{marginTop: 10, borderBottomWidth:.3 }]}>
               <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <Text style={[styles.listTitle, {marginTop: 7}]}>Event Date</Text>
-                <Button mode="outlined" uppercase = {false}color = '#000' style={{marginLeft: 10 ,width: 120}}
+                <Button mode="outlined" uppercase = {false}color = '#000' style={{marginLeft: 10 ,width: 125 }}
                   onPress={()=>this.setState({isDatePickerVisible : true})}                 
                 >
                   {get(this.state,'eventDate','') !== '' ? moment(get(this.state,'eventDate','')).format('DD-MM-YYYY') : 'Date picker' }
@@ -429,7 +430,7 @@ export default class EditEvent extends React.Component {
               <View style={{flexDirection:'row',marginTop:8,justifyContent:'space-between'}}>
                 <View style={{flexDirection:'row'}} >               
                   <Text style={styles.timeText} >START TIME</Text>
-                  <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginHorizontal: .5 }}
+                  <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 122, marginHorizontal: .3 }}
                     onPress={()=>this.setState({isStartPickerVisible : true})}  
                     disabled ={get(this.state,'eventDate','') === '' ? true : false}               
                   >
@@ -507,16 +508,8 @@ export default class EditEvent extends React.Component {
                    <Image source={require('../../assets/icons/Arrow.png')} style={{height: 10,width: 10, marginTop: 6}}/>
                 </View> */}
                 {/* <View style={{ width: 125 }}>
-                  <Dropdown
-                    value={repeat}
-                    selectedItemColor = '#000'
-                    textColor = '#000'
-                    onChangeText={(item)=>this.onSelectRecurrence(item)}
-                    data={recurrence}
-                    fontSize={14}
-                    dropdownOffset={{ top: 0, left: 0 }}
-                  />
                 </View> */}
+                {Platform.OS === 'android' ? 
                   <Picker
                     selectedValue={repeat}
                     style={{ width: 140}}
@@ -526,6 +519,18 @@ export default class EditEvent extends React.Component {
                     <Picker.Item label="Weekly" value="Weekly" />
                     <Picker.Item label="Monthly" value="Monthly" />
                   </Picker>
+                  :
+                  <Dropdown
+                    value={repeat}
+                    selectedItemColor = '#000'
+                    textColor = '#000'
+                    onChangeText={(item)=>this.onSelectRecurrence(item)}
+                    data={recurrence}
+                    fontSize={16}
+                    dropdownOffset={{ top: 10, left: 0 }}
+                    containerStyle={{width:120}}
+                  />
+                }
               </View>
             </View>
             <View style={styles.selectGroupView}>
@@ -699,6 +704,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray', 
     borderBottomWidth: .6,
     height: 40,
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(12),
   },
   DropdownStyle: {
     height: 12, 
@@ -750,9 +756,10 @@ const styles = StyleSheet.create({
     marginRight: 60
   },
   timeText: {
-    marginTop: 10,
+    marginRight: 5,
+    marginTop: 12,
     color: '#939393',
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(10),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(10) : AppSizes.verticalScale(8),
     fontFamily: AppFonts.NRegular,
     letterSpacing: .2,
     fontWeight: '700'

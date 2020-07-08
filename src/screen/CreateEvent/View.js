@@ -32,7 +32,7 @@ export default class CreateEvent extends React.Component {
       memberList: [],
       groupList:[],
       groupListName: [],
-      defaultFillColor: 'Tusk',
+      defaultFillColor: '',
       eventDate: '',
       eventDate1: new Date(),
       startTime: '',
@@ -314,7 +314,7 @@ export default class CreateEvent extends React.Component {
         data: data,
         id: get(this.state, 'userId','')
       }
-      console.log('Details==>>', Details)
+      // console.log('Details==>>', Details)
       this.props.createEvent(Details)
     }
   }
@@ -364,6 +364,7 @@ export default class CreateEvent extends React.Component {
                   data={categoryList}
                   dropdownOffset={{ top: 10, left: 0 }}
                 /> */}
+              {Platform.OS === 'android' ? 
                 <Picker
                   selectedValue={category}
                   style={{ height: 50, width: 150 }}
@@ -372,7 +373,17 @@ export default class CreateEvent extends React.Component {
                   <Picker.Item label="PERSONAL" value="PERSONAL" />
                   <Picker.Item label="GROUP" value="GROUP" />
                   <Picker.Item label="BUSINESS" value="BUSINESS" />
-               </Picker>
+                </Picker>
+               :
+                <Dropdown
+                  value={category}
+                  selectedItemColor = '#000'
+                  textColor = '#3293ed'
+                  onChangeText={(item)=>this.onSelectCategory(item)}
+                  data={categoryList}
+                  dropdownOffset={{ top: 10, left: 0 }}
+                /> 
+              }
             </View>
             </View>
               {eventNameError && <Text style={AppStyles.error}>Please enter the event name</Text>}
@@ -398,7 +409,7 @@ export default class CreateEvent extends React.Component {
             <View style={styles.colorContainer}>
               <View style={{flexDirection:'row',justifyContent:'space-between', marginTop: 8}}>
                 <View>
-                  <Text style={[styles.listTitle,{fontWeight:'600',top: 10 }]}>Default Fill colour</Text>
+                  <Text style={[styles.listTitle,{fontWeight:'700',top: 10 ,marginLeft: 10 }]}>Default Fill colour</Text>
                 </View>
                 <View style={{flexDirection:'row'}}>
                   <View style={ [styles.roundColorView, {backgroundColor : defaultFillColor === 'White' ? '#ffffff' : defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
@@ -421,7 +432,7 @@ export default class CreateEvent extends React.Component {
             <View style={[styles.selectGroupView,{marginTop: 10}]}>
               <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <Text style={[styles.listTitle, {marginTop: 7}]}>Event Date</Text>
-                <Button mode="outlined" uppercase = {false}color = '#000' style={{marginLeft: 10 ,width: 120}}
+                <Button mode="outlined" uppercase = {false}color = '#000' style={{marginLeft: 10 ,width: 125}}
                   onPress={()=>this.setState({isDatePickerVisible : true})}                 
                 >
                   {get(this.state,'eventDate','') !== '' ? moment(get(this.state,'eventDate','')).format('DD-MM-YYYY') : 'Date picker' }
@@ -442,7 +453,7 @@ export default class CreateEvent extends React.Component {
               <View style={{flexDirection:'row', marginTop:8, justifyContent:'space-between'}}>
                 <View style={{flexDirection:'row'}} >               
                   <Text style={styles.timeText} >START TIME</Text>
-                  <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginHorizontal: .5 }}
+                  <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 122, marginHorizontal: .5 }}
                     onPress={()=>this.setState({isStartPickerVisible : true})}  
                     disabled ={get(this.state,'eventDate','') === '' ? true : false}               
                   >
@@ -464,7 +475,7 @@ export default class CreateEvent extends React.Component {
                 </View>
                 <View style={{flexDirection:'row'}}> 
                    <Text style={styles.timeText}>END TIME</Text>
-                   <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginRight: 5}}
+                   <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 122, marginRight: 5}}
                     onPress={()=>this.setState({isEndPickerVisible : true})} 
                     disabled ={get(this.state,'eventDate','') === '' ? true : false}                 
                   >
@@ -520,16 +531,8 @@ export default class CreateEvent extends React.Component {
                    <Image source={require('../../assets/icons/Arrow.png')} style={{height: 10,width: 10, marginTop: 6}}/>
                 </View> */}
                 {/* <View style={{ width: 125 }}>
-                  <Dropdown
-                    value={repeat}
-                    selectedItemColor = '#000'
-                    textColor = '#000'
-                    onChangeText={(item)=>this.onSelectRecurrence(item)}
-                    data={recurrence}
-                    fontSize={14}
-                    dropdownOffset={{ top: 0, left: 0 }}
-                  />
                </View> */}
+                {Platform.OS === 'android' ? 
                   <Picker
                     selectedValue={repeat}
                     style={{ width: 140}}
@@ -539,6 +542,18 @@ export default class CreateEvent extends React.Component {
                     <Picker.Item label="Weekly" value="Weekly" />
                     <Picker.Item label="Monthly" value="Monthly" />
                   </Picker>
+                  :
+                  <Dropdown
+                    value={repeat}
+                    selectedItemColor = '#000'
+                    textColor = '#000'
+                    onChangeText={(item)=>this.onSelectRecurrence(item)}
+                    data={recurrence}
+                    fontSize={16}
+                    dropdownOffset={{ top: 10, left: 0 }}
+                    containerStyle={{width:120}}
+                  />
+                }
               </View>
             </View>
             <View style={styles.selectGroupView}>
@@ -715,6 +730,7 @@ const styles = StyleSheet.create({
     borderColor: 'gray', 
     borderBottomWidth: .6,
     height: 40,
+	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(12),
   },
   DropdownStyle: {
     height: 12, 
