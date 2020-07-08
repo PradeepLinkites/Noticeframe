@@ -155,106 +155,100 @@ export default class EventScreen extends React.Component {
             </View>
           </View>
           {!isGridView ?
-          <View>
-          {size(getEventData) > 0 ?
-          <ScrollView>
-            {getEventData.map((data, ind)=>{
-              let date = moment(data.eventDate).format("DD MMM, YYYY")
-              let start_time = moment(data.startTime).format("h:mm A")
-              let end_time = moment(data.endTime).format("h:mm A")
-              return(
-                <TouchableOpacity 
-                  key={ind}
-                  onPress={()=> this.props.navigation.navigate('EventDetail',{id : data._id})}
-                  style={[styles.eventListView,{backgroundColor : data.defaultFillColor === 'White' ? '#ffffff' : data.defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : data.defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
-                      : data.defaultFillColor === 'Coral Candy' ? '#f5d5cb': data.defaultFillColor === 'Cruise' ? '#b5dce1': data.defaultFillColor === 'Swirl' ? '#d6cdc8': data.defaultFillColor === 'Tusk' ? '#d7e0b1': ''}]}>
-                  <View style={{flex:1}}>
-                    <Text style={styles.eventTitleText}>{data.eventName}</Text>
-                    <Text style={styles.eventDateText}>{date}</Text>
-                    <Text style={styles.eventDateText}>{start_time} to {end_time}</Text>
-                  </View>
-                  <View>
-                  <View style={styles.slideShowView}>
-                    <Text style={styles.slideShowText}>Show in SlideShow</Text>
-                    <SwitchComponent onChange = {this.toggleSwitch.bind(this, data._id, ind )} value = {data.showEventInSlideShow}/>
-                  </View>
-                  </View>
-                    <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent',{id : data._id})}>
-                      <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
-                    </TouchableOpacity>
-                  <TouchableOpacity style={styles.shareView} onPress={this.onShare.bind(this, data)}>
-                    <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
-                  </TouchableOpacity>
-                </TouchableOpacity>
-                )
-              })
-            }
-          </ScrollView>
-          :
-            <View style={{alignItems: 'center',marginTop: deviceHeight/5}}>
-              <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
-              <Text>No Events Created Yet Create One Now!</Text>
-            </View>
-          }
-          </View>
-          : 
-          <View>
-          {size(eventDetails) > 0 ?
+            size(getEventData) > 0 ?
             <ScrollView>
-              {eventDetails.map((data,ind) => {
+              {getEventData.map((data, ind)=>{
+                let date = moment(data.eventDate).format("DD MMM, YYYY")
+                let start_time = moment(data.startTime).format("h:mm A")
+                let end_time = moment(data.endTime).format("h:mm A")
                 return(
-                <View style={AppStyles.gridView} key={ind}>
-                  <Text style={styles.dateText}>{moment(data[0].eventDate).format("DD MMM YYYY")}</Text>
-                  <FlatGrid
-                    itemDimension={130}
-                    items={data}
-                    keyExtractor={(item, rowItemIndex) => rowItemIndex}
-                    renderItem={({ item, index }) => {
-                      let start_time = moment(item.startTime).format("h:mm A")
-                      let end_time = moment(item.endTime).format("h:mm A")  
-                      var diffInHours = Math.floor(Math.abs(new Date(item.startTime) - new Date()) / 36e5)
-                      let frameColor = '#ed1c24'
-                      if(red && diffInHours <= redHour){
-                        console.log('red')
-                        frameColor = '#ed1c24'
-                      }
-                      if(yellow &&  diffInHours >= 24 && diffInHours <= yellowHour){
-                        console.log('yellow')
-                        frameColor = '#ff9900'
-                      }
-                      if(green && diffInHours >= 72){
-                        console.log('green')
-                        frameColor = '#00a651'
-                      }    
-                      return(
-                        <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
-                          <Image source={require('../../assets/images/event_thumb1.png')} style={[AppStyles.itemContainer, {borderColor: frameColor}]}/>
-                            {get(item, 'showEventInSlideShow', false) && 
-                            <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow',{id : item._id})} style={AppStyles.playButton}>
-                              <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
-                            </TouchableOpacity>
-                            }
-                          <View style={AppStyles.eventBottomBar}>
-                            <Text style={AppStyles.eventNameText}>{item.eventName}</Text>
-                            <Text style={AppStyles.eventTimeText}>{start_time}  to  {end_time}</Text>
-                          </View>
-                        </TouchableOpacity>
-                      )}
-                    }
-                  />
-                </View>
-                )
-              })
+                  <TouchableOpacity 
+                    key={ind}
+                    onPress={()=> this.props.navigation.navigate('EventDetail',{id : data._id})}
+                    style={[styles.eventListView,{backgroundColor : data.defaultFillColor === 'White' ? '#ffffff' : data.defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : data.defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
+                        : data.defaultFillColor === 'Coral Candy' ? '#f5d5cb': data.defaultFillColor === 'Cruise' ? '#b5dce1': data.defaultFillColor === 'Swirl' ? '#d6cdc8': data.defaultFillColor === 'Tusk' ? '#d7e0b1': ''}]}>
+                    <View style={{flex:1}}>
+                      <Text style={styles.eventTitleText}>{data.eventName}</Text>
+                      <Text style={styles.eventDateText}>{date}</Text>
+                      <Text style={styles.eventDateText}>{start_time} to {end_time}</Text>
+                    </View>
+                    <View>
+                    <View style={styles.slideShowView}>
+                      <Text style={styles.slideShowText}>Show in SlideShow</Text>
+                      <SwitchComponent onChange = {this.toggleSwitch.bind(this, data._id, ind )} value = {data.showEventInSlideShow}/>
+                    </View>
+                    </View>
+                      <TouchableOpacity style={styles.editView} onPress={()=>this.props.navigation.navigate('EditEvent',{id : data._id})}>
+                        <Image source={require('../../assets/icons/Edit.png')} style={styles.imageStyle}/>
+                      </TouchableOpacity>
+                    <TouchableOpacity style={styles.shareView} onPress={this.onShare.bind(this, data)}>
+                      <Image source={require('../../assets/icons/Share.png')} style={styles.imageStyle}/>
+                    </TouchableOpacity>
+                  </TouchableOpacity>
+                  )
+                })
               }
             </ScrollView>
             :
-            <View style={{alignItems: 'center',marginTop: deviceHeight/5}}>
-              <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
+            <View style={{alignItems: 'center',marginTop: deviceHeight/4}}>
+              <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={styles.noEventImage}/>
               <Text>No Events Created Yet Create One Now!</Text>
             </View>
-            }
-          </View>
-        }
+            : 
+            size(eventDetails) > 0 ?
+              <ScrollView>
+                {eventDetails.map((data,ind) => {
+                  return(
+                  <View style={AppStyles.gridView} key={ind}>
+                    <Text style={styles.dateText}>{moment(data[0].eventDate).format("DD MMM YYYY")}</Text>
+                    <FlatGrid
+                      itemDimension={130}
+                      items={data}
+                      keyExtractor={(item, rowItemIndex) => rowItemIndex}
+                      renderItem={({ item, index }) => {
+                        let start_time = moment(item.startTime).format("h:mm A")
+                        let end_time = moment(item.endTime).format("h:mm A")  
+                        var diffInHours = Math.floor(Math.abs(new Date(item.startTime) - new Date()) / 36e5)
+                        let frameColor = '#ed1c24'
+                        if(red && diffInHours <= redHour){
+                          console.log('red')
+                          frameColor = '#ed1c24'
+                        }
+                        if(yellow &&  diffInHours >= 24 && diffInHours <= yellowHour){
+                          console.log('yellow')
+                          frameColor = '#ff9900'
+                        }
+                        if(green && diffInHours >= 72){
+                          console.log('green')
+                          frameColor = '#00a651'
+                        }    
+                        return(
+                          <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
+                            <Image source={require('../../assets/images/event_thumb1.png')} style={[AppStyles.itemContainer, {borderColor: frameColor}]}/>
+                              {get(item, 'showEventInSlideShow', false) && 
+                              <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow',{id : item._id})} style={AppStyles.playButton}>
+                                <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
+                              </TouchableOpacity>
+                              }
+                            <View style={AppStyles.eventBottomBar}>
+                              <Text style={AppStyles.eventNameText}>{item.eventName}</Text>
+                              <Text style={AppStyles.eventTimeText}>{start_time}  to  {end_time}</Text>
+                            </View>
+                          </TouchableOpacity>
+                        )}
+                      }
+                    />
+                  </View>
+                  )
+                })
+                }
+              </ScrollView>
+              :
+              <View style={{alignItems: 'center',marginTop: deviceHeight/4}}>
+                <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={styles.noEventImage}/>
+                <Text>No Events Created Yet Create One Now!</Text>
+              </View>
+          }
         </>
         }
         <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
@@ -323,5 +317,9 @@ const styles = StyleSheet.create({
     position: 'absolute',                                          
     bottom: Platform.OS === 'android' ? 22 : 32,                                                    
     right: Platform.OS === 'android' ? 26 : 15,  
+  },
+  noEventImage: {
+    height : Platform.OS === 'android' ? 100 : AppSizes.verticalScale(50),
+    width: Platform.OS === 'android' ? 100 : AppSizes.verticalScale(50),
   }
 })

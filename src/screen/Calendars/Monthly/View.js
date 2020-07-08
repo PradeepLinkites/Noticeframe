@@ -27,6 +27,9 @@ export default class Monthly extends React.Component {
 
   componentDidMount() {
     this.setState({ isLoading: true })
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.setState({ isModalVisible: false })
+    })
     AsyncStorage.getItem('@user')
     .then((user) => {
       const user1 = JSON.parse(user)
@@ -36,6 +39,10 @@ export default class Monthly extends React.Component {
         this.setState({userId: user1._id})
       }
     })
+  }
+
+  componentWillUnmount(){
+    this.focusListener.remove()
   }
 
   componentDidUpdate(prevProps, prevState) {

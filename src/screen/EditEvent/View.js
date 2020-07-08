@@ -336,7 +336,7 @@ export default class EditEvent extends React.Component {
                     style={styles.eventInputBox}
                     placeholder = "Event Name"
                     placeholderTextColor="#000"
-                    maxLength={40}
+                    maxLength={20}
                     onChangeText={text => this.onEventChange(text)}
                     value={this.state.eventName}
                   />
@@ -377,7 +377,7 @@ export default class EditEvent extends React.Component {
                     onChangeText={(item)=>this.selectGroupName(item)}
                     data={groupListName}
                     fontSize={16}
-                    dropdownOffset={{ top: 0, left: 0 }}
+                    dropdownOffset={{ top: 15, left: 0}} 
                   />
                 </View>
               </View>
@@ -406,7 +406,7 @@ export default class EditEvent extends React.Component {
             <View style={[styles.selectGroupView,{marginTop: 10, borderBottomWidth:.3 }]}>
               <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <Text style={[styles.listTitle, {marginTop: 7}]}>Event Date</Text>
-                <Button mode="outlined" uppercase = {false}color = '#000' style={{marginLeft: 10 ,width: 125 }}
+                <Button mode="outlined" uppercase = {false}color = '#000' style={{marginLeft: 10 ,width: 127 }}
                   onPress={()=>this.setState({isDatePickerVisible : true})}                 
                 >
                   {get(this.state,'eventDate','') !== '' ? moment(get(this.state,'eventDate','')).format('DD-MM-YYYY') : 'Date picker' }

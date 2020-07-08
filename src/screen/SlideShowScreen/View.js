@@ -85,7 +85,7 @@ export default class SlideShow extends React.Component {
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'SlideShow' ? 'NOTICE FRAME' : ''
     return (
-      <SafeAreaView style={[AppStyles.container, {backgroundColor:'#fff'}]}>
+      <SafeAreaView style={[AppStyles.container, {backgroundColor:'#fff',justifyContent:'center'}]}>
       {isLoading ?
         <ActivityIndicator color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
         :
@@ -146,7 +146,7 @@ export default class SlideShow extends React.Component {
           </ScrollView>   
           : 
           <View style={{justifyContent: 'center',alignItems: 'center',flex: 1,backgroundColor:'#fff', height: deviceHeight}}>
-            <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
+            <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={styles.imageStyle}/>
             <Text>No Events Created Yet Create One Now!</Text>
           </View>
           }
@@ -221,6 +221,10 @@ const styles = StyleSheet.create({
     letterSpacing: .2,
     color: '#fff'
   },
+  imageStyle: {
+    height : Platform.OS === 'android' ? 100 : AppSizes.verticalScale(50),
+    width: Platform.OS === 'android' ? 100 : AppSizes.verticalScale(50),
+  }
 })
 
 

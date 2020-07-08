@@ -200,8 +200,8 @@ export default {
   itemContainer: {
     borderRadius: 22,
     borderWidth: 4,
-    height: Platform.OS === 'android' ? Sizes.verticalScale(140) : Sizes.verticalScale(130),
-    width:  Platform.OS === 'android' ? Sizes.verticalScale(140) : Sizes.verticalScale(130),
+    height: Platform.OS === 'android' ? Sizes.verticalScale(140) : Sizes.verticalScale(120),
+    width:  Platform.OS === 'android' ? Sizes.verticalScale(140) : Sizes.verticalScale(120),
     marginBottom: 2
   },
   playButton: {
@@ -210,7 +210,7 @@ export default {
     right: Platform.OS === 'android' ? 35 : 30,
   },
   eventBottomBar:{
-    width: Platform.OS === 'android' ? Sizes.verticalScale(135) : Sizes.verticalScale(130),
+    width: Platform.OS === 'android' ? Sizes.verticalScale(135) : Sizes.verticalScale(115),
     position:'absolute',
     bottom : 5,
     left: 4,

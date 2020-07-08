@@ -61,6 +61,7 @@ export default class CreateEvent extends React.Component {
       createEventMessage: '',
       isLoading: false,
       eventNameError :false,
+      selectColorError: false,
       notesError: false,
       eventDateError: false,
       startTimeError: false,
@@ -273,6 +274,10 @@ export default class CreateEvent extends React.Component {
       error = false
       this.setState({ eventDateError: true })
     } 
+    if (get(this.state,'defaultFillColor','') === '') {
+      error = false
+      this.setState({ selectColorError: true })
+    } 
     if (get(this.state,'startTime','') === '') {
       error = false
       this.setState({ startTimeError: true })
@@ -348,44 +353,37 @@ export default class CreateEvent extends React.Component {
               <Text style={styles.listTitle}>Event Name</Text>
               <View style={{ flexDirection:'row', justifyContent:'space-between'}}>
                 <TextInput
-                  style={styles.eventInputBox}
-                  placeholder = "Event Name"
-                  placeholderTextColor="#000"
-                  maxLength={40}
-                  onChangeText={text => this.onEventChange(text)}
-                  value={this.state.eventName}
+                    style={styles.eventInputBox}
+                    placeholder = "Event Name"
+                    placeholderTextColor="#000"
+                    maxLength={20}
+                    onChangeText={text => this.onEventChange(text)}
+                    value={this.state.eventName}
                   />
-              <View style={{ width: 125, paddingHorizontal: 5, marginRight: 15}}>
-                {/* <Dropdown
-                  value={category}
-                  selectedItemColor = '#000'
-                  textColor = '#3293ed'
-                  onChangeText={(item)=>this.onSelectCategory(item)}
-                  data={categoryList}
-                  dropdownOffset={{ top: 10, left: 0 }}
-                /> */}
-              {Platform.OS === 'android' ? 
-                <Picker
-                  selectedValue={category}
-                  style={{ height: 50, width: 150 }}
-                  onValueChange={(itemValue, itemIndex) => this.onSelectCategory(itemValue)}
-                >
-                  <Picker.Item label="PERSONAL" value="PERSONAL" />
-                  <Picker.Item label="GROUP" value="GROUP" />
-                  <Picker.Item label="BUSINESS" value="BUSINESS" />
-                </Picker>
-               :
-                <Dropdown
-                  value={category}
-                  selectedItemColor = '#000'
-                  textColor = '#3293ed'
-                  onChangeText={(item)=>this.onSelectCategory(item)}
-                  data={categoryList}
-                  dropdownOffset={{ top: 10, left: 0 }}
-                /> 
-              }
-            </View>
-            </View>
+                <View style={{ width: Platform.OS === 'android' ? 125 : 135,  marginRight: Platform.OS === 'android' ? 15 : 0, paddingHorizontal: 3}}>
+                {Platform.OS === 'android' ? 
+                  <Picker
+                    selectedValue={get(this.state, 'category', '')}
+                    style={{ height: 50, width: 150 }}
+                    onValueChange={(itemValue, itemIndex) => this.onSelectCategory(itemValue)}
+                  >
+                    <Picker.Item label="PERSONAL" value="PERSONAL" />
+                    <Picker.Item label="GROUP" value="GROUP" />
+                    <Picker.Item label="BUSINESS" value="BUSINESS" />
+                  </Picker>
+                  :
+                  <Dropdown
+                    value={category}
+                    selectedItemColor = '#000'
+                    textColor = '#3293ed'
+                    onChangeText={(item)=>this.onSelectCategory(item)}
+                    data={categoryList}
+                    dropdownOffset={{ top: 13, left: 0}} 
+                  />
+                }
+                </View>
+                 {/* <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/> */}
+              </View>
               {eventNameError && <Text style={AppStyles.error}>Please enter the event name</Text>}
             </View>
               {category === 'GROUP' &&
@@ -428,11 +426,12 @@ export default class CreateEvent extends React.Component {
                  {/* <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.colorDropdownStyle}/> */}
                 </View>
               </View>
+              {this.state.selectColorError && <Text style={[AppStyles.error,{marginLeft: 10 }]}>Please select the color</Text>}
             </View>
             <View style={[styles.selectGroupView,{marginTop: 10}]}>
               <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <Text style={[styles.listTitle, {marginTop: 7}]}>Event Date</Text>
-                <Button mode="outlined" uppercase = {false}color = '#000' style={{marginLeft: 10 ,width: 125}}
+                <Button mode="outlined" uppercase = {false}color = '#000' style={{marginLeft: 10 ,width: 127}}
                   onPress={()=>this.setState({isDatePickerVisible : true})}                 
                 >
                   {get(this.state,'eventDate','') !== '' ? moment(get(this.state,'eventDate','')).format('DD-MM-YYYY') : 'Date picker' }

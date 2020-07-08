@@ -151,8 +151,8 @@ export default class Daily extends React.Component {
               return(
                 <View key={i.toString()} style={styles.day}>
                   <View style={styles.dayLabel}>                   
-                    <Text style={[styles.monthDateText, { color: '#000' }]}>{weekdayToAdd.format('M/D').toString()}</Text>
-                    <Text style={[styles.dayText, { color: '#000' }]}>{weekdayToAdd.format('ddd').toString()}</Text>
+                    <Text style={[styles.monthDateText, { color: '#ff6600' }]}>{weekdayToAdd.format('M/D').toString()}</Text>
+                    <Text style={[styles.dayText, { color: '#ff6600' }]}>{weekdayToAdd.format('ddd').toString()}</Text>
                   </View>
                   {eventViews.length === 0 ?
                     <TouchableOpacity onPress={()=>this.props.navigation.navigate('CreateEvent')} style={{backgroundColor:'#fff', justifyContent:'center', alignItems: 'center', flex: 1,paddingVertical:22}}>

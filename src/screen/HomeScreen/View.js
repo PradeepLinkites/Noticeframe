@@ -78,51 +78,48 @@ export default class HomeScreen extends React.Component {
         {isLoading ?
         <ActivityIndicator animating = {isLoading} color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
         :
-        <View style={{paddingLeft: 25 }}>
-          {size(getEventData) > 0 ?
-            <ScrollView>
-              <Text style={styles.text}>Recent Events</Text>
-                <FlatGrid
-                  itemDimension={130}
-                  items={getEventData}
-                  renderItem={({ item, index }) => {
-                    let start_time = moment(item.startTime).format("h:mm A")
-                    let end_time = moment(item.endTime).format("h:mm A")
-                    var diffInHours = Math.floor(Math.abs(new Date(item.startTime) - new Date()) / 36e5)
-                    let frameColor = '#ed1c24'
-                    if(red && diffInHours <= redHour){
-                      frameColor = '#ed1c24'
-                    }
-                    if(yellow &&  diffInHours >= 24 && diffInHours <= yellowHour){
-                      frameColor = '#ff9900'
-                    }
-                    if(green && diffInHours >= 72){
-                      frameColor = '#00a651'
-                    }         
-                    return(
-                    <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
+        size(getEventData) > 0 ?
+          <View style={{paddingLeft: 25, flex: 1}}>
+            <Text style={styles.text}>Recent Events</Text>
+              <FlatGrid
+                itemDimension={120}
+                items={getEventData}
+                renderItem={({ item, index }) => {
+                  let start_time = moment(item.startTime).format("h:mm A")
+                  let end_time = moment(item.endTime).format("h:mm A")
+                  var diffInHours = Math.floor(Math.abs(new Date(item.startTime) - new Date()) / 36e5)
+                  let frameColor = '#ed1c24'
+                  if(red && diffInHours <= redHour){
+                    frameColor = '#ed1c24'
+                  }
+                  if(yellow &&  diffInHours >= 24 && diffInHours <= yellowHour){
+                    frameColor = '#ff9900'
+                  }
+                  if(green && diffInHours >= 72){
+                    frameColor = '#00a651'
+                  }         
+                  return(
+                    <TouchableOpacity onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
                       <Image source={require('../../assets/images/event_thumb1.png')} style={[AppStyles.itemContainer, {borderColor: frameColor}]}/>
                       {get(item, 'showEventInSlideShow', false) && 
                         <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow',{id : item._id})} style={AppStyles.playButton}>
                           <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
                         </TouchableOpacity>
                       }
-                        <TouchableOpacity style={AppStyles.eventBottomBar}>
-                          <Text style={AppStyles.eventNameText}>{item.eventName}</Text>
-                          <Text style={AppStyles.eventTimeText}>{start_time} to {end_time}</Text>
-                        </TouchableOpacity>
+                      <TouchableOpacity style={AppStyles.eventBottomBar}>
+                        <Text style={AppStyles.eventNameText}>{item.eventName}</Text>
+                        <Text style={AppStyles.eventTimeText}>{start_time} to {end_time}</Text>
+                      </TouchableOpacity>
                     </TouchableOpacity>
                   )}
-                  }
-                />
-            </ScrollView>
-            :
-            <View style={{alignItems: 'center', marginTop: deviceHeight/4 }}>
-              <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={{ height: 100, width: 100 }}/>
-              <Text>Welcome to Notice Frame Please Create Event .</Text>
-            </View>
-            }
-        </View>
+                }
+              />
+          </View>
+          :
+          <View style={{alignItems: 'center', justifyContent:'center', flex: 1 }}>
+            <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={styles.imageStyle}/>
+            <Text>Welcome to Notice Frame Please Create Event .</Text>
+          </View>
         }
       </SafeAreaView>
     )
@@ -135,5 +132,9 @@ const styles = StyleSheet.create({
     marginTop: 15,
 	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
     fontWeight:'600'
+  },
+  imageStyle: {
+    height : Platform.OS === 'android' ? 100 : AppSizes.verticalScale(50),
+    width: Platform.OS === 'android' ? 100 : AppSizes.verticalScale(50),
   }
 })

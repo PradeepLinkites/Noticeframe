@@ -93,8 +93,7 @@ export default class Daily extends React.Component {
   render() {
     const { allEvents, isLoading } = this.state
     return (
-      <SafeAreaView style={AppStyles.container}>
-        <ScrollView style={styles.container}>
+      <SafeAreaView style={{flex:1}}>
         {allEvents.length > 0 && 
           <EventCalendar
             events={allEvents}
@@ -103,19 +102,20 @@ export default class Daily extends React.Component {
             initDate={moment().format('YYYY-MM-DD')}
             renderEvent={(event) => {
               return(
-                <TouchableOpacity 
-                  style={{flex: 1, width: width}} 
-                  onPress={this._eventTapped.bind(this, event.id )}
-                >
-                  <Text>{event.title}</Text>
-                  <Text>{event.summary}</Text>
-                  <Text>{event.start_time} - {event.end_time}</Text>
-                </TouchableOpacity>
+                <ScrollView style={styles.container}>
+                  <TouchableOpacity 
+                    style={{flex: 1, width: width, padding: 10}} 
+                    onPress={this._eventTapped.bind(this, event.id )}
+                  >
+                    {/* <Text>{event.title}</Text> */}
+                    <Text>{event.summary}</Text>
+                    <Text style={{marginTop:5}}>{event.start_time} - {event.end_time}</Text>
+                  </TouchableOpacity>
+                </ScrollView>
               )
             }}
           />
         }      
-       </ScrollView>
       </SafeAreaView>
     )
   }
