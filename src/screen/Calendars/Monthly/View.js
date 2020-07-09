@@ -121,7 +121,7 @@ export default class Monthly extends React.Component {
               borderWidth: .5,
               borderColor: 'gray',
               backgroundColor: calendarHeader === 'White' ? '#ffffff' : calendarHeader === 'Hawkes Blue' ? '#d5d6ea' : calendarHeader === 'Milk Punch' ? '#f4e3c9' 
-              : calendarHeader === 'Coral Candy' ? '#f5d5cb': calendarHeader === 'Cruise' ? '#b5dce1': calendarHeader === 'Swirl' ? '#d6cdc8': calendarHeader === 'Tusk' ? '#d7e0b1': ''
+              : calendarHeader === 'Coral Candy' ? '#f5d5cb': calendarHeader === 'Cruise' ? '#b5dce1': calendarHeader === 'Swirl' ? '#d6cdc8': calendarHeader === 'Tusk' ? '#d7e0b1': '#fff'
             }}
             current={new Date()}
             onDayPress={this.onDayPress.bind(this, dates)}

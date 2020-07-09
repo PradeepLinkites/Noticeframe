@@ -11,7 +11,7 @@ import sizes from '../../../theme/sizes';
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
-export default class Daily extends React.Component {
+export default class Weekly extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,23 +25,18 @@ export default class Daily extends React.Component {
     }
   }
 
-  onFocusFunction = () => {
-    this.setState({ isLoading: true })
-    AsyncStorage.getItem('@user')
-    .then((user) => {
-      const user1 = JSON.parse(user)
-      if(!isEmpty(user1)){
-        this.props.getSetting(user1._id)
-        this.props.getEventCalender(user1._id)
-        this.setState({userId: user1._id})
-      }
-    })
-  }
-  
   componentDidMount() {
     this.setState({ isLoading: true })
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
-      this.onFocusFunction()
+      AsyncStorage.getItem('@user')
+      .then((user) => {
+        const user1 = JSON.parse(user)
+        if(!isEmpty(user1)){
+          this.props.getSetting(user1._id)
+          this.props.getEventCalender(user1._id)
+          this.setState({userId: user1._id})
+        }
+      })
     })
   }
 
@@ -105,7 +100,9 @@ export default class Daily extends React.Component {
   }
 
   render() {
-    const { allEvents, isLoading } = this.state
+    const { allEvents, calendarHeader, calendarBody, isLoading } = this.state
+    let bodyColor = get(this.state,'calendarBody','') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarBody','') === 'Milk Punch' ? '#f4e3c9' 
+    : get(this.state,'calendarBody','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarBody','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarBody','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarBody','') === 'Tusk' ? '#d7e0b1': '#fff'
     return (
       <SafeAreaView style={AppStyles.container}>
         <ScrollView style={styles.container}>
@@ -127,8 +124,7 @@ export default class Daily extends React.Component {
               let seconds = parseInt(duration[0]) * 3600 + parseInt(duration[1]) * 60 + parseInt(duration[2])
               let endTime = moment(event.start).add(seconds, 'seconds').format('LT').toString()
                 return (
-                  <TouchableOpacity key={j} onPress={this._eventTapped.bind(this, event.id )}>
-                    <View style={styles.event}>
+                  <TouchableOpacity style={[styles.event,{backgroundColor: bodyColor}]} key={j} onPress={this._eventTapped.bind(this, event.id )}>
                       <View style={styles.eventDuration}>
                         <View style={styles.durationContainer}>
                           <View style={styles.durationDot} />
@@ -143,7 +139,6 @@ export default class Daily extends React.Component {
                       <View>
                         <Text numberOfLines={3} style={styles.eventText}>{event.note}</Text>
                       </View>
-                    </View>
                   </TouchableOpacity>
                 )
             }}
@@ -151,11 +146,11 @@ export default class Daily extends React.Component {
               return(
                 <View key={i.toString()} style={styles.day}>
                   <View style={styles.dayLabel}>                   
-                    <Text style={[styles.monthDateText, { color: '#ff6600' }]}>{weekdayToAdd.format('M/D').toString()}</Text>
-                    <Text style={[styles.dayText, { color: '#ff6600' }]}>{weekdayToAdd.format('ddd').toString()}</Text>
+                    <Text style={[styles.monthDateText, { color: '#000' }]}>{weekdayToAdd.format('MM/D').toString()}</Text>
+                    <Text style={[styles.dayText, { color: '#000' }]}>{weekdayToAdd.format('ddd').toString()}</Text>
                   </View>
                   {eventViews.length === 0 ?
-                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('CreateEvent')} style={{backgroundColor:'#fff', justifyContent:'center', alignItems: 'center', flex: 1,paddingVertical:22}}>
+                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('CreateEvent')} style={{backgroundColor:bodyColor, justifyContent:'center', alignItems: 'center', flex: 1,paddingVertical:22}}>
                       <Image source={require('../../../assets/icons/Plus2.png')} style={styles.plusIcon}/>
                     </TouchableOpacity>
                     :
@@ -167,7 +162,40 @@ export default class Daily extends React.Component {
               )
             }}    
             onDayPress={(weekday, i) => this.showEvent(weekday)}
-            style={{ height: deviceHeight, width:'100%'}}
+            style={{
+              borderWidth: .5,
+              borderColor: 'gray',
+              backgroundColor: calendarHeader === 'White' ? '#ffffff' : calendarHeader === 'Hawkes Blue' ? '#d5d6ea' : calendarHeader === 'Milk Punch' ? '#f4e3c9' 
+              : calendarHeader === 'Coral Candy' ? '#f5d5cb': calendarHeader === 'Cruise' ? '#b5dce1': calendarHeader === 'Swirl' ? '#d6cdc8': calendarHeader === 'Tusk' ? '#d7e0b1': '#fff'
+            }}
+
+            // renderLastEvent={(event, j) => {
+            //   let startTime = moment(event.start).format('LT').toString()
+            //   let duration = event.duration.split(':')
+            //   let seconds = parseInt(duration[0]) * 3600 + parseInt(duration[1]) * 60 + parseInt(duration[2])
+            //   let endTime = moment(event.start).add(seconds, 'seconds').format('LT').toString()
+            //   return (
+            //     <View key={j}>
+            //       <View style={[styles.event,{backgroundColor: bodyColor}]}>
+            //         <View style={styles.eventDuration}>
+            //           <View style={styles.durationContainer}>
+            //             <View style={styles.durationDot} />
+            //             <Text style={styles.durationText}>{startTime}</Text>
+            //           </View>
+            //           <View style={{ paddingTop: 10 }} />
+            //           <View style={styles.durationContainer}>
+            //             <View style={styles.durationDot} />
+            //             <Text style={styles.durationText}>{endTime}</Text>
+            //           </View>
+            //           <View style={styles.durationDotConnector} />
+            //         </View>
+            //         <View style={styles.eventNote}>
+            //           <Text style={styles.eventText}>{event.note}</Text>
+            //         </View>
+            //       </View>
+            //     </View>
+            //   )
+            // }}      
           /> 
          }
        </ScrollView>

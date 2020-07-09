@@ -29,11 +29,14 @@ const styles = StyleSheet.create({
     title: {
         color: '#000',
         fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14), 
-        fontWeight: '300',
+        fontWeight: '500',
         marginTop: 10
     },
     dayLableStyle: {
-        color: '#A2a2a2',fontSize: 14, marginTop: Platform.OS === 'android' ? 10 : 15
+        fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12), 
+        color: '#000',
+        marginTop: 15,
+        marginBottom: 10,
     },
     monthDateText: {
         fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12), 
@@ -43,12 +46,13 @@ const styles = StyleSheet.create({
         backgroundColor:'#e2e9f6'
     },
     event: {
-        backgroundColor:'#fff',
+        // backgroundColor:'#fff',
         flex: 1,
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 10
+        padding: 10,
+        borderBottomWidth: .3
     },
     eventDuration: {
         width: '30%',
@@ -61,20 +65,20 @@ const styles = StyleSheet.create({
     durationDot: {
         width: 4,
         height: 4,
-        backgroundColor: 'grey',
+        backgroundColor: '#000',
         marginRight: 5,
         alignSelf: 'center',
         borderRadius: 4/2,
     },
     durationDotConnector: {
         height: 20,
-        borderLeftColor: 'grey',
+        borderLeftColor: '#000',
         borderLeftWidth: StyleSheet.hairlineWidth,
         position: 'absolute',
         left: 2
     },
     durationText: {
-        color: 'grey',
+        color: '#000',
         fontSize: 12
     },
 });

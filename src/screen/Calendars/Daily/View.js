@@ -91,7 +91,9 @@ export default class Daily extends React.Component {
   }
 
   render() {
-    const { allEvents, isLoading } = this.state
+    const { allEvents, calendarBody, isLoading } = this.state
+    let bodyColor = get(this.state,'calendarBody','') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarBody','') === 'Milk Punch' ? '#f4e3c9' 
+    : get(this.state,'calendarBody','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarBody','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarBody','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarBody','') === 'Tusk' ? '#d7e0b1': '#fff'
     return (
       <SafeAreaView style={{flex:1}}>
         {allEvents.length > 0 && 
@@ -100,20 +102,28 @@ export default class Daily extends React.Component {
             scrollToFirst
             width={width}
             initDate={moment().format('YYYY-MM-DD')}
+            headerStyle={{backgroundColor : 'pink'}}
             renderEvent={(event) => {
               return(
                 <ScrollView style={styles.container}>
                   <TouchableOpacity 
-                    style={{flex: 1, width: width, padding: 10}} 
+                    style={{flex: 1, width: width, padding: 10, backgroundColor: bodyColor}} 
                     onPress={this._eventTapped.bind(this, event.id )}
                   >
                     <Text>{event.title}</Text>
-                    {/* <Text>{event.summary}</Text> */}
                     <Text style={{marginTop:5}}>{event.start_time} - {event.end_time}</Text>
                   </TouchableOpacity>
                 </ScrollView>
               )
             }}
+          //   style={{
+          //     container: {
+          //       backgroundColor: 'green',
+          //   },
+          //   event: {
+          //     backgroundColor: 'red',
+          //  }
+          //   }}
           />
         }      
       </SafeAreaView>
