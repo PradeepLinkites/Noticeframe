@@ -257,10 +257,12 @@ export default class CreateEvent extends React.Component {
     let error = true
     this.setState({
       eventNameError: false,
+      selectColorError:false,
       notesError: false,
       eventDateError: false,
       startTimeError: false,
       endTimeError: false
+
     })
     if (eventName.trim() === '') {
       error = false
@@ -348,7 +350,7 @@ export default class CreateEvent extends React.Component {
                 :
                 <Image style={styles.avatar} source={this.state.eventPicture} />
               }
-            </View>
+            </View> 
             <View style={styles.eventContainer}>
               <Text style={styles.listTitle}>Event Name</Text>
               <View style={{ flexDirection:'row', justifyContent:'space-between'}}>
@@ -473,7 +475,7 @@ export default class CreateEvent extends React.Component {
                   />
                 </View>
                 <View style={{flexDirection:'row'}}> 
-                   <Text style={styles.timeText}>END TIME</Text>
+                   <Text style={[styles.timeText,{marginLeft: 2}]}>END TIME</Text>
                    <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 122, marginRight: 5}}
                     onPress={()=>this.setState({isEndPickerVisible : true})} 
                     disabled ={get(this.state,'eventDate','') === '' ? true : false}                 

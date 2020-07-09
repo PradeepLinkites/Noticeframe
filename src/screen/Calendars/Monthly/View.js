@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
+import { ActivityIndicator, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import { get , isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
 import moment from 'moment'
@@ -21,7 +21,8 @@ export default class Monthly extends React.Component {
       calendarBody: '',
       calendarFont: '',
       isLoading: false,
-      userId: ''
+      userId: '',
+      // myColor:'red'
     }
   }
 
@@ -29,15 +30,14 @@ export default class Monthly extends React.Component {
     this.setState({ isLoading: true })
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.setState({ isModalVisible: false })
-    })
-    AsyncStorage.getItem('@user')
-    .then((user) => {
-      const user1 = JSON.parse(user)
-      if(!isEmpty(user1)){
-        this.props.getSetting(user1._id)
-        this.props.getEventCalender(user1._id)
-        this.setState({userId: user1._id})
-      }
+      AsyncStorage.getItem('@user')
+      .then((user) => {
+        const user1 = JSON.parse(user)
+        if(!isEmpty(user1)){
+          this.props.getEventCalender(user1._id)
+          this.setState({userId: user1._id})
+        }
+      })
     })
   }
 
@@ -53,9 +53,9 @@ export default class Monthly extends React.Component {
     if (this.props.getSettingPhase) {
       this.props.resetSettingPhase()
       this.setState({
-        calendarHeader: get(prevProps, 'getSettingData.Calendar.calendarHeader', 'default_header'),
-        calendarBody: get(prevProps, 'getSettingData.Calendar.calendarBody', 'default_body'),
-        calendarFont: get(prevProps, 'getSettingData.Calendar.calendarFont', 'default_body'),
+        calendarHeader: get(this.props, 'getSettingData.Calendar.calendarHeader', 'default_header'),
+        calendarBody: get(this.props, 'getSettingData.Calendar.calendarBody', 'default_body'),
+        calendarFont: get(this.props, 'getSettingData.Calendar.calendarFont', 'default_body'),
         isLoading: false
       })
     }
@@ -102,22 +102,34 @@ export default class Monthly extends React.Component {
   }
 
   render() {
-    const { eventDetails } = this.state
+    const { isLoading, eventDetails, currentDate, calendarHeader, calendarBody } = this.state
     let dates = {}
     eventDetails.forEach((val) => {
       dates[val.date] = { marked: true }  
     })
+    let bodyColor = get(this.state,'calendarBody','') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarBody','') === 'Milk Punch' ? '#f4e3c9' 
+    : get(this.state,'calendarBody','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarBody','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarBody','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarBody','') === 'Tusk' ? '#d7e0b1': '#fff'
     return (
-      <SafeAreaView style={AppStyles.container}>
+      <SafeAreaView style={{flex:1}}>
+        {isLoading ?
+        <ActivityIndicator animating = {isLoading} color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
+        :
         <ScrollView style={styles.container}>
           <Calendar
-            monthFormat={'dd MMM yyyy'}
-            style={styles.calendar}
+            // monthFormat={'dd MMM yyyy'}
+            style={{
+              borderWidth: .5,
+              borderColor: 'gray',
+              backgroundColor: calendarHeader === 'White' ? '#ffffff' : calendarHeader === 'Hawkes Blue' ? '#d5d6ea' : calendarHeader === 'Milk Punch' ? '#f4e3c9' 
+              : calendarHeader === 'Coral Candy' ? '#f5d5cb': calendarHeader === 'Cruise' ? '#b5dce1': calendarHeader === 'Swirl' ? '#d6cdc8': calendarHeader === 'Tusk' ? '#d7e0b1': ''
+            }}
             current={new Date()}
             onDayPress={this.onDayPress.bind(this, dates)}
             markedDates={dates}
             hideArrows={true}
             theme={{
+              calendarBackground: bodyColor,
+              selectedDayBackgroundColor: 'red',
               textSectionTitleColor: '#A2a2a2',
               todayTextColor: '#ff6600',
               dayTextColor: '#000',
@@ -125,7 +137,7 @@ export default class Monthly extends React.Component {
               dotColor: '#ff6600',
               monthTextColor: '#000',
               textDayFontWeight: '300',
-              textMonthFontWeight: '300',
+              textMonthFontWeight: '500',
               fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(18), 
               textMonthFontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14), 
               textDayHeaderFontSize: 14,
@@ -134,9 +146,14 @@ export default class Monthly extends React.Component {
                   marginTop: 6,
                   marginBottom: 10,
                   flexDirection: 'row',
-                  justifyContent: 'space-between'
-                }
-              }
+                  justifyContent: 'space-between',
+                  padding: 20
+                },
+                dayHeader: {
+                  fontSize:  Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(12), 
+                },
+              },
+              // calendarBackground: 'pink',
             }}
           />
           {/* <Modal isVisible={this.state.isModalVisible}>
@@ -173,11 +190,12 @@ export default class Monthly extends React.Component {
           {this.state.isModalVisible &&
             <View style={{paddingHorizontal: 20,marginTop: 20}}>
               <Text style={{ alignSelf:'center',fontSize: 18, marginVertical: 3, fontWeight: '700'}}>List of Events</Text>
+              <Text style={{ alignSelf:'center',fontSize: 18, marginVertical: 3, fontWeight: '300', color: '#A2a2a2'}}>{moment(currentDate).format('Do YYYY')}</Text>
               {size(get(this.state, 'eventDetails', [])) > 0 && eventDetails.map((item,ind) => {
                 if(item.date === this.state.currentDate){
                   return(
                   <TouchableOpacity onPress={this.onNavigate.bind(this, get(item, 'id', ''))} key = {ind}>
-                    <Card style={{backgroundColor:'#fff',marginBottom: 5 }}>
+                    <Card style={{backgroundColor : bodyColor ,marginVertical: 5}}>
                       <Card.Content>
                         <Title>{item.note}</Title>
                         <Paragraph>{item.eventDate}</Paragraph>
@@ -192,6 +210,7 @@ export default class Monthly extends React.Component {
             </View>  
           } 
         </ScrollView>
+        }
         <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
           <Image source={require('../../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
         </TouchableOpacity>

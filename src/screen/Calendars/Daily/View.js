@@ -107,8 +107,8 @@ export default class Daily extends React.Component {
                     style={{flex: 1, width: width, padding: 10}} 
                     onPress={this._eventTapped.bind(this, event.id )}
                   >
-                    {/* <Text>{event.title}</Text> */}
-                    <Text>{event.summary}</Text>
+                    <Text>{event.title}</Text>
+                    {/* <Text>{event.summary}</Text> */}
                     <Text style={{marginTop:5}}>{event.start_time} - {event.end_time}</Text>
                   </TouchableOpacity>
                 </ScrollView>

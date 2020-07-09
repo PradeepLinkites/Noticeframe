@@ -452,7 +452,7 @@ export default class EditEvent extends React.Component {
                   {/* <Text style={styles.selectedText}>{moment(get(this.state,'startTime','')).format("HH:mm A")}</Text> */}
                 </View>
                 <View style={{flexDirection:'row'}}> 
-                   <Text style={styles.timeText}>END TIME</Text>
+                   <Text style={[styles.timeText,{marginLeft: 2}]}>END TIME</Text>
                    <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 120, marginRight: 5}}
                     onPress={()=>this.setState({isEndPickerVisible : true})} 
                     disabled ={get(this.state,'eventDate','') === '' ? true : false}                 
