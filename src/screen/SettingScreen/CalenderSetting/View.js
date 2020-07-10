@@ -67,7 +67,6 @@ export default class CalendarSetting extends React.Component {
          }
        }
      }
-     console.log('data===>>', data)
      this.props.updateSetting(data)
     })
   }
@@ -109,7 +108,6 @@ export default class CalendarSetting extends React.Component {
         }
       }
     }
-    console.log('data===>>', data)
     this.props.updateSetting(data)
   }
 
@@ -120,7 +118,7 @@ export default class CalendarSetting extends React.Component {
     return (
       <SafeAreaView style={[AppStyles.container,{backgroundColor: '#fff'}]}>
         {isLoading ? 
-        <ActivityIndicator color = {'#3b5261'} size = "large" style = {AppStyles.activityIndicator} />
+        <ActivityIndicator color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
         :
         <ScrollView style={styles.container}>
           <Navbar 

@@ -2,15 +2,13 @@ import React from 'react'
 import {  Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import WeeklyCalendar from 'react-native-weekly-calendar';
-import styles from './styles'
+// import WeeklyCalendar from 'react-native-weekly-calendar';
+// import styles from './styles'
 import moment from 'moment'
 import AsyncStorage from '@react-native-community/async-storage'
 import { get , isEmpty, size } from 'lodash'
 import EventCalendar from 'react-native-events-calendar'
-const deviceWidth = Dimensions.get('window').width
-const deviceHeight = Dimensions.get('window').height
-let { width } = Dimensions.get('window')
+const { width, height } = Dimensions.get('window')
 
 export default class Daily extends React.Component {
   constructor(props) {
@@ -61,12 +59,9 @@ export default class Daily extends React.Component {
     if (event) {
       event.forEach((value, i) => {
         if(get(value, 'startTime', '') !== null){
-          var now  = moment(value.endTime).format("DD/MM/YYYY HH:mm:ss")
-          var then = moment(value.startTime).format("DD/MM/YYYY HH:mm:ss")
-          let duration = moment.utc(moment(now,"DD/MM/YYYY HH:mm:ss").diff(moment(then,"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss")
           calendarData.push({
-            start: moment(get(value, 'startTime', '')).format('YYYY-MM-DD hh:mm:ss'),
-            end: moment(get(value, 'endTime', '')).format('YYYY-MM-DD hh:mm:ss'),
+            start: moment(get(value, 'startTime', '')).format('YYYY-MM-DD HH:MM:SS'),
+            end: moment(get(value, 'endTime', '')).format('YYYY-MM-DD HH:MM:SS'),
             title: get(value, 'eventName', ''),
             summary:get(value, 'note', ''),
             date: moment(get(value, 'eventDate', '')).format('YYYY-MM-DD'),
@@ -101,13 +96,16 @@ export default class Daily extends React.Component {
             events={allEvents}
             scrollToFirst
             width={width}
+            // format12h={true}
             initDate={moment().format('YYYY-MM-DD')}
-            headerStyle={{backgroundColor : 'pink'}}
+            styles={{
+              backgroundColor:'red'
+            }}
             renderEvent={(event) => {
               return(
-                <ScrollView style={styles.container}>
+                <ScrollView>
                   <TouchableOpacity 
-                    style={{flex: 1, width: width, padding: 10, backgroundColor: bodyColor}} 
+                    style={{width: width, height: height, padding: 10, backgroundColor: bodyColor}} 
                     onPress={this._eventTapped.bind(this, event.id )}
                   >
                     <Text>{event.title}</Text>
@@ -116,14 +114,6 @@ export default class Daily extends React.Component {
                 </ScrollView>
               )
             }}
-          //   style={{
-          //     container: {
-          //       backgroundColor: 'green',
-          //   },
-          //   event: {
-          //     backgroundColor: 'red',
-          //  }
-          //   }}
           />
         }      
       </SafeAreaView>

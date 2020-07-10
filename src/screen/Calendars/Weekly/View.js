@@ -45,6 +45,7 @@ export default class Weekly extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    // console.log('props==>>>', this.props.getEventCalenderData)
     if (this.props.getEventCalenderPhase) {
       this.props.resetEventPhase()
       this.handleEvent(get(this.props, 'getEventCalenderData',[]))
@@ -66,11 +67,24 @@ export default class Weekly extends React.Component {
     if (event) {
       event.forEach((value, i) => {
         if(get(value, 'startTime', '') !== null){
-          var now  = moment(value.endTime).format("DD/MM/YYYY HH:mm:ss")
-          var then = moment(value.startTime).format("DD/MM/YYYY HH:mm:ss")
-          let duration = moment.utc(moment(now,"DD/MM/YYYY HH:mm:ss").diff(moment(then,"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss")
+          // var now  = moment(value.endTime).format("DD/MM/YYYY HH:MM:SS")
+          // var then = moment(value.startTime).format("DD/MM/YYYY HH:MM:SS")
+          // let duration = moment.utc(moment(now,"DD/MM/YYYY HH:MM:ss").diff(moment(then,"DD/MM/YYYY HH:MM:ss"))).format("HH:MM:ss")
+          // console.log('startTime====>>', get(value, 'startTime', ''))
+          // console.log('now====>>', now)
+          // console.log('then====>>', then)
+          // console.log('duration====>>', duration)
+
+          var d1 = new Date(get(value, 'startTime', ''))
+          var d2 = new Date(get(value, 'endTime', ''))
+          var date = new Date(d2-d1)
+          var hour = date.getUTCHours()
+          var min = date.getUTCMinutes()
+          var sec = date.getUTCSeconds()
+          console.log(hour + ":" + min + ":" + sec)
+          let duration = hour + ":" + min + ":" + sec
           calendarData.push({
-            start: moment(get(value, 'startTime', '')).format('YYYY-MM-DD hh:mm:ss'),
+            start: moment(get(value, 'startTime', '')).format('YYYY-MM-DD HH:mm:ss'),
             duration: duration,
             date: moment(get(value, 'eventDate', '')).format('YYYY-MM-DD'),
             startTime: moment(get(value, 'startTime', '')).format('hh:mm:ss A'),
@@ -82,7 +96,6 @@ export default class Weekly extends React.Component {
         }
       })
     }
-    console.log('calendarData===>>', calendarData)
     this.setState({
       allEvents: calendarData,
       isLoading: false
@@ -118,7 +131,6 @@ export default class Weekly extends React.Component {
             titleFormat='DD MMM YYYY'
             locale='en'
             renderEvent={(event, j, i) => {
-              let newDate = event.start.split(" ")[0]
               let startTime = moment(event.start).format('LT').toString()
               let duration = event.duration.split(':')
               let seconds = parseInt(duration[0]) * 3600 + parseInt(duration[1]) * 60 + parseInt(duration[2])

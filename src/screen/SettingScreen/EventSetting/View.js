@@ -64,7 +64,7 @@ export default class eventSetting extends React.Component {
     return (
       <SafeAreaView style={[styles.container,{backgroundColor: 'fff'}]}>
         {this.state.isLoading ? 
-          <ActivityIndicator color = {'#3b5261'} size = "large" style = {AppStyles.activityIndicator} />
+          <ActivityIndicator color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
           :
         <ScrollView style={styles.container}>
           <Navbar 

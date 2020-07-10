@@ -17,36 +17,6 @@ const data = [
     { label: 'OutLoook Calender' },
 ]
 
-// const items = [{
-//   id: '92iijs7yta',
-//   name: 'Event Name'
-// }, {
-//   id: 'a0s0a8ssbsd',
-//   name: 'Date'
-// }, {
-//   id: '16hbajsabsd',
-//   name: 'Start Time'
-// }, {
-//   id: 'nahs75a5sg',
-//   name: 'End Time '
-// }, {
-//   id: '667atsas',
-//   name: 'Note(if any)'
-// }, {
-//   id: 'hsyasajs',
-//   name: 'Recurrence(if any)'
-// }, {
-//   id: 'djsjudksjd',
-//   name: 'Contacts(attached to event)'
-// }, {
-//   id: 'sdhyaysdj',
-//   name: 'Reminder set'
-// }, {
-//   id: 'suudydjsjd',
-//   name: 'Location'
-//   }
-// ];
-
 export default class ImportSetting extends React.Component {
   constructor(props) {
     super(props)
@@ -153,7 +123,7 @@ export default class ImportSetting extends React.Component {
                   initValueTextStyle={[styles.text,{color:'#000'}]}
                   selectStyle={{borderColor: "black"}}
                   data={data}
-                  initValue={get(this.state, 'selectCalendar', [])}
+                  initValue="Select Calendar!"
                   onChange={(option) => this.onSelect(option.label)}
                 />
                 {/* <Image source={require('../../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/> */}
