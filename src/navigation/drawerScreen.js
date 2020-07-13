@@ -188,16 +188,42 @@ const drawerStacks = [
 	  fontSize: 32, //AppSizes.verticalScale(32),
 	  fontFamily: 'NunitoSans-Black',
 	  color: 'red' //AppColors.app.textColor
+	},
+	tickImageStyle:{
+		width: AppSizes.verticalScale(14),
+		height: AppSizes.verticalScale(14),
+		resizeMode: 'contain', 
+		marginRight: 15, 
+		marginTop: 2
 	}
   })
 
   const DrawerContent = ((props => {
 	const [value, setValue] = useState(false)
-	const [isSelected , handleSelected] = useState(false)
+	const [isSelected , selectValue] = useState('')
 	const handleToggleValue = () => {
 		const newValue = !value
-		setValue(newValue);
+		setValue(newValue)
 	}
+	const handleSelect1 = e => {
+		selectValue('Calendar')
+		props.navigation.navigate('Calendar')
+	}
+	const handleSelect2 = (e, name) => {
+		if(name === 'Daily'){
+			selectValue('Daily')
+			props.navigation.navigate('Daily')
+		}
+		if(name === 'Weekly'){
+			selectValue('Weekly')
+			props.navigation.navigate('Weekly')
+		}
+		if(name === 'Monthly'){
+			selectValue('Monthly')
+			props.navigation.navigate('Monthly')
+		}
+	}
+
 	let firstName = get(props, `screenProps.user.firstName`, 'Your Name here')
 	let lastName = get(props, `screenProps.user.lastName`, '')
 	return (
@@ -253,19 +279,23 @@ const drawerStacks = [
 								item === 'Calender List' 
 								?							
 								<TouchableOpacity key={ind} 
-									style={{justifyContent:'center', width:'100%',marginBottom:.5}}
-									onPress={()=>props.navigation.navigate('Calendar')}
+									style={{flexDirection:'row', justifyContent:'space-between', width:'100%',marginBottom:.5 }}
+									// onPress={()=>handleSelected({isSelected: 'Calendar'}), ()=>props.navigation.navigate('Calendar')}
+									onPress={handleSelect1}
 								>
 									<Text style={styles.calenderListText}>{item}</Text>
-									{props.navigation.state.routes[props.navigation.state.index] === item && <Image source={require('../assets/sidemenuAssets/Tick.png')} style={{right: 15, position:'absolute', height: 20, width: 20, resizeMode: 'contain' }} />} 
+									{isSelected ==='Calendar' && <Image source={require('../assets/sidemenuAssets/Tick.png')} style={styles.tickImageStyle} />}                   
+									{/* {props.navigation.state.routes[props.navigation.state.index] === item && <Image source={require('../assets/sidemenuAssets/Tick.png')} style={{right: 15, position:'absolute', height: 20, width: 20, resizeMode: 'contain' }} />}  */}
 								</TouchableOpacity>
 								:
 								<TouchableOpacity key={ind} 
-									style={{justifyContent:'center', width:'100%',marginBottom:.5}}
-									onPress={()=>props.navigation.navigate(item)}
+								   style={{flexDirection:'row', justifyContent:'space-between', width:'100%',marginBottom:.5 }}
+								// onPress={()=>props.navigation.navigate(item), () =>handleSelected(item)}
+								  onPress={(e)=>handleSelect2(e, item)}
 							    >
 								  <Text style={styles.calenderListText}>{item}</Text>
-								  {props.navigation.state.routes[props.navigation.state.index] === item && <Image source={require('../assets/sidemenuAssets/Tick.png')} style={{right: 15, position:'absolute', height: 20, width: 20, resizeMode: 'contain' }} />} 
+							      {isSelected === item && <Image source={require('../assets/sidemenuAssets/Tick.png')} style={styles.tickImageStyle} />}                   
+								  {/* {props.navigation.state.routes[props.navigation.state.index] === item && <Image source={require('../assets/sidemenuAssets/Tick.png')} style={{right: 15, position:'absolute', height: 20, width: 20, resizeMode: 'contain' }} />}  */}
 							    </TouchableOpacity>
 						   )})
 						}

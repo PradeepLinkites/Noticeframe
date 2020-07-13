@@ -1,12 +1,12 @@
 import React from 'react'
-import {ActivityIndicator, ScrollView, StyleSheet, Text, View, SafeAreaView, Image, Dimensions, TouchableOpacity } from 'react-native'
+import {Share, ActivityIndicator, ScrollView, StyleSheet, Text, View, SafeAreaView, Image, Dimensions, TouchableOpacity } from 'react-native'
 import { _, get, isEmpty , size} from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import { FlatGrid } from 'react-native-super-grid';
 import SwitchComponent from '../Common/Switch'
 import AsyncStorage from '@react-native-community/async-storage'
 import moment from "moment"
-import Share from "react-native-share"
+// import Share from "react-native-share"
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -118,22 +118,42 @@ export default class EventScreen extends React.Component {
     this.setState({ isGridView : !this.state.isGridView})
   }
 
-  onShare = async (data) => {
-    const shareOptions = {
-      title: 'Share file',
-      failOnCancel: false,
-      saveToFiles: true,
-    };
-    // If you want, you can use a try catch, to parse
-    // the share response. If the user cancels, etc.  
+  // onShare = async (data) => {
+  //   const shareOptions = {
+  //     title: 'Share file',
+  //     failOnCancel: false,
+  //     saveToFiles: true,
+  //   };
+  //   // If you want, you can use a try catch, to parse
+  //   // the share response. If the user cancels, etc.  
+  //   try {
+  //     const ShareResponse = await Share.open(shareOptions);
+  //     // setResult(JSON.stringify(ShareResponse, null, 2));
+  //   } catch (error) {
+  //     console.log('Error =>', error);
+  //     // setResult('error: '.concat(getErrorString(error)));
+  //   }
+  // }
+
+  onShare = async () => {
     try {
-      const ShareResponse = await Share.open(shareOptions);
-      // setResult(JSON.stringify(ShareResponse, null, 2));
+      const result = await Share.share({
+        message:
+          'React Native | A framework for building native apps using React',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
     } catch (error) {
-      console.log('Error =>', error);
-      // setResult('error: '.concat(getErrorString(error)));
+      alert(error.message);
     }
-  }
+  };
   
   render() {
     const { eventDetails, getEventData, isGridView, key, red, yellow, green, redHour, yellowHour, greenHour, isLoading } = this.state
