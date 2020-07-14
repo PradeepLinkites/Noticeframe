@@ -146,7 +146,7 @@ export default class SlideShow extends React.Component {
           </ScrollView>   
           : 
           <View style={{justifyContent: 'center',alignItems: 'center',flex: 1,backgroundColor:'#fff', height: deviceHeight}}>
-            <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={styles.imageStyle}/>
+            <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={AppStyles.noEventImageStyle}/>
             <Text>No Events Created Yet Create One Now!</Text>
           </View>
           }
@@ -221,10 +221,6 @@ const styles = StyleSheet.create({
     letterSpacing: .2,
     color: '#fff'
   },
-  imageStyle: {
-    height : Platform.OS === 'android' ? 100 : AppSizes.verticalScale(50),
-    width: Platform.OS === 'android' ? 100 : AppSizes.verticalScale(50),
-  }
 })
 
 

@@ -117,7 +117,7 @@ export default class HomeScreen extends React.Component {
           </View>
           :
           <View style={{alignItems: 'center', justifyContent:'center', flex: 1 }}>
-            <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={styles.imageStyle}/>
+            <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={AppStyles.noEventImageStyle}/>
             <Text>Welcome to Notice Frame Please Create Event .</Text>
           </View>
         }
@@ -133,8 +133,4 @@ const styles = StyleSheet.create({
 	  fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(14),
     fontWeight:'600'
   },
-  imageStyle: {
-    height : Platform.OS === 'android' ? 100 : AppSizes.verticalScale(50),
-    width: Platform.OS === 'android' ? 100 : AppSizes.verticalScale(50),
-  }
 })

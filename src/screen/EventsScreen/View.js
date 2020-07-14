@@ -211,7 +211,7 @@ export default class EventScreen extends React.Component {
             </ScrollView>
             :
             <View style={{alignItems: 'center',marginTop: deviceHeight/4}}>
-              <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={styles.noEventImage}/>
+              <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={AppStyles.noEventImageStyle}/>
               <Text>No Events Created Yet Create One Now!</Text>
             </View>
             : 
@@ -265,7 +265,7 @@ export default class EventScreen extends React.Component {
               </ScrollView>
               :
               <View style={{alignItems: 'center',marginTop: deviceHeight/4}}>
-                <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={styles.noEventImage}/>
+                <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={AppStyles.noEventImageStyle}/>
                 <Text>No Events Created Yet Create One Now!</Text>
               </View>
           }
@@ -338,8 +338,4 @@ const styles = StyleSheet.create({
     bottom: Platform.OS === 'android' ? 22 : 32,                                                    
     right: Platform.OS === 'android' ? 26 : 15,  
   },
-  noEventImage: {
-    height : Platform.OS === 'android' ? 100 : AppSizes.verticalScale(50),
-    width: Platform.OS === 'android' ? 100 : AppSizes.verticalScale(50),
-  }
 })

@@ -232,4 +232,8 @@ export default {
     fontWeight:'500',
     marginBottom: 2,
   },
+  noEventImageStyle: {
+    height : Platform.OS === 'android' ? Sizes.verticalScale(50) : Sizes.verticalScale(50),
+    width: Platform.OS === 'android' ? Sizes.verticalScale(50) : Sizes.verticalScale(50),
+  }
 };

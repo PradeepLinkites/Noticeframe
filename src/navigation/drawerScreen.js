@@ -241,7 +241,7 @@ const drawerStacks = [
 		<ScrollView
 		  contentContainerStyle={styles.drawerContentContainer}
 		  showsVerticalScrollIndicator={false}
-		  scrollEnabled={false}
+		  scrollEnabled={true}
 		>
 		  {drawerStacks.map((item, index )=> {
 			return(
