@@ -20,6 +20,7 @@
     "moment": "^2.25.3",
     "react": "16.9.0",
     "react-native": "0.61.5",
+    "react-native-big-calendar": "^0.4.0",
     "react-native-calendar-datepicker": "^1.2.2",
     "react-native-calendars": "^1.265.0",
     "react-native-checkbox": "^2.0.0",

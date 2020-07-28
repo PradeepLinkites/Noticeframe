@@ -1,7 +1,7 @@
 import React from 'react'
 import {ActivityIndicator, Platform, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, Animated, Easing, TouchableOpacity, TouchableWithoutFeedback } from 'react-native'
 import Navbar from '../../Common/commonNavbar'
-import { get , isEmpty, size } from 'lodash'
+import { _, get , isEmpty, size } from 'lodash'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
 import SwitchComponent from '../../Common/Switch'
@@ -34,7 +34,7 @@ export default class SlideShowSetting extends React.Component {
       personal : '',
       business : '',
       group : '',
-      numberOfEventsInSlideshow: 6,
+      numberOfEventsInSlideshow: 5,
       status: 0,
       isLoading: false,
       userId: '',
@@ -42,7 +42,7 @@ export default class SlideShowSetting extends React.Component {
     }
   }
 
-  componentDidMount() {
+  onFocusFunction = () => {
     this.setState({ isLoading: true })
     AsyncStorage.getItem('@user')
     .then((user) => {
@@ -54,8 +54,20 @@ export default class SlideShowSetting extends React.Component {
     })
   }
 
+  componentDidMount(){
+    this.setState({ isLoading: true })
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.onFocusFunction()
+    })
+  }
+
+  componentWillUnmount(){
+    this.focusListener.remove()
+  }
+
   componentDidUpdate(prevProps, prevState){
     if(this.props.getSettingPhase){
+      this.props.resetSettingPhase()
       this.setState({ 
         settingDetails: get(this.props,'getSettingData',''),
         eventName: get(this.props,'getSettingData.SlideShow.eventName',''),
@@ -69,15 +81,15 @@ export default class SlideShowSetting extends React.Component {
         personal : get(this.props,'getSettingData.SlideShow.personal',''),
         business : get(this.props,'getSettingData.SlideShow.business',''),
         group : get(this.props,'getSettingData.SlideShow.group',''),
-        numberOfEventsInSlideshow: get(this.props,'getSettingData.SlideShow.numberOfEventsInSlideshow',''),
+        numberOfEventsInSlideshow: get(this.props,'getSettingData.SlideShow.numberOfEventsInSlideshow', 5),
         isLoading: false
       })
     }
     if(this.props.updateSettingPhase){
+      this.props.resetSettingPhase()
       this.props.getSetting(this.state.userId)
       this.setState({ loading: false })
     }
-    this.props.resetSettingPhase()
   }
 
   onChange(name, value){
@@ -106,7 +118,7 @@ export default class SlideShowSetting extends React.Component {
       this.setState({ numberOfEventsInSlideshow: this.state.numberOfEventsInSlideshow - 1})
     }
   }
-  onChangePlus =()=>{
+  onChangePlus = () => {
     if(this.state.numberOfEventsInSlideshow < 15){
       this.setState({ numberOfEventsInSlideshow: this.state.numberOfEventsInSlideshow + 1 })
     }
@@ -159,9 +171,9 @@ export default class SlideShowSetting extends React.Component {
                 <ModalSelector
                   initValueTextStyle={{color:'#000',fontSize:14,marginTop:2}}
                   selectStyle={{borderColor: "transparent"}}
-                  style={{right:20}}
+                  style={{ right:20 }}
                   data={data}
-                  initValue={transitions}
+                  initValue={"Select transition"}
                   onChange={(option)=>this.setState({ transitions: option.label })} 
                   />
                 <Image source={require('../../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/>
@@ -174,7 +186,7 @@ export default class SlideShowSetting extends React.Component {
                 :
                 <TouchableOpacity onPress={this.onChangeMinus}><Image source={require('../../../assets/icons/-.png')} style={styles.image} /></TouchableOpacity>
                 }
-                  <View style={{justifyContent:'center'}}><Text style={styles.number}>{numberOfEventsInSlideshow}</Text></View>
+                  <View style={{justifyContent:'center'}}><Text style={styles.number}>{_.get(this.state, 'numberOfEventsInSlideshow','')}</Text></View>
                 {numberOfEventsInSlideshow == 15 ? <View style={{marginLeft: 55}} />
                 :
                 <TouchableOpacity onPress={this.onChangePlus}><Image source={require('../../../assets/icons/+.png')} style={styles.image} /></TouchableOpacity>
@@ -282,7 +294,7 @@ const styles = StyleSheet.create({
   headerText: {
     marginBottom: 10, 
     color:'#A2a2a2',
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(12),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(14),
   },
   settingText: {
     color:'#A2a2a2',
@@ -308,7 +320,7 @@ const styles = StyleSheet.create({
     paddingRight: 30,
     color:'#A2a2a2',
     marginTop: Platform.OS === 'android' ? 10 : 3,
-    fontSize: Platform.OS === 'android' ? 12 : 14,
+    fontSize: Platform.OS === 'android' ? 14 : 14,
 
   },
   image: {
