@@ -135,11 +135,17 @@ export default class EventScreen extends React.Component {
   //   }
   // }
 
-  onShare = async () => {
+  onShare = async (data) => {
+    let date = moment(data.eventDate).format("DD MMM, YYYY")
+    let start_time = moment(data.startTime).format("h:mm A")
+    let end_time = moment(data.endTime).format("h:mm A")
     try {
       const result = await Share.share({
         message:
-          'React Native | A framework for building native apps using React',
+        `Event Name: ${data.eventName}, Date: ${date}, Start Time: ${start_time}, End Time:${end_time}`,
+        title: 'Notice Frame Event',
+        // url: 'www.example.com',
+        subject: 'Notice Frame Event'
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -325,7 +331,7 @@ const styles = StyleSheet.create({
     marginTop:4, marginRight:8
   },
   imageStyle :{
-    height: Platform.OS === 'android' ? AppSizes.verticalScale(28) : AppSizes.verticalScale(22),  width: 30,
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(32) : AppSizes.verticalScale(22),  width: 30,
   },
   shareView: {
     marginTop:4, marginRight:8

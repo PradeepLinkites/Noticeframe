@@ -49,7 +49,7 @@ export default class EditEvent extends React.Component {
       setReminderAlarm: false,
       repeat: '',
       notes: '',
-      notesError: false,
+      // notesError: false,
       location: '',
       showNotesInSlideShow: false,
       showEventInSlideShow: false,
@@ -253,17 +253,17 @@ export default class EditEvent extends React.Component {
     var error = true
     this.setState({
       eventNameError: false,
-      notesError: false,
+      // notesError: false,
       isLoading: true
     })
     if(eventName.trim() === ''){
       error = false
       this.setState({ eventNameError: true })
     } 
-    if(notes.trim() === ''){
-      error = false
-      this.setState({ notesError: true })
-    } 
+    // if(notes.trim() === ''){
+    //   error = false
+    //   this.setState({ notesError: true })
+    // } 
     if(error){
     const data = {}
       data.eventPicture = eventPicture
@@ -427,7 +427,7 @@ export default class EditEvent extends React.Component {
             
             <View style={styles.eventContainer}>
               <Text style={styles.listTitle}>Event Time</Text>
-              <View style={{flexDirection:'row',marginTop:8,justifyContent:'space-between'}}>
+              <View style={{flexDirection:'row',marginTop:8,justifyContent:'space-between',marginRight: 5}}>
                 <View style={{flexDirection:'row'}} >               
                   <Text style={styles.timeText} >START TIME</Text>
                   <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 122, marginHorizontal: .3 }}
@@ -546,7 +546,7 @@ export default class EditEvent extends React.Component {
                     value={this.state.notes}
                   />
               </View>
-              {notesError && <Text style={AppStyles.error}>Please enter the notes</Text>}
+              {/* {notesError && <Text style={AppStyles.error}>Please enter the notes</Text>} */}
             </View>
             <View style={styles.selectGroupView}>
               <Text style={styles.listTitle}>Location</Text>
@@ -756,13 +756,12 @@ const styles = StyleSheet.create({
     marginRight: 60
   },
   timeText: {
-    marginRight: 5,
+    marginRight: 3,
     marginTop: 12,
     color: '#939393',
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(10) : AppSizes.verticalScale(8),
     fontFamily: AppFonts.NRegular,
-    letterSpacing: .2,
-    fontWeight: '700'
+    fontWeight: '600'
   },
   checkBoxContainer: {
     marginTop: 25,

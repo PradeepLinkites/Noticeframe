@@ -62,7 +62,7 @@ export default class CreateEvent extends React.Component {
       isLoading: false,
       eventNameError :false,
       selectColorError: false,
-      notesError: false,
+      // notesError: false,
       eventDateError: false,
       startTimeError: false,
       endTimeError: false,
@@ -258,7 +258,7 @@ export default class CreateEvent extends React.Component {
     this.setState({
       eventNameError: false,
       selectColorError:false,
-      notesError: false,
+      // notesError: false,
       eventDateError: false,
       startTimeError: false,
       endTimeError: false
@@ -268,10 +268,10 @@ export default class CreateEvent extends React.Component {
       error = false
       this.setState({ eventNameError: true })
     } 
-    if (notes.trim() === '') {
-      error = false
-      this.setState({ notesError: true })
-    } 
+    // if (notes.trim() === '') {
+    //   error = false
+    //   this.setState({ notesError: true })
+    // } 
     if (get(this.state,'eventDate','') === '') {
       error = false
       this.setState({ eventDateError: true })
@@ -451,7 +451,7 @@ export default class CreateEvent extends React.Component {
             </View>
             <View style={styles.eventContainer}>
               <Text style={styles.listTitle}>Event Time</Text>
-              <View style={{flexDirection:'row', marginTop:8, justifyContent:'space-between'}}>
+              <View style={{flexDirection:'row', marginTop:8, justifyContent:'space-between', marginRight: 5}}>
                 <View style={{flexDirection:'row'}} >               
                   <Text style={styles.timeText} >START TIME</Text>
                   <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 122, marginHorizontal: .5 }}
@@ -570,7 +570,7 @@ export default class CreateEvent extends React.Component {
                     value={this.state.notes}
                   />
               </View>
-              {notesError && <Text style={AppStyles.error}>Please enter the note</Text>}
+              {/* {notesError && <Text style={AppStyles.error}>Please enter the note</Text>} */}
             </View>
 
             <View style={styles.selectGroupView}>
@@ -783,13 +783,12 @@ const styles = StyleSheet.create({
     marginRight: 60
   },
   timeText: {
-    marginRight: 5,
+    marginRight: 3,
     marginTop: 12,
     color: '#939393',
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(10) : AppSizes.verticalScale(8),
     fontFamily: AppFonts.NRegular,
-    letterSpacing: .2,
-    fontWeight: '700'
+    fontWeight: '600'
   },
   checkBoxContainer: {
     marginTop: 25,
