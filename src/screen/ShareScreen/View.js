@@ -56,65 +56,68 @@ export default class ShareScreen extends React.Component {
   }
 
   onSocialShare(name){
-    // if( name === 'Twitter') {
-    //     shareOnTwitter({
-    //       'text':'Global democratized marketplace for art',
-    //       'link':'https://artboost.com/',
-    //       'imagelink':'https://artboost.com/apple-touch-icon-144x144.png',
-    //       //or use image
-    //       'image': 'artboost-icon',
-    //     },
-    //     (results) => {
-    //       console.log(results);
-    //     }
-    //   )
-    // }
-    // if( name === 'Facebook') {
-    //   shareOnFacebook({
-    //     'text':'Global democratized marketplace for art',
-    //     'link':'https://artboost.com/',
-    //     'imagelink':'https://artboost.com/apple-touch-icon-144x144.png',
-    //     //or use image
-    //     'image': 'artboost-icon',
-    //   },
-    //   (results) => {
-    //     console.log(results);
-    //   }
-    //  )
-    // }
-    if(name === 'Whatsapp'){
-      let msg = this.state.msg
-      let mobile = this.state.mobile_no
-      if(mobile){
-        if(msg){
-          let url = 'http://api.whatsapp.com/send?phone=91' + this.state.mobile_no
-          Linking.openURL(url).then((data) => {
-            console.log('WhatsApp Opened');
-          }).catch(() => {
-            alert('Make sure Whatsapp installed on your device')
-          })
-        }else{
-          alert('Please insert message to send')
-        }
-      }else{
-        alert('Please insert mobile no')
-      }
+    if( name === 'Facebook') {
+      //   shareOnFacebook({
+      //     'text':'Global democratized marketplace for art',
+      //     'link':'https://artboost.com/',
+      //     'imagelink':'https://artboost.com/apple-touch-icon-144x144.png',
+      //     //or use image
+      //     'image': 'artboost-icon',
+      //   },
+      //   (results) => {
+      //     console.log(results);
+      //   }
+      //  )
+        let url = 'https://www.facebook.com/'
+        Linking.openURL(url).then((data) => {
+          alert('Facebook Opened')
+        }).catch(() => {
+          alert('Something went wrong')
+        })
     }
+
     if(name === 'Instagram'){
-      const twitterUrlScheme = 'http://api.instagram://user?username=apple'
-        Linking.canOpenURL(twitterUrlScheme)
-        .then((supported) =>
-          Linking.openURL(
-              supported
-                  ? twitterUrlScheme
-                  : 'https://www.twitter.com/apple'
-              )
-          )
-        .catch((err) => console.error('An error occurred', err))
+      let url = 'https://www.instagram.com/'
+      Linking.openURL(url).then((data) => {
+        alert('Instagram Opened');
+      }).catch(() => {
+        alert('Something went wrong');
+      })
     }
+
+    if( name === 'Twitter') {
+      //   shareOnTwitter({
+      //     'text':'Global democratized marketplace for art',
+      //     'link':'https://artboost.com/',
+      //     'imagelink':'https://artboost.com/apple-touch-icon-144x144.png',
+      //     //or use image
+      //     'image': 'artboost-icon',
+      //   },
+      //   (results) => {
+      //     console.log(results);
+      //   }
+      // )
+      let url = 'https://www.twitter.com/'
+      Linking.openURL(url).then((data) => {
+        alert('Twitter Opened')
+      }).catch(() => {
+        alert('Something went wrong')
+      })  
+    }
+
+    if(name === 'Whatsapp'){
+      let url = 'https://api.whatsapp.com/'
+      Linking.openURL(url).then((data) => {
+        alert('Whatsapp Opened')
+      }).catch(() => {
+        alert('Something went wrong')
+      })
+    }
+
     if(name === 'Email'){
-      Linking.openURL('mailto://somethingemail@gmail.com&subject=abcdefg&body=body')
+      Linking.openURL('mailto:/')
     }
+    
   }
  
   render() {

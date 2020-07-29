@@ -142,7 +142,7 @@ export default class EventScreen extends React.Component {
     try {
       const result = await Share.share({
         message:
-        `Event Name: ${data.eventName}, Date: ${date}, Start Time: ${start_time}, End Time:${end_time}`,
+        `Event Name: ${data.eventName}, Date: ${date}, Start Time: ${start_time}, End Time: ${end_time}`,
         title: 'Notice Frame Event',
         // url: 'www.example.com',
         subject: 'Notice Frame Event'
