@@ -70,6 +70,7 @@ export default class EditEvent extends React.Component {
   }
 
   onFocusFunction = () => {
+    this.setState({ isLoading: true })
     const {state} = this.props.navigation
     AsyncStorage.getItem('@user')
     .then((user) => {
@@ -84,7 +85,6 @@ export default class EditEvent extends React.Component {
   }
   
   componentDidMount() {
-    this.setState({ isLoading: true })
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction()
     })
