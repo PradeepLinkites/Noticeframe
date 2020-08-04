@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 
 // Actions
 import { getUser, resetPhase } from '@redux/user/actions';
-import { getGroupListForShow, createEvent, getEvent, resetEventPhase } from '@redux/event/actions';
+import { getGroupListForShow, createEvent, getEvent, resetEventPhase, uploadImage } from '@redux/event/actions';
 import { getSetting , resetSettingPhase} from '@redux/setting/actions';
 
 
@@ -19,6 +19,8 @@ const mapStateToProps = state => ({
   getGroupListForShowData: state.event.getGroupListForShowData,
   createEventPhase: state.event.createEventPhase,
   createEventMessage: state.event.createEventMessage,
+  imageUploadPhase: state.event.imageUploadPhase,
+  imageUploadData: state.event.imageUploadData,
 
   getSettingPhase: state.setting.getSettingPhase,
   getSettingMessage: state.setting.getSettingMessage,
@@ -34,7 +36,7 @@ const mapDispatchToProps = {
   createEvent: createEvent,
   getEvent: getEvent,
   resetEventPhase: resetEventPhase,
-
+  uploadImage: uploadImage,
   getSetting: getSetting,
   resetSettingPhase: resetSettingPhase
 };

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Modal, TextInput, Platform, Alert, Picker, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
+import {Modal, TextInput,FlatList, Platform, Alert, Picker, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get, isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
@@ -14,6 +14,8 @@ import ModalSelector from 'react-native-modal-selector'
 import AsyncStorage from '@react-native-community/async-storage'
 import { Button } from 'react-native-paper';
 import sizes from '../../theme/sizes'
+import { RNS3 } from 'react-native-s3-upload';
+
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 let index = 0
@@ -72,6 +74,17 @@ export default class CreateEvent extends React.Component {
       redHour: 24,
       yellowHour: 48,
       greenHour: 72,
+      imageOpenModal: false,
+      imageUploadModal: false,
+      imageList: [],
+      // imageLibary: [
+      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event9.jpeg", index: 1 },
+      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event4.jpeg", index: 2 },
+      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/homerightbg.jpg", index: 3 },
+      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event10.jpeg", index: 4 },
+      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event3.jpeg", index: 5 },
+      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event6.jpeg", index: 6 },
+      // ],
     }
     this._initState = this.state 
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this)
@@ -82,6 +95,7 @@ export default class CreateEvent extends React.Component {
 
   onFocusFunction = () => {
     const {state} = this.props.navigation
+    this.setState({ isLoading: true, eventPicture: [], defaultFillColor: '' })
     AsyncStorage.getItem('@user')
     .then((user) => {
       const user1 = JSON.parse(user)
@@ -96,7 +110,6 @@ export default class CreateEvent extends React.Component {
   }
 
   componentDidMount(){
-    this.setState({ isLoading: true })
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction()
     })
@@ -111,7 +124,6 @@ export default class CreateEvent extends React.Component {
       this.props.resetEventPhase()
       this.setState({ isLoading: false , createEventMessage: this.props.createEventMessage })
       this.props.navigation.navigate('Home')
-      alert('Event Created Successfully')
       this._resetState()
       this.props.getEvent(get(this.state, 'userId', ''))
     }
@@ -211,7 +223,24 @@ export default class CreateEvent extends React.Component {
     this.setState({showEventInSlideShow: value})
   }
 
+  openImageModal(){
+    this.setState({ imageOpenModal: !this.state.imageOpenModal})
+  }
+
+  selectFolder(data){
+    this.setState({ imageUploadModal: !this.state.imageUploadModal, imageList: data.imageLibary })
+  }
+
+  onSelectImage(item){
+    let obj = {}
+    let newArray = []
+    obj.uri = item.imageUrl
+    newArray.push(obj)
+    this.setState({ imageUploadModal: false, imageOpenModal: false ,eventPicture: newArray})
+  }
+
   selectPhotoTapped() {
+    this.setState({ isLoading: true, imageOpenModal: false })
     const options = {
       quality: 1.0,
       maxWidth: 500,
@@ -219,6 +248,7 @@ export default class CreateEvent extends React.Component {
       storageOptions: {
         skipBackup: true,
       },
+      includeBase64:true
     }
     ImagePicker.showImagePicker(options, response => {
       if (response.didCancel) {
@@ -228,11 +258,33 @@ export default class CreateEvent extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        let source = {uri: response.uri}
-        this.setState({
-          eventPicture: source,
-        })
+        this.imageUpload(response)
       }
+    })
+  }
+
+  imageUpload(data){
+    const file = {
+      uri: data.uri,
+      name: "image.png",
+      type: "image/png"
+    }    
+    const options = {
+      keyPrefix: "",
+      bucket: "noticeframe",
+      region: "eu-west-2",
+      accessKey: "AKIA27YYELXRINJ7KB6U",
+      secretKey: "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",
+      successActionStatus: 201
+    }   
+    RNS3.put(file, options).then(response => {
+      if (response.status !== 201)
+        throw new Error("Failed to upload image to S3")
+        let obj = {}
+        let newArray = []
+        obj.uri = get(response.body, 'postResponse.location', '')
+        newArray.push(obj)
+        this.setState({ eventPicture: newArray, isLoading: false })
     })
   }
 
@@ -321,7 +373,6 @@ export default class CreateEvent extends React.Component {
         data: data,
         id: get(this.state, 'userId','')
       }
-      // console.log('Details==>>', Details)
       this.props.createEvent(Details)
     }
   }
@@ -340,16 +391,13 @@ export default class CreateEvent extends React.Component {
             routeKey={'CreateEvent'} 
           />        
             <View style={styles.topContainer}>
-              {size(get(this.state, 'eventPicture', [])) == 0 ?
-                <TouchableOpacity
-                  style={styles.addPictureButton}
-                  onPress={this.selectPhotoTapped.bind(this)}
-                >
-                  <Text style={styles.addPictureText}>Add Picture</Text>
-                </TouchableOpacity>
-                :
-                <Image style={styles.avatar} source={this.state.eventPicture} />
-              }
+             <Image style={styles.avatar} source={size(get(this.state,'eventPicture',[])) == 1 ? get(this.state,'eventPicture',[]): require('../../assets/images/placeholder-event.png')} />
+              <TouchableOpacity
+                style={styles.addPictureButton}
+                onPress={this.openImageModal.bind(this)}
+              >
+                <Text style={styles.addPictureText}>Add Picture</Text>
+              </TouchableOpacity>
             </View> 
             <View style={styles.eventContainer}>
               <Text style={styles.listTitle}>Event Name</Text>
@@ -672,6 +720,71 @@ export default class CreateEvent extends React.Component {
                 </View>
               </View>
             </Modal>
+
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={this.state.imageOpenModal}
+              onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+              }}
+              >
+              <View style={styles.centeredView}>
+                <View style={styles.imageUploadModal}>
+                  <View style={{padding: 20,flexDirection:'row',justifyContent:'space-between'}}>
+                    <Text style={[styles.cancelText,{color:'#000'}]}>Select Image</Text>
+                    <TouchableOpacity onPress={() =>this.setState({ imageOpenModal: false})}><Text>CANCEL</Text></TouchableOpacity>
+                  </View>
+                  <View style={{ height:.5, backgroundColor:'#A2a2a2'}} />
+                    <View style={{ paddingHorizontal: 20, paddingVertical: 50}}>
+                      <FlatList
+                        showsHorizontalScrollIndicator={false}
+                        data={folderLibary}
+                        horizontal={true}
+                        renderItem={({ item, index }) => {
+                          return(
+                            <TouchableOpacity style={{margin: 10}} onPress={this.selectFolder.bind(this, item)}>
+                            <Image
+                              style={{width: 90, height: 100 }}
+                              source={require('../../assets/sidemenuAssets/Folder.png')}
+                            />
+                            <Text>{item.name}</Text>
+                            </TouchableOpacity>
+                          )
+                        }}
+                      />
+                    </View>
+                    <TouchableOpacity style={{padding: 20,backgroundColor:'#3b5261',alignItems:'center' }} onPress={this.selectPhotoTapped.bind(this)}><Text style={[styles.cancelText,{color:'#fff'}]}>Choose Other</Text></TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+
+            <Modal
+              animationType="slide"
+              visible={this.state.imageUploadModal}
+              onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+              }}
+              >
+              <View style={{flex: 1 ,backgroundColor:'#fff'}}>
+                <View style={{backgroundColor:'#3b5261',alignItems:'center',justifyContent:'center',paddingVertical: 20}}>
+                  <Text style={[styles.cancelText,{color:'#fff'}]}>Select Images</Text>
+                </View>
+                <View style={styles.MainContainer}>
+                  <FlatList
+                    data={this.state.imageList}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity onPress={this.onSelectImage.bind(this, item)} style={{ flex: 1, flexDirection: 'column', margin: 1}}>
+                        <Image style={styles.imageThumbnail} source={{ uri: item.imageUrl }} />
+                      </TouchableOpacity>
+                    )}
+                    numColumns={3}
+                    keyExtractor={(item, index) => index.toString()}
+                  />
+                </View>
+              </View>
+            </Modal>
+
           </ScrollView>
         </SafeAreaView>
     )
@@ -684,9 +797,8 @@ const styles = StyleSheet.create({
     backgroundColor:'#e6e1de'
   },
   topContainer:{
-    height: deviceHeight *.22 ,
-    backgroundColor:'#A2a2a2',
-    justifyContent:'center',
+    height: deviceHeight *.28 ,
+    // backgroundColor:'#A2a2a2',
     alignItems:'center'
   },
   addPictureButton: {
@@ -696,13 +808,14 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     borderRadius:18,
     justifyContent:'center',
-    alignItems:'center'
+    alignItems:'center',
+    bottom: Platform.OS === 'android' ? AppSizes.verticalScale(60) : AppSizes.verticalScale(60),
   },
   addPictureText: {
     fontSize: 16,
   },
   avatar: {
-    height: deviceHeight *.22 ,
+    height: deviceHeight *.28 ,
     width: '100%',
   },
   listTitle: {
@@ -920,7 +1033,31 @@ const styles = StyleSheet.create({
   },
   colorModalView: {
     flexDirection: 'row',paddingVertical: 10 
-  }
+  },
+  imageUploadModal: {
+    width: '90%',
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  MainContainer: {
+    justifyContent: 'center',
+    flex: 1,
+    paddingTop: 30,
+  },
+
+  imageThumbnail: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(100) : AppSizes.verticalScale(100),
+  },
 })
 
 const categoryList = [{ value: 'GROUP' },{ value: 'PERSONAL' },{ value: 'BUSINESS' }]
@@ -958,3 +1095,184 @@ const colorItem = [
     component:<View style = {styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:'#d7e0b1'}]}/><Text style={styles.selectedText}>Tusk</Text></View> 
   },
 ]
+
+
+const folderLibary = [
+  { name: "Architecture and Engineering",
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Site%20Visit%202.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Site%20Visit%201.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/On%20Construction.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Fabricating.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Design%20Meeting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Coding%20or%20Price%20Matrix%20Meetig.jpg"},
+    ] 
+  },
+  { name: "Building and Grounds Cleaning and Maintenance", 
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Window%20Cleaning.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Tweaking.png"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Site%20Visit.png"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/site%20visit.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Site%20Clearance.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/On%20Construction.png"},
+    ] 
+  },
+  { name: "Business and Financial Operations Occupations",
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Team%20Meeting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Stocks%20or%20Sales%20Meeting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Review%20Meeting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Price%20Matrix%20Meeting.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Negotiations%20Meeting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Meeting.jpg"},    
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Meeting%202.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Investments%20Meeting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Interviewing.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Interviewing%202.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Finance%20Meeting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Finance%20Leadership%20Team%20Meeting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Contract%20Negotiation%20Meeting%201.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Brain%20Storming%20Meeting%203.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/1-2-1.jpg"},
+    ] 
+  },
+  { name: "Community and Social Services",
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Team%20Away%20Day.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Support%20or%20Contact%20by%20Phone.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Problem%20Solving.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/PPE%20Selection%20Meeting.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/In%20Maths%20Class.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Drugs%20Committee%20Meeting.jpg"},
+    ] 
+ },
+  { name: "Computer and Mathematical",
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Coding%20or%20Price%20Matrix%20Meeting.jpg"},
+    ] 
+  },
+  { name: "Education, Training, and Library",
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Training.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Team%20Meeting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Study%20Leave.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Study%20%26%20Training.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Lecturing.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Finance%20Leadership%20Team%20Meeting.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Away%20Day%202.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Away%20Day%201.jpg"},
+    ] 
+ },
+  { name: "Entertainment and Media",
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Stage%20Management.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Sound%20Testing.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Rehearsals.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Recording.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Photo%20Shoot.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Overseas.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/On%20Stage.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/On%20Interview.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Mixing.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/In%20Studio%20Filming.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/In%20Production.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Filming%20on%20Location.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Editing.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Creating.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Concert.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Concert%20Meeting.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Blogging.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/At%20Rock%20Concert.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/At%20Aquarium.jpg"},
+    ] 
+  },
+  { name: "Farming, Fishing, and Forestry",
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Wood%20cutting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Tree%20Felling.png"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Shepherding.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Shearing.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/On%20Dive.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Lambing.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Harvesting2.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Harvesting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Fishing2.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Fishing.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/At%20Market.jpg"},
+    ] 
+  },
+  { name: "Office and Administrative", 
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Typing_Dictation_Secretarial.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Filing.jpg"},
+    ] 
+  },
+  { name: "Healthcare",
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Ward%20Round3.png"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/ward%20round2.png"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Ward%20Round.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Vet%20in%20Theatres.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Pharmacist%20Drugs%20Round.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/On%20Induction.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Off%20Sick.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Midwife%20on%20Visits.png"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/In%20Theatre.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/In%20Laboratory.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/In%20Laboratory%202.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/In+Delivery+Suite.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/In%20Consultation.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Drugs%20Round.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Doctors%20Appointment.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Diagnostics%20Meeting.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Covid-19%20Meeting.jpg"},
+    ] 
+  },
+  { name: "Informal Meetings", 
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Roof%20Meeting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Lunch%20Meeting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Coffee%20Club%20Meeting.jpg"},
+  ] 
+ },
+  { name: "Legal",
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/In%20Court.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Conveyancing.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/At%20Court%20House.jpg"},
+    ]   
+  },
+  { name: "Sales & Retail", 
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Sales%20Strategy%20Meeting.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Presenting.png"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/In%20Consultation.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Forecasting%20Meeting.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Client%20Meeting.jpg"},
+    ] 
+  },
+  { name: "Staff Absence", 
+    imageLibary:[
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Study%20leave.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Sick%20leave.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Sick%20Leave%202.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Self-Isolating.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Self-Isolating%202.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Paternity%20Leave%203.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Paternity%20Leave%202.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Paternity%20Leave%201.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/On%20Training%20Course.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/On%20Holiday.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/On%20Annual%20Leave.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/On%20Annual%20Leave%203.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/On%20Annual%20Leave%202.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Maternity%20Leave.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Maternity%20Leave%202.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/In%20Hospital.jpg"},
+      { imageUrl:  "https://noticeframe.s3.eu-west-2.amazonaws.com/Carers%20Leave.jpg"},
+      { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/Bereavement%20Leave.jpg"},
+    ] 
+  },
+]
+

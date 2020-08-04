@@ -26,6 +26,8 @@ const initialState = {
   updateSlideShowMessage: '',
   createGroupPhase: false,
   createGroupMessage: '',
+  imageUploadPhase: '',
+  imageUploadData: {}
   // updateSettingPhase: false,
 };
 
@@ -145,6 +147,17 @@ export default function userReducer(state = initialState, action) {
           ...state,
           createGroupPhase: input.status,
           createGroupMessage: input.message,
+        };  
+      }
+    }
+
+    case 'IMAGE_UPLOAD': {
+      const input = action.data
+      if(input.status){
+        return {
+          ...state,
+          imageUploadPhase: input.status,
+          imageUploadData: input.data,
         };  
       }
     }

@@ -232,6 +232,7 @@ export default class EventScreen extends React.Component {
                       items={data}
                       keyExtractor={(item, rowItemIndex) => rowItemIndex}
                       renderItem={({ item, index }) => {
+                        let uri = get(item, 'eventPicture[0].uri', 'https://oilandgascouncil.com/wp-content/uploads/placeholder-event.png')
                         let start_time = moment(item.startTime).format("h:mm A")
                         let end_time = moment(item.endTime).format("h:mm A")  
                         var diffInHours = Math.floor(Math.abs(new Date(item.startTime) - new Date()) / 36e5)
@@ -250,7 +251,7 @@ export default class EventScreen extends React.Component {
                         }    
                         return(
                           <TouchableOpacity  onPress={()=> this.props.navigation.navigate('EventDetail',{id : item._id})}>
-                            <Image source={require('../../assets/images/event_thumb1.png')} style={[AppStyles.itemContainer, {borderColor: frameColor}]}/>
+                            <Image source={{ uri: uri }} style={[AppStyles.itemContainer, {borderColor: frameColor}]}/>
                               {get(item, 'showEventInSlideShow', false) && 
                               <TouchableOpacity onPress={()=> this.props.navigation.navigate('SlideShow',{id : item._id})} style={AppStyles.playButton}>
                                 <Image source={require('../../assets/icons/Play.png')} style={{height: 36, width: 36 }}/>
