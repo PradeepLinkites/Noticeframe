@@ -80,6 +80,7 @@ export default class EditEvent extends React.Component {
   }
 
   onFocusFunction = () => {
+    this.setState({ isLoading: true })
     const {state} = this.props.navigation
     this.setState({ isLoading: true, eventPicture: [] })
     AsyncStorage.getItem('@user')
