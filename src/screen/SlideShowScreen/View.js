@@ -109,9 +109,10 @@ export default class SlideShow extends React.Component {
               const date = moment(item.eventDate).format("DD MMM, YYYY")
               const start_time = moment(item.startTime).format("h:mm A")
               const end_time = moment(item.endTime).format("h:mm A")
+              let uri = get(item, 'eventPicture[0].uri', 'https://oilandgascouncil.com/wp-content/uploads/placeholder-event.png')
               return(
                 <FadeInView key={ind}>
-                  <Image source={avtarImage} style={styles.backgroundImage}/>
+                  <Image source={{ uri: uri }} style={styles.backgroundImage}/>
                   <View style={styles.BigEventContainer}>
                     <View style={[styles.eventView,{backgroundColor:'rgba(248, 247, 216, 0.2)'}]}>
                       <Text style={styles.eventTitleText}>{item.eventName}</Text>

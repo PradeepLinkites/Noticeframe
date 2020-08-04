@@ -101,7 +101,7 @@ export default class CreateEvent extends React.Component {
               routeKey={'EventDetail'} 
             />       
               <View style={styles.topContainer}>
-                <Image style={styles.avatar} source={require('../../assets/icons/Image_slideshow.png')} />
+                <Image style={styles.avatar} source={{ uri: get(getEventDetailData, 'eventPicture[0].uri', 'https://oilandgascouncil.com/wp-content/uploads/placeholder-event.png')}} />
                   <View style={styles.textWrapper}>
                     <Text style={styles.eventTitleText}>{get(getEventDetailData, 'eventName', '')}</Text>
                     <Text style={styles.eventDateText}>{date}</Text>

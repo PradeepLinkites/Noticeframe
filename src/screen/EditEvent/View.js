@@ -13,6 +13,7 @@ import moment from "moment"
 import ModalSelector from 'react-native-modal-selector'
 import AsyncStorage from '@react-native-community/async-storage'
 import { Button } from 'react-native-paper';
+import { RNS3 } from 'react-native-s3-upload';
 
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
@@ -65,14 +66,14 @@ export default class EditEvent extends React.Component {
       imageOpenModal: false,
       imageUploadModal: false,
       imageList: [],
-      imageLibary: [
-        { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event9.jpeg", index: 1 },
-        { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event4.jpeg", index: 2 },
-        { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/homerightbg.jpg", index: 3 },
-        { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event10.jpeg", index: 4 },
-        { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event3.jpeg", index: 5 },
-        { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event6.jpeg", index: 6 },
-      ],
+      // imageLibary: [
+      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event9.jpeg", index: 1 },
+      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event4.jpeg", index: 2 },
+      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/homerightbg.jpg", index: 3 },
+      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event10.jpeg", index: 4 },
+      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event3.jpeg", index: 5 },
+      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event6.jpeg", index: 6 },
+      // ],
     }
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this)
     this.onSelectCategory = this.onSelectCategory.bind(this)
@@ -117,7 +118,7 @@ export default class EditEvent extends React.Component {
     })
       this.setState({
         event_id: get(prevProps, 'getEventDetailData._id', ''),
-        // eventPicture: get(prevProps, 'getEventDetailData.eventPicture', []),
+        eventPicture: get(prevProps, 'getEventDetailData.eventPicture', []),
         eventName: get(prevProps, 'getEventDetailData.eventName', ''),
         memberList: get(prevProps, 'getEventDetailData.selectContacts', ''),
         texts: get(prevProps, 'getEventDetailData.texts', ''),
@@ -248,6 +249,7 @@ export default class EditEvent extends React.Component {
   }
 
   selectPhotoTapped() {
+    this.setState({ isLoading: true, imageOpenModal: false })
     const options = {
       quality: 1.0,
       maxWidth: 500,
@@ -265,12 +267,33 @@ export default class EditEvent extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        let source = {uri: response.uri};
-        this.setState({
-          eventPicture: source,
-          imageOpenModal: false
-        })
+        this.imageUpload(response)
       }
+    })
+  }
+
+  imageUpload(data){
+    const file = {
+      uri: data.uri,
+      name: "image.png",
+      type: "image/png"
+    }    
+    const options = {
+      keyPrefix: "",
+      bucket: "noticeframe",
+      region: "eu-west-2",
+      accessKey: "AKIA27YYELXRINJ7KB6U",
+      secretKey: "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",
+      successActionStatus: 201
+    }   
+    RNS3.put(file, options).then(response => {
+      if (response.status !== 201)
+        throw new Error("Failed to upload image to S3")
+        let obj = {}
+        let newArray = []
+        obj.uri = get(response.body, 'postResponse.location', '')
+        newArray.push(obj)
+        this.setState({ eventPicture: newArray, isLoading: false })
     })
   }
 
@@ -346,7 +369,7 @@ export default class EditEvent extends React.Component {
             routeKey={'EditEvent'} 
           />        
             <View style={styles.topContainer}>
-             <Image style={styles.avatar} source={size(get(this.state,'eventPicture',[])) == 1 ? get(this.state,'eventPicture',[]): ''} />
+             <Image style={styles.avatar} source={size(get(this.state,'eventPicture',[])) == 1 ? get(this.state,'eventPicture',[]): require('../../assets/images/placeholder-event.png')} />
               <TouchableOpacity
                 style={styles.addPictureButton}
                 onPress={this.openImageModal.bind(this)}
