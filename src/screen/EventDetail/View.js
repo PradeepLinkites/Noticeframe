@@ -198,8 +198,9 @@ const styles = StyleSheet.create({
     color: '#fff'
   },
   avatar: {
-    height: deviceHeight *.25 ,
+    height: deviceHeight *.28 ,
     width: '100%',
+    resizeMode: 'cover'
   },
   textWrapper: {
     position:'absolute', left:20, bottom: 10
@@ -269,7 +270,7 @@ const styles = StyleSheet.create({
   },
   imageStyle: {
     width: wp(9),
-    height: hp(5)
+    height: hp(6)
   },
   bottomContainer: {
     paddingTop: hp(2),

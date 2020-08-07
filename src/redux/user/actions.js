@@ -1,9 +1,10 @@
 import { cos } from "react-native-reanimated";
 import hostname  from '../../config'
-
+import Config from "react-native-config"
+const HOSTNAME = Config.API_URL
 
 export function createUser(user) {
-  return dispatch => { fetch(hostname + `/sign-up`, {
+  return dispatch => { fetch(HOSTNAME + `/sign-up`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -27,7 +28,7 @@ export function createUser(user) {
   }
  
   export function loginUser(user) {
-    return dispatch => { fetch( hostname + `/login`, {
+    return dispatch => { fetch( HOSTNAME + `/login`, {
       method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -51,7 +52,7 @@ export function createUser(user) {
   }
 
   export function forgotPassword(email) {
-    return dispatch => { fetch(hostname + `/post/sendLink/ForUpdatePassword`, {
+    return dispatch => { fetch(HOSTNAME + `/post/sendLink/ForUpdatePassword`, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -76,7 +77,7 @@ export function createUser(user) {
   }
 
   export function getUser(userId) {
-      return dispatch => { fetch( hostname + `/get/user/?id=${userId}`, {
+      return dispatch => { fetch( HOSTNAME + `/get/user/?id=${userId}`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -99,7 +100,7 @@ export function createUser(user) {
     }
 
     export function getUserListForShow() {
-      return dispatch => { fetch( hostname + `/get/userListForShow`, {
+      return dispatch => { fetch( HOSTNAME + `/get/userListForShow`, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',

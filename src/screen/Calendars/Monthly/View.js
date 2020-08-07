@@ -69,8 +69,8 @@ export default class Monthly extends React.Component {
           id: get(value, '_id', ''),
           date: moment(get(value, 'eventDate', '')).format('YYYY-MM-DD'),
           eventDate: moment(get(value, 'eventDate', '')).format('DD-MM-YYYY'),
-          startTime: moment(get(value, 'startTime', '')).format('h:mm A'),
-          endTime: moment(get(value, 'endTime', '')).format('h:mm A'),
+          startTime: moment(get(value, 'startTime', '')).format('hh:mm A'),
+          endTime: moment(get(value, 'endTime', '')).format('hh:mm A'),
           note: get(value, 'eventName', ''),
           hexColor: get(value, 'defaultFillColor', '')
         })
@@ -86,10 +86,10 @@ export default class Monthly extends React.Component {
     let eventDate = newDates.dateString
     this.state.eventDetails.map(item=> {
       if(item.date === eventDate){
-        this.setState({ isModalVisible: !this.state.isModalVisible ,currentDate : eventDate })
+        this.setState({ isModalVisible: !this.state.isModalVisible , currentDate : eventDate })
       }
     })
-    this.setState({ selectedDate: day.dateString })
+    // this.setState({ selectedDate: day.dateString })
   }
 
   toggleModal = () => {
@@ -97,9 +97,17 @@ export default class Monthly extends React.Component {
   }
 
   onNavigate = (id) => {
-    this.setState({isModalVisible: !this.state.isModalVisible})
+    this.setState({isModalVisible: false})
     this.props.navigation.navigate('EventDetail',{id : id})
   }
+
+  _renderArrow = () => {
+    this.setState({ isModalVisible : false })
+  }
+  subsMonth(){
+    subtractMonth()
+       this.setState({isModalVisible: false})
+   }
 
   render() {
     const { isLoading, eventDetails, currentDate, calendarHeader, calendarBody } = this.state
@@ -126,11 +134,16 @@ export default class Monthly extends React.Component {
             current={new Date()}
             onDayPress={this.onDayPress.bind(this, dates)}
             markedDates={dates}
-            hideArrows={true}
+            hideArrows={false}
+            hideExtraDays={true}
+            onPressArrowLeft={subtractMonth => subtractMonth()}
+            onPressArrowRight={addMonth => addMonth()}
+            // onMonthChange={(month) => this.state.isModalVisible == true && this.setState({ isModalVisible: false })}
             theme={{
               calendarBackground: bodyColor,
               selectedDayBackgroundColor: 'red',
               textSectionTitleColor: '#A2a2a2',
+              arrowColor: '#ff6600',
               todayTextColor: '#ff6600',
               dayTextColor: '#000',
               textDisabledColor: '#A2a2a2',
@@ -156,7 +169,7 @@ export default class Monthly extends React.Component {
               // calendarBackground: 'pink',
             }}
           />
-          {/* <Modal isVisible={this.state.isModalVisible}>
+          <Modal isVisible={this.state.isModalVisible}>
             <View style={{ backgroundColor:'#fff', paddingTop: 10 }}>
                 <Text style={{ alignSelf:'center',fontSize: 20, top: 3}}>List of Events</Text>
                 {this.state.eventDetails.map((item,ind) => {
@@ -186,11 +199,11 @@ export default class Monthly extends React.Component {
                 })}
               <Button title="Cancel" onPress={this.toggleModal} color='#A2a2a2'/>
             </View>
-          </Modal> */}
-          {this.state.isModalVisible &&
+          </Modal>
+          {/* {this.state.isModalVisible &&
             <View style={{paddingHorizontal: 20,marginTop: 20}}>
               <Text style={{ alignSelf:'center',fontSize: 18, marginVertical: 3, fontWeight: '700'}}>List of Events</Text>
-              <Text style={{ alignSelf:'center',fontSize: 18, marginVertical: 3, fontWeight: '300', color: '#A2a2a2'}}>{moment(currentDate).format('Do YYYY')}</Text>
+              <Text style={{ alignSelf:'center',fontSize: 18, marginVertical: 3, fontWeight: '300', color: '#A2a2a2'}}>{moment(currentDate).format('Do MMM YYYY')}</Text>
               {size(get(this.state, 'eventDetails', [])) > 0 && eventDetails.map((item,ind) => {
                 if(item.date === this.state.currentDate){
                   return(
@@ -208,7 +221,7 @@ export default class Monthly extends React.Component {
                 })
               }
             </View>  
-          } 
+          }  */}
         </ScrollView>
         }
         <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>

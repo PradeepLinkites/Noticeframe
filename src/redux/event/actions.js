@@ -1,9 +1,10 @@
 import hostname  from '../../config'
 import { cos } from 'react-native-reanimated';
-
+import Config from "react-native-config"
+const HOSTNAME = Config.API_URL
 
   export function getGroupListForShow(userId) {
-    return dispatch => { fetch(hostname + `/get/groupListForShow/?id=${userId}`, {
+    return dispatch => { fetch(HOSTNAME + `/get/groupListForShow/?id=${userId}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -26,7 +27,7 @@ import { cos } from 'react-native-reanimated';
   }
   
   export function createEvent(data){
-    return dispatch => { fetch(hostname + `/post/event`, {
+    return dispatch => { fetch(HOSTNAME + `/post/event`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -52,7 +53,7 @@ import { cos } from 'react-native-reanimated';
 
   export function getEvent(userId){
     console.log('userId', userId)
-    return dispatch => { fetch(hostname + `/get/eventsById?data=${userId}`, {
+    return dispatch => { fetch(HOSTNAME + `/get/eventsById?data=${userId}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -75,7 +76,7 @@ import { cos } from 'react-native-reanimated';
     }
     
   export function eventDetails(userId){
-  return dispatch => { fetch(hostname + `/get/eventDetails?data=${userId}`, {
+  return dispatch => { fetch(HOSTNAME + `/get/eventDetails?data=${userId}`, {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
@@ -98,7 +99,7 @@ import { cos } from 'react-native-reanimated';
   }
 
   export function getEventCalender (userId){
-    return dispatch => { fetch(hostname + `/get/event/forCalendars?data=${userId}`, {
+    return dispatch => { fetch(HOSTNAME + `/get/event/forCalendars?data=${userId}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -121,7 +122,7 @@ import { cos } from 'react-native-reanimated';
     }
 
   export function getEventSlideShow (userId){
-    return dispatch => { fetch(hostname + `/get/event/slideShow?data=${userId}`, {
+    return dispatch => { fetch(HOSTNAME + `/get/event/slideShow?data=${userId}`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -144,7 +145,7 @@ import { cos } from 'react-native-reanimated';
     }
 
   export function updateEvent(data){
-    return dispatch => { fetch(hostname  + `/put/event`, {
+    return dispatch => { fetch(HOSTNAME  + `/put/event`, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
@@ -168,7 +169,7 @@ import { cos } from 'react-native-reanimated';
     }
  
   export function deleteEvent(eventId){
-    return dispatch => { fetch(hostname + `/delete/event?data=${eventId}`, {
+    return dispatch => { fetch(HOSTNAME + `/delete/event?data=${eventId}`, {
       method: 'DELETE',
       headers: {
         'Accept': 'application/json',
@@ -191,7 +192,7 @@ import { cos } from 'react-native-reanimated';
   }
 
   export function updateSlideShow(data){
-    return dispatch => { fetch(hostname + `/put/event/slideShow`, {
+    return dispatch => { fetch(HOSTNAME + `/put/event/slideShow`, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
@@ -215,7 +216,7 @@ import { cos } from 'react-native-reanimated';
   }
 
   export function createGroup(data){
-    return dispatch => { fetch(hostname + `/post/createGroup`, {
+    return dispatch => { fetch(HOSTNAME + `/post/createGroup`, {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

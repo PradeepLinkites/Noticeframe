@@ -1,5 +1,5 @@
 import React from 'react'
-import {Modal, TextInput,FlatList, Platform, Alert, Picker, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
+import {ActivityIndicator, Modal, TextInput,FlatList, Platform, Alert, Picker, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import Navbar from '../Common/commonNavbar'
 import { get, isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
@@ -77,14 +77,6 @@ export default class CreateEvent extends React.Component {
       imageOpenModal: false,
       imageUploadModal: false,
       imageList: [],
-      // imageLibary: [
-      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event9.jpeg", index: 1 },
-      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event4.jpeg", index: 2 },
-      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/homerightbg.jpg", index: 3 },
-      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event10.jpeg", index: 4 },
-      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event3.jpeg", index: 5 },
-      //   { imageUrl: "https://noticeframe.s3.eu-west-2.amazonaws.com/event6.jpeg", index: 6 },
-      // ],
     }
     this._initState = this.state 
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this)
@@ -95,7 +87,7 @@ export default class CreateEvent extends React.Component {
 
   onFocusFunction = () => {
     const {state} = this.props.navigation
-    this.setState({ isLoading: true, eventPicture: [], defaultFillColor: '' })
+    this.setState({  eventPicture: [] })
     AsyncStorage.getItem('@user')
     .then((user) => {
       const user1 = JSON.parse(user)
@@ -123,6 +115,7 @@ export default class CreateEvent extends React.Component {
     if(this.props.createEventPhase) {
       this.props.resetEventPhase()
       this.setState({ isLoading: false , createEventMessage: this.props.createEventMessage })
+      this.props.getEventCalender(get(this.state, 'userId', ''))
       this.props.navigation.navigate('Home')
       this._resetState()
       this.props.getEvent(get(this.state, 'userId', ''))
@@ -348,7 +341,7 @@ export default class CreateEvent extends React.Component {
       data.selectContacts = memberList
       data.defaultFillColor = defaultFillColor
       data.frameBoundaryColor = defaultFillColor
-      data.eventDateLocal = eventDate1
+      data.eventDateLocal = moment(eventDate).format('YYYY-MM-DD')
       data.eventDate = eventDate
       data.startTime = startTime
       data.endTime = endTime
@@ -378,11 +371,14 @@ export default class CreateEvent extends React.Component {
   }
 
   render() {
-    const {eventNameError, notesError, startTimeError,endTimeError, checked, modalVisible, groupListName, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
+    const { isLoading, eventNameError, notesError, startTimeError,endTimeError, checked, modalVisible, groupListName, repeat, category, isEndPickerVisible, isStartPickerVisible, isDatePickerVisible, startTime, endTime, defaultFillColor  } = this.state
     const { state } = this.props.navigation
     const route = get(state, 'routeName', '')  === 'CreateEvent' ? 'Create Event' : ''
     return (
-      <SafeAreaView style={[AppStyles.container,{backgroundColor:'#3b5261'}]}>
+      <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
+      {isLoading ?
+        <ActivityIndicator animating = {isLoading} color = '#3b5261' size = "small" style = {AppStyles.activityIndicator} />
+        :
       <ScrollView style={styles.container}>
           <Navbar 
             navigation={this.props.navigation} 
@@ -481,10 +477,10 @@ export default class CreateEvent extends React.Component {
             <View style={[styles.selectGroupView,{marginTop: 10}]}>
               <View style={{flexDirection:'row',justifyContent:'space-between'}}>
                 <Text style={[styles.listTitle, {marginTop: 7}]}>Event Date</Text>
-                <Button mode="outlined" uppercase = {false}color = '#000' style={{marginLeft: 10 ,width: 127}}
+                <Button mode="outlined" uppercase = {false}color = '#000' style={{marginRight: 10 ,width: 125}}
                   onPress={()=>this.setState({isDatePickerVisible : true})}                 
                 >
-                  {get(this.state,'eventDate','') !== '' ? moment(get(this.state,'eventDate','')).format('DD-MM-YYYY') : 'Date picker' }
+                  {get(this.state,'eventDate','') !== '' ? moment(get(this.state,'eventDate','')).format('DD-MM-YYYY') : 'Select date' }
                 </Button>
               </View>
               {this.state.eventDateError && <Text style={AppStyles.error}>Please select the event date</Text>}
@@ -499,14 +495,14 @@ export default class CreateEvent extends React.Component {
             </View>
             <View style={styles.eventContainer}>
               <Text style={styles.listTitle}>Event Time</Text>
-              <View style={{flexDirection:'row', marginTop:8, justifyContent:'space-between', marginRight: 5}}>
-                <View style={{flexDirection:'row'}} >               
+              <View style={{flexDirection:'row', marginTop:8, justifyContent:'space-between', marginRight: 5 }}>
+                <View style={{flexDirection:'column'}} >               
                   <Text style={styles.timeText} >START TIME</Text>
                   <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 122, marginHorizontal: .5 }}
                     onPress={()=>this.setState({isStartPickerVisible : true})}  
                     disabled ={get(this.state,'eventDate','') === '' ? true : false}               
                   >
-                    {get(this.state,'startTime','') !== '' ? moment(get(this.state,'startTime','')).format('h:mm A') : 'Time picker' }
+                    {get(this.state,'startTime','') !== '' ? moment(get(this.state,'startTime','')).format('h:mm A') : 'Select time' }
                   </Button>
                   <DateTimePickerModal
                     minimumDate={new Date()}
@@ -522,13 +518,13 @@ export default class CreateEvent extends React.Component {
                     date ={new Date(get(this.state,'eventDate',''))}
                   />
                 </View>
-                <View style={{flexDirection:'row'}}> 
+                <View style={{flexDirection:'column'}}> 
                    <Text style={[styles.timeText,{marginLeft: 2}]}>END TIME</Text>
                    <Button mode="outlined" uppercase = {false} color = '#000' style={{width: 122, marginRight: 5}}
                     onPress={()=>this.setState({isEndPickerVisible : true})} 
                     disabled ={get(this.state,'eventDate','') === '' ? true : false}                 
                   >
-                    {get(this.state,'endTime','') !== '' ? moment(get(this.state,'endTime','')).format('h:mm A') : 'Time picker' }
+                    {get(this.state,'endTime','') !== '' ? moment(get(this.state,'endTime','')).format('h:mm A') : 'Select time' }
                   </Button>
                    <DateTimePickerModal
                       minimumDate={new Date()}
@@ -630,7 +626,7 @@ export default class CreateEvent extends React.Component {
                 </View> */}
                   <TextInput
                     multiline
-                    style={[styles.inputBox,{borderBottomWidth:0}]}
+                    style={styles.inputBox}
                     maxLength={40}
                     placeholder = "Location"
                     placeholderTextColor = "#000"
@@ -735,20 +731,20 @@ export default class CreateEvent extends React.Component {
                     <Text style={[styles.cancelText,{color:'#000'}]}>Select Image</Text>
                     <TouchableOpacity onPress={() =>this.setState({ imageOpenModal: false})}><Text>CANCEL</Text></TouchableOpacity>
                   </View>
-                  <View style={{ height:.5, backgroundColor:'#A2a2a2'}} />
-                    <View style={{ paddingHorizontal: 20, paddingVertical: 50}}>
+                  <View style={{ height:.6, backgroundColor:'#A2a2a2'}} />
+                    <View style={{ paddingHorizontal: 20, paddingVertical: 80}}>
                       <FlatList
                         showsHorizontalScrollIndicator={false}
                         data={folderLibary}
                         horizontal={true}
                         renderItem={({ item, index }) => {
                           return(
-                            <TouchableOpacity style={{margin: 10}} onPress={this.selectFolder.bind(this, item)}>
-                            <Image
-                              style={{width: 90, height: 100 }}
-                              source={require('../../assets/sidemenuAssets/Folder.png')}
-                            />
-                            <Text>{item.name}</Text>
+                            <TouchableOpacity style={styles.folderContainer} onPress={this.selectFolder.bind(this, item)}>
+                              <Image
+                                style={styles.folderStyle}
+                                source={require('../../assets/sidemenuAssets/Folder.png')}
+                              />
+                              <Text style={{fontSize: 14 ,flexGrow: 1, flexShrink: 1}} numberOfLines={3}>{item.name}</Text>
                             </TouchableOpacity>
                           )
                         }}
@@ -786,6 +782,7 @@ export default class CreateEvent extends React.Component {
             </Modal>
 
           </ScrollView>
+          }
         </SafeAreaView>
     )
   }
@@ -896,10 +893,9 @@ const styles = StyleSheet.create({
     marginRight: 60
   },
   timeText: {
-    marginRight: 3,
-    marginTop: 12,
+    margin: 7,
     color: '#939393',
-    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(10) : AppSizes.verticalScale(8),
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(10) : AppSizes.verticalScale(10),
     fontFamily: AppFonts.NRegular,
     fontWeight: '600'
   },
@@ -1052,7 +1048,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 30,
   },
-
+  folderContainer:{
+    margin: 10,
+    padding: Platform.OS === 'android' ? AppSizes.verticalScale(10) : AppSizes.verticalScale(10),
+    width: Platform.OS === 'android' ? AppSizes.verticalScale(100) : AppSizes.verticalScale(100),
+  },
+  folderStyle: {
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(60) : AppSizes.verticalScale(60),
+    width: Platform.OS === 'android' ? AppSizes.verticalScale(65) : AppSizes.verticalScale(65),
+  },
   imageThumbnail: {
     justifyContent: 'center',
     alignItems: 'center',

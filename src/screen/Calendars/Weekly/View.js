@@ -1,32 +1,37 @@
 import React from 'react'
-import {  Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import WeeklyCalendar from 'react-native-weekly-calendar';
-import styles from './styles'
+// import styles from './styles'
 import moment from 'moment'
 import AsyncStorage from '@react-native-community/async-storage'
-import { get , isEmpty, size } from 'lodash'
+import { _, get , isEmpty, size } from 'lodash'
+import {Agenda} from 'react-native-calendars';
 import sizes from '../../../theme/sizes';
+import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
+const testIDs = require('./testIDs')
+
 
 export default class Weekly extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       date: '2020-03-23',
-      allEvents: [],
+      allEvents: {},
       calendarHeader: '',
       calendarBody: '',
       calendarFont: '',
       isLoading: false,
-      userId: ''
+      userId: '',
+      getEventCalenderData: []
     }
   }
 
   componentDidMount() {
-    this.setState({ isLoading: true })
+    // this.setState({ isLoading: true })
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       AsyncStorage.getItem('@user')
       .then((user) => {
@@ -45,11 +50,13 @@ export default class Weekly extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    // console.log('props==>>>', this.props.getEventCalenderData)
-    if (this.props.getEventCalenderPhase) {
-      this.props.resetEventPhase()
-      this.handleEvent(get(this.props, 'getEventCalenderData',[]))
-      this.setState({ isLoading: false })
+    if(prevProps.getEventCalenderData !== this.props.getEventCalenderData){
+      if (this.props.getEventCalenderPhase) {
+        let eventList = get(this.props, 'getEventCalenderData',[])
+        this.handleEvent(eventList)
+        this.props.resetEventPhase()
+        // this.setState({ isLoading: false })
+      }
     }
     if (this.props.getSettingPhase) {
       this.props.resetSettingPhase()
@@ -64,51 +71,15 @@ export default class Weekly extends React.Component {
 
   handleEvent(event) {
     const calendarData = []
-    if (event) {
-      event.forEach((value, i) => {
-        if(get(value, 'startTime', '') !== null){
-          // var now  = moment(value.endTime).format("DD/MM/YYYY HH:MM:SS")
-          // var then = moment(value.startTime).format("DD/MM/YYYY HH:MM:SS")
-          // let duration = moment.utc(moment(now,"DD/MM/YYYY HH:MM:ss").diff(moment(then,"DD/MM/YYYY HH:MM:ss"))).format("HH:MM:ss")
-          // console.log('startTime====>>', get(value, 'startTime', ''))
-          // console.log('now====>>', now)
-          // console.log('then====>>', then)
-          // console.log('duration====>>', duration)
-
-          var d1 = new Date(get(value, 'startTime', ''))
-          var d2 = new Date(get(value, 'endTime', ''))
-          var date = new Date(d2-d1)
-          var hour = date.getUTCHours()
-          var min = date.getUTCMinutes()
-          var sec = date.getUTCSeconds()
-          console.log(hour + ":" + min + ":" + sec)
-          let duration = hour + ":" + min + ":" + sec
-          calendarData.push({
-            start: moment(get(value, 'startTime', '')).format('YYYY-MM-DD HH:mm:ss'),
-            duration: duration,
-            date: moment(get(value, 'eventDate', '')).format('YYYY-MM-DD'),
-            startTime: moment(get(value, 'startTime', '')).format('hh:mm:ss A'),
-            endTime: moment(get(value, 'endTime', '')).format('hh:mm:ss A'),
-            note: get(value, 'eventName', ''),
-            hexColor: get(value, 'defaultFillColor', ''),
-            id: get(value, '_id', '')
-          })
-        }
-      })
-    }
-    this.setState({
-      allEvents: calendarData,
-      isLoading: false
-    },()=>{
-      this.forceUpdate()
+    const eventData = []
+    const group = _.groupBy(event, 'eventDateLocal')
+    this.setState({allEvents: group, 
+      // isLoading: false 
     })
   }
 
-  showEvent =(day)=>{
-    this.setState({ date: day.format('YYYY-MM-DD') })
-  }
-
-  _eventTapped (id) {
+  onNavigate = (id) => {
+    this.setState({isModalVisible: false})
     this.props.navigation.navigate('EventDetail',{id : id})
   }
 
@@ -116,102 +87,137 @@ export default class Weekly extends React.Component {
     const { allEvents, calendarHeader, calendarBody, isLoading } = this.state
     let bodyColor = get(this.state,'calendarBody','') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarBody','') === 'Milk Punch' ? '#f4e3c9' 
     : get(this.state,'calendarBody','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarBody','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarBody','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarBody','') === 'Tusk' ? '#d7e0b1': '#fff'
-    return (
-      <SafeAreaView style={AppStyles.container}>
-        <ScrollView style={styles.container}>
-          {allEvents.length > 0 &&
-          <WeeklyCalendar
-            events={allEvents.length > 0 ? allEvents : []}
-            selected={moment().format('YYYY-MM-DD')}
-            startWeekday={7}
-            weekdayFormat='ddd'
-            themeColor='#ff6600'
-            titleStyle={styles.title}
-            dayLabelStyle={styles.dayLableStyle}
-            titleFormat='DD MMM YYYY'
-            locale='en'
-            renderEvent={(event, j, i) => {
-              let startTime = moment(event.start).format('LT').toString()
-              let duration = event.duration.split(':')
-              let seconds = parseInt(duration[0]) * 3600 + parseInt(duration[1]) * 60 + parseInt(duration[2])
-              let endTime = moment(event.start).add(seconds, 'seconds').format('LT').toString()
-                return (
-                  <TouchableOpacity style={[styles.event,{backgroundColor: bodyColor}]} key={j} onPress={this._eventTapped.bind(this, event.id )}>
-                      <View style={styles.eventDuration}>
-                        <View style={styles.durationContainer}>
-                          <View style={styles.durationDot} />
-                          <Text style={styles.durationText}>{startTime}</Text>
-                        </View>
-                        <View style={styles.durationContainer}>
-                          <View style={styles.durationDot} />
-                          <Text style={styles.durationText}>{endTime}</Text>
-                        </View>
-                        <View style={styles.durationDotConnector} />
-                      </View>
-                      <View>
-                        <Text numberOfLines={3} style={styles.eventText}>{event.note}</Text>
-                      </View>
-                  </TouchableOpacity>
-                )
-            }}
-            renderDay={(eventViews, weekdayToAdd, i) => {
-              return(
-                <View key={i.toString()} style={styles.day}>
-                  <View style={styles.dayLabel}>                   
-                    <Text style={[styles.monthDateText, { color: '#000' }]}>{weekdayToAdd.format('MM/D').toString()}</Text>
-                    <Text style={[styles.dayText, { color: '#000' }]}>{weekdayToAdd.format('ddd').toString()}</Text>
-                  </View>
-                  {eventViews.length === 0 ?
-                    <TouchableOpacity onPress={()=>this.props.navigation.navigate('CreateEvent')} style={{backgroundColor:bodyColor, justifyContent:'center', alignItems: 'center', flex: 1,paddingVertical:22}}>
-                      <Image source={require('../../../assets/icons/Plus2.png')} style={styles.plusIcon}/>
-                    </TouchableOpacity>
-                    :
-                    <View style={styles.allEvents}>
-                      {eventViews}
-                    </View>
-                  }
-                </View>
-              )
-            }}    
-            onDayPress={(weekday, i) => this.showEvent(weekday)}
-            style={{
-              borderWidth: .5,
-              borderColor: 'gray',
-              backgroundColor: calendarHeader === 'White' ? '#ffffff' : calendarHeader === 'Hawkes Blue' ? '#d5d6ea' : calendarHeader === 'Milk Punch' ? '#f4e3c9' 
-              : calendarHeader === 'Coral Candy' ? '#f5d5cb': calendarHeader === 'Cruise' ? '#b5dce1': calendarHeader === 'Swirl' ? '#d6cdc8': calendarHeader === 'Tusk' ? '#d7e0b1': '#fff'
-            }}
+      return (
+          <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
+            <Agenda
+              style={{flex:1, backgroundColor:'red',height: 700}}
+              items={allEvents}
+              selected={new Date()}
+              renderItem={this.renderItem.bind(this)}
+              renderEmptyDate={this.renderEmptyDate.bind(this)}
+              hideExtraDays={true}
+              pastScrollRange={10}
+              futureScrollRange={10}
+              renderEmptyData = {this.renderEmptyData.bind(this)}
+              // onDayPress={(day)=>{console.log('day pressed')}}
+              theme={{
+                agendaDayTextColor: '#3b5261',
+                agendaDayNumColor: 'green',
+                agendaTodayColor: 'red',
+                // agendaKnobColor: '#A2a2a2'
+              }}
+              // onCalendarToggled={(calendarOpened) => {console.log(calendarOpened)}}
+              // onDayPress={(day)=>{console.log('day pressed')}}
+              // rowHasChanged={this.rowHasChanged.bind(this)}
+              // loadItemsForMonth={this.loadItems.bind(this)}
+            />
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
+              <Image source={require('../../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
+            </TouchableOpacity>
+          </SafeAreaView>
+      )
+    }
+    
+    loadItems(day) {
+      setTimeout(() => {
+        for (let i = -15; i < 85; i++) {
+          const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+          const strTime = this.timeToString(time);
+          if (!this.state.items[strTime]) {
+            this.state.items[strTime] = [];
+            const numItems = Math.floor(Math.random() * 3 + 1);
+            for (let j = 0; j < numItems; j++) {
+              this.state.items[strTime].push({
+                name: 'Item for ' + strTime + ' #' + j,
+                height: Math.max(50, Math.floor(Math.random() * 150))
+              });
+            }
+          }
+        }
+        const newItems = {};
+        Object.keys(this.state.items).forEach(key => {newItems[key] = this.state.items[key];});
+        this.setState({
+          items: newItems
+        });
+      }, 1000);
+    }
+  
+    renderItem(item) {
+      let startTime = moment(get(item, 'startTime', '')).format('hh:mm A')
+      let endTime = moment(get(item, 'endTime', '')).format('hh:mm A')
+      let eventDate = moment(get(item, 'eventDate', '')).format('DD-MM-YYYY')
+      return (
+        <TouchableOpacity
+          testID={testIDs.agenda.ITEM}
+          style={[styles.item, {height: item.height}]} 
+          onPress={this.onNavigate.bind(this, get(item, '_id', ''))}
+        >
+        <View style={{flex:1}}>
+          <Text style={styles.eventTitleText}>{item.eventName}</Text>
+          <Text style={styles.eventDateText}>{eventDate}</Text>
+          <Text style={styles.eventDateText}>{startTime} to {endTime}</Text>
+        </View>
+        </TouchableOpacity>
+      )
+    }
 
-            // renderLastEvent={(event, j) => {
-            //   let startTime = moment(event.start).format('LT').toString()
-            //   let duration = event.duration.split(':')
-            //   let seconds = parseInt(duration[0]) * 3600 + parseInt(duration[1]) * 60 + parseInt(duration[2])
-            //   let endTime = moment(event.start).add(seconds, 'seconds').format('LT').toString()
-            //   return (
-            //     <View key={j}>
-            //       <View style={[styles.event,{backgroundColor: bodyColor}]}>
-            //         <View style={styles.eventDuration}>
-            //           <View style={styles.durationContainer}>
-            //             <View style={styles.durationDot} />
-            //             <Text style={styles.durationText}>{startTime}</Text>
-            //           </View>
-            //           <View style={{ paddingTop: 10 }} />
-            //           <View style={styles.durationContainer}>
-            //             <View style={styles.durationDot} />
-            //             <Text style={styles.durationText}>{endTime}</Text>
-            //           </View>
-            //           <View style={styles.durationDotConnector} />
-            //         </View>
-            //         <View style={styles.eventNote}>
-            //           <Text style={styles.eventText}>{event.note}</Text>
-            //         </View>
-            //       </View>
-            //     </View>
-            //   )
-            // }}      
-          /> 
-         }
-       </ScrollView>
-      </SafeAreaView>
-    )
+    renderEmptyData() {
+      return (
+        <View style={styles.emptyDate}>
+          <Text>This is empty date!</Text>
+        </View>
+      )
+    }
+  
+    renderEmptyDate() {
+      return (
+        <View style={styles.emptyDate}>
+          <Text>This is empty date!</Text>
+        </View>
+      );
+    }
+  
+    rowHasChanged(r1, r2) {
+      return r1.name !== r2.name;
+    }
+  
+    timeToString(time) {
+      const date = new Date(time);
+      return date.toISOString().split('T')[0];
+    }
   }
-}
+
+const styles = StyleSheet.create({
+  item: {
+    backgroundColor: 'white',
+    flex: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginRight: 10,
+    marginTop: 17
+  },
+  emptyDate: {
+    flex: 1, justifyContent:'center',alignItems:'center'
+  },
+  eventTitleText: {
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(14) : AppSizes.verticalScale(14),
+    fontFamily: AppFonts.NRegular,
+    fontWeight:'500',
+    letterSpacing: .3,
+    marginBottom: 5
+  },
+  eventDateText: {
+    margin: 1.5,
+    fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(12) : AppSizes.verticalScale(12),
+	  fontFamily: AppFonts.NRegular,
+    letterSpacing: .2
+  },
+  plusButtonStyle: {
+    width:  Platform.OS === 'android' ? AppSizes.verticalScale(50) : AppSizes.verticalScale(50), 
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(50) : AppSizes.verticalScale(50),  
+    borderRadius: Platform.OS === 'android' ?  25 : 25 ,                                             
+    position: 'absolute',                                          
+    bottom: Platform.OS === 'android' ? 22 : 32,                                                    
+    right: Platform.OS === 'android' ? 26 : 15,  
+  }
+});

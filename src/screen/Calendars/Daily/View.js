@@ -1,14 +1,17 @@
 import React from 'react'
-import {  Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-// import WeeklyCalendar from 'react-native-weekly-calendar';
+import WeeklyCalendar from 'react-native-weekly-calendar';
 // import styles from './styles'
 import moment from 'moment'
 import AsyncStorage from '@react-native-community/async-storage'
 import { get , isEmpty, size } from 'lodash'
 import EventCalendar from 'react-native-events-calendar'
-const { width, height } = Dimensions.get('window')
+import { useIsFocused } from '@react-navigation/native';
+const deviceWidth = Dimensions.get('window').width
+const deviceHeight = Dimensions.get('window').height
+let { width } = Dimensions.get('window')
 
 export default class Daily extends React.Component {
   constructor(props) {
@@ -59,6 +62,9 @@ export default class Daily extends React.Component {
     if (event) {
       event.forEach((value, i) => {
         if(get(value, 'startTime', '') !== null){
+          var now  = moment(value.endTime).format("DD/MM/YYYY HH:mm:ss")
+          var then = moment(value.startTime).format("DD/MM/YYYY HH:mm:ss")
+          let duration = moment.utc(moment(now,"DD/MM/YYYY HH:mm:ss").diff(moment(then,"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss")
           calendarData.push({
             start: moment(get(value, 'startTime', '')).format('YYYY-MM-DD HH:MM:SS'),
             end: moment(get(value, 'endTime', '')).format('YYYY-MM-DD HH:MM:SS'),
@@ -86,37 +92,44 @@ export default class Daily extends React.Component {
   }
 
   render() {
-    const { allEvents, calendarBody, isLoading } = this.state
-    let bodyColor = get(this.state,'calendarBody','') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarBody','') === 'Milk Punch' ? '#f4e3c9' 
-    : get(this.state,'calendarBody','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarBody','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarBody','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarBody','') === 'Tusk' ? '#d7e0b1': '#fff'
+    const { allEvents, isLoading } = this.state
     return (
-      <SafeAreaView style={{flex:1}}>
-        {allEvents.length > 0 && 
+      <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
+        <ScrollView style={styles.container}>
           <EventCalendar
             events={allEvents}
             scrollToFirst
             width={width}
-            // format12h={true}
             initDate={moment().format('YYYY-MM-DD')}
-            styles={{
-              backgroundColor:'red'
-            }}
             renderEvent={(event) => {
               return(
-                <ScrollView>
-                  <TouchableOpacity 
-                    style={{width: width, height: height, padding: 10, backgroundColor: bodyColor}} 
-                    onPress={this._eventTapped.bind(this, event.id )}
-                  >
-                    <Text>{event.title}</Text>
-                    <Text style={{marginTop:5}}>{event.start_time} - {event.end_time}</Text>
-                  </TouchableOpacity>
-                </ScrollView>
+                <TouchableOpacity 
+                  style={{flex: 1, width: width}} 
+                  onPress={this._eventTapped.bind(this, event.id )}
+                >
+                  <Text>{event.title}</Text>
+                  <Text>{event.summary}</Text>
+                  <Text>{event.start_time} - {event.end_time}</Text>
+                </TouchableOpacity>
               )
             }}
-          />
-        }      
+          /> 
+       </ScrollView>
+       <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
+          <Image source={require('../../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
+        </TouchableOpacity>
       </SafeAreaView>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  plusButtonStyle: {
+    width:  Platform.OS === 'android' ? AppSizes.verticalScale(50) : AppSizes.verticalScale(50), 
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(50) : AppSizes.verticalScale(50),  
+    borderRadius: Platform.OS === 'android' ?  25 : 25 ,                                             
+    position: 'absolute',                                          
+    bottom: Platform.OS === 'android' ? 22 : 32,                                                    
+    right: Platform.OS === 'android' ? 26 : 15,  
+  }
+})

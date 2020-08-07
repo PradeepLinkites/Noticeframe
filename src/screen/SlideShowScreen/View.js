@@ -91,7 +91,7 @@ export default class SlideShow extends React.Component {
         :
         <View style={styles.container}>
           {size(slideShowData) > 0 ?
-          <ScrollView>
+          // <ScrollView>
             <Swiper
             dot={<View style={{backgroundColor: '#A2a2a2', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3}} />}
             activeDot={<View style={{backgroundColor: '#ff6600', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3}} />} 
@@ -111,7 +111,7 @@ export default class SlideShow extends React.Component {
               const end_time = moment(item.endTime).format("h:mm A")
               let uri = get(item, 'eventPicture[0].uri', 'https://oilandgascouncil.com/wp-content/uploads/placeholder-event.png')
               return(
-                <FadeInView key={ind}>
+                <View key={ind}>
                   <Image source={{ uri: uri }} style={styles.backgroundImage}/>
                   <View style={styles.BigEventContainer}>
                     <View style={[styles.eventView,{backgroundColor:'rgba(248, 247, 216, 0.2)'}]}>
@@ -140,11 +140,11 @@ export default class SlideShow extends React.Component {
                       )
                   })}
                   </View>
-                </FadeInView>
+                </View>
               )
             })}      
           </Swiper>
-          </ScrollView>   
+          // </ScrollView>   
           : 
           <View style={{justifyContent: 'center',alignItems: 'center',flex: 1,backgroundColor:'#fff', height: deviceHeight}}>
             <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={AppStyles.noEventImageStyle}/>
@@ -225,27 +225,27 @@ const styles = StyleSheet.create({
 })
 
 
-const FadeInView = (props) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current  // Initial value for opacity: 0
+// const FadeInView = (props) => {
+//   const fadeAnim = useRef(new Animated.Value(0)).current  // Initial value for opacity: 0
 
-  React.useEffect(() => {
-    Animated.timing(
-      fadeAnim,
-      {
-        toValue: 1,
-        duration: 10000,
-      }
-    ).start();
-  }, [])
+//   React.useEffect(() => {
+//     Animated.timing(
+//       fadeAnim,
+//       {
+//         toValue: 1,
+//         duration: 10000,
+//       }
+//     ).start();
+//   }, [])
 
-  return (
-    <Animated.View                 // Special animatable View
-      style={{
-        ...props.style,
-        opacity: fadeAnim,         // Bind opacity to animated value
-      }}
-    >
-      {props.children}
-    </Animated.View>
-  );
-}
+//   return (
+//     <Animated.View                 // Special animatable View
+//       style={{
+//         ...props.style,
+//         opacity: fadeAnim,         // Bind opacity to animated value
+//       }}
+//     >
+//       {props.children}
+//     </Animated.View>
+//   );
+// }

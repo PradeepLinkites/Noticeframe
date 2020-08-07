@@ -1,7 +1,9 @@
 import hostname  from '../../config'
+import Config from "react-native-config"
+const HOSTNAME = Config.API_URL
 
   export function getSetting(userId) {
-    return dispatch => { fetch(hostname +`/get/setting/?data=${userId}`, {
+    return dispatch => { fetch(HOSTNAME +`/get/setting/?data=${userId}`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -24,7 +26,7 @@ import hostname  from '../../config'
   }
 
   export function updateSetting(data){
-    return dispatch => { fetch(hostname + `/put/setting`, {
+    return dispatch => { fetch(HOSTNAME + `/put/setting`, {
       method: 'PUT',
       headers: {
         'Accept': 'application/json',
