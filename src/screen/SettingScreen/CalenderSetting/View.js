@@ -85,13 +85,13 @@ export default class CalendarSetting extends React.Component {
 
   onSelect = (name, colorName) => {
     if(name === 'header'){
-      this.setState({ calendarHeader: colorName , isHeaderModalVisible: false })
+      this.setState({ calendarHeader: colorName , isHeaderModalVisible: false },() => this.submit())
     }
     if(name === 'body'){
-      this.setState({ calendarBody: colorName , isBodyModalVisible: false})
+      this.setState({ calendarBody: colorName , isBodyModalVisible: false},() => this.submit())
     }
     if(name === 'font'){
-      this.setState({ calendarFont: colorName , isFontModalVisible: false })
+      this.setState({ calendarFont: colorName , isFontModalVisible: false },() => this.submit())
     }
   }
 
@@ -177,7 +177,7 @@ export default class CalendarSetting extends React.Component {
               <View style={[styles.colorButton, {backgroundColor : calendarFont === 'White' ? '#ffffff' : calendarFont === 'Black' ? '#000' : ''}]} />
             </View>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={[AppStyles.button,{backgroundColor: '#3b5261', paddingVertical: Platform.OS === 'android' ? 10  : 12 ,marginLeft: 20,marginRight: 20}]}
               onPress={this.submit.bind(this)}
             >
@@ -187,12 +187,12 @@ export default class CalendarSetting extends React.Component {
                 :
                 <Text style={[AppStyles.buttonText,{fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(16) : AppSizes.verticalScale(14)}]}>Save</Text>
               }
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
           <Modal isVisible={this.state.isHeaderModalVisible}>
             <View style={{height: deviceHeight/2, backgroundColor:'#fff'}}>    
               {colorData.map((item,ind) => (
-                <TouchableOpacity onPress={this.onSelect.bind(this, 'header', item.name)} style={styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:item.color}]}/><Text style={styles.selectedText}>{item.name}</Text></TouchableOpacity> 
+                <TouchableOpacity key={ind} onPress={this.onSelect.bind(this, 'header', item.name)} style={styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:item.color}]}/><Text style={styles.selectedText}>{item.name}</Text></TouchableOpacity> 
               ))}
             </View>
             <Button title="Hide modal" onPress={this.toggleHeaderModal} />
@@ -201,7 +201,7 @@ export default class CalendarSetting extends React.Component {
           <Modal isVisible={this.state.isBodyModalVisible}>
             <View style={{height: deviceHeight/2, backgroundColor:'#fff'}}>    
               {colorData.map((item,ind) => (
-                <TouchableOpacity onPress={this.onSelect.bind(this, 'body', item.name)} style={styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:item.color}]}/><Text style={styles.selectedText}>{item.name}</Text></TouchableOpacity> 
+                <TouchableOpacity  key={ind} onPress={this.onSelect.bind(this, 'body', item.name)} style={styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:item.color}]}/><Text style={styles.selectedText}>{item.name}</Text></TouchableOpacity> 
               ))}
             </View>
             <Button title="Hide modal" onPress={this.toggleBodyModal} />
@@ -210,7 +210,7 @@ export default class CalendarSetting extends React.Component {
           <Modal isVisible={this.state.isFontModalVisible}>
             <View style={{height: deviceHeight/6, backgroundColor:'#fff', justifyContent:'center'}}>    
               {fontColor.map((item,ind) => (
-                <TouchableOpacity onPress={this.onSelect.bind(this, 'font', item.name)} style={styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:item.color}]}/><Text style={styles.selectedText}>{item.name}</Text></TouchableOpacity> 
+                <TouchableOpacity  key={ind} onPress={this.onSelect.bind(this, 'font', item.name)} style={styles.colorModalView}><View style={[styles.roundViewModal, {backgroundColor:item.color}]}/><Text style={styles.selectedText}>{item.name}</Text></TouchableOpacity> 
               ))}
             </View>
             <Button title="Hide modal" onPress={this.toggleFontModal} />

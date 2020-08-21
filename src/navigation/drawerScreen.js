@@ -223,7 +223,7 @@ const drawerStacks = [
 			props.navigation.navigate('Monthly')
 		}
 	}
-
+	
 	let firstName = get(props, `screenProps.user.firstName`, 'Your Name here')
 	let lastName = get(props, `screenProps.user.lastName`, '')
 	return (
@@ -345,7 +345,7 @@ class Logout extends React.Component {
 		AsyncStorage.removeItem('@user');
 		this.props.screenProps.updateUser({})
 		// LoginManager.logOut()
-		this.props.navigation.navigate('AuthStack')
+		this.props.navigation.navigate('SignIn')
 	}
 
 	render() {

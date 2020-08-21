@@ -22,11 +22,12 @@ export default class FrameColorSetting extends React.Component {
       lessUrgentHours: 48,
       notUrgentHours: 72,
       userId: '',   
-      isLoading: true
+      isLoading: false
     }
   }
 
   componentDidMount() {
+    this.setState({ isLoading: true })
     AsyncStorage.getItem('@user')
     .then((user) => {
       const user1 = JSON.parse(user)
@@ -60,13 +61,13 @@ export default class FrameColorSetting extends React.Component {
   
   onChange(name, value){
     if(name === 'urgent'){
-      this.setState({ urgent: value})
+      this.setState({ urgent: value},()=>this.submit())
     }
     if(name === 'lessUrgent'){
-      this.setState({ lessUrgent: value})
+      this.setState({ lessUrgent: value},()=>this.submit())
     }
     if(name === 'notUrgent'){
-      this.setState({ notUrgent: value})
+      this.setState({ notUrgent: value},()=>this.submit())
     }
   }
 

@@ -14,7 +14,7 @@ import ModalSelector from 'react-native-modal-selector'
 import AsyncStorage from '@react-native-community/async-storage'
 import { Button } from 'react-native-paper';
 import { RNS3 } from 'react-native-s3-upload';
-
+import Config from "react-native-config"
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -280,12 +280,12 @@ export default class EditEvent extends React.Component {
       type: "image/png"
     }    
     const options = {
-      // keyPrefix: "",
-      // bucket: "noticeframe",
-      // region: "eu-west-2",
-      // accessKey: "AKIA27YYELXRINJ7KB6U",
-      // secretKey: "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",
-      // successActionStatus: 201
+      keyPrefix: "",
+      bucket: Config.BUCKET,
+      region: Config.REGION,
+      accessKey: Config.ACCESS_KEY,
+      secretKey: Config.SECRET_KEY,
+      successActionStatus: 201
     }   
     RNS3.put(file, options).then(response => {
       if (response.status !== 201)

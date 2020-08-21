@@ -50,6 +50,15 @@ export default class Weekly extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.props.getSettingPhase) {
+      this.props.resetSettingPhase()
+      this.setState({
+        calendarHeader: get(this.props, 'getSettingData.Calendar.calendarHeader', 'default_header'),
+        calendarBody: get(this.props, 'getSettingData.Calendar.calendarBody', 'default_body'),
+        calendarFont: get(this.props, 'getSettingData.Calendar.calendarFont', 'default_body'),
+        isLoading: false
+      })
+    }
     if(prevProps.getEventCalenderData !== this.props.getEventCalenderData){
       if (this.props.getEventCalenderPhase) {
         let eventList = get(this.props, 'getEventCalenderData',[])
@@ -57,15 +66,6 @@ export default class Weekly extends React.Component {
         this.props.resetEventPhase()
         // this.setState({ isLoading: false })
       }
-    }
-    if (this.props.getSettingPhase) {
-      this.props.resetSettingPhase()
-      this.setState({
-        calendarHeader: get(prevProps, 'getSettingData.Calendar.calendarHeader', 'default_header'),
-        calendarBody: get(prevProps, 'getSettingData.Calendar.calendarBody', 'default_body'),
-        calendarFont: get(prevProps, 'getSettingData.Calendar.calendarFont', 'default_body'),
-        isLoading: false
-      })
     }
   }
 
@@ -89,31 +89,37 @@ export default class Weekly extends React.Component {
     : get(this.state,'calendarBody','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarBody','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarBody','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarBody','') === 'Tusk' ? '#d7e0b1': '#fff'
       return (
           <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
-            <Agenda
-              style={{flex:1, backgroundColor:'red',height: 700}}
-              items={allEvents}
-              selected={new Date()}
-              renderItem={this.renderItem.bind(this)}
-              renderEmptyDate={this.renderEmptyDate.bind(this)}
-              hideExtraDays={true}
-              pastScrollRange={10}
-              futureScrollRange={10}
-              renderEmptyData = {this.renderEmptyData.bind(this)}
-              // onDayPress={(day)=>{console.log('day pressed')}}
-              theme={{
-                agendaDayTextColor: '#3b5261',
-                agendaDayNumColor: 'green',
-                agendaTodayColor: 'red',
-                // agendaKnobColor: '#A2a2a2'
-              }}
-              // onCalendarToggled={(calendarOpened) => {console.log(calendarOpened)}}
-              // onDayPress={(day)=>{console.log('day pressed')}}
-              // rowHasChanged={this.rowHasChanged.bind(this)}
-              // loadItemsForMonth={this.loadItems.bind(this)}
-            />
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
-              <Image source={require('../../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
-            </TouchableOpacity>
+            {isLoading ?
+             <ActivityIndicator color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
+              :
+              <>
+                <Agenda
+                  style={{flex:1, height: 700}}
+                  items={allEvents}
+                  selected={new Date()}
+                  renderItem={this.renderItem.bind(this)}
+                  renderEmptyDate={this.renderEmptyDate.bind(this)}
+                  hideExtraDays={true}
+                  pastScrollRange={10}
+                  futureScrollRange={10}
+                  renderEmptyData = {this.renderEmptyData.bind(this)}
+                  // onDayPress={(day)=>{console.log('day pressed')}}
+                  theme={{
+                    agendaDayTextColor: '#3b5261',
+                    agendaDayNumColor: 'green',
+                    agendaTodayColor: 'red',
+                    calendarBackground: bodyColor,
+                  }}
+                  // onCalendarToggled={(calendarOpened) => {console.log(calendarOpened)}}
+                  // onDayPress={(day)=>{console.log('day pressed')}}
+                  // rowHasChanged={this.rowHasChanged.bind(this)}
+                  // loadItemsForMonth={this.loadItems.bind(this)}
+                />
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
+                  <Image source={require('../../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
+                </TouchableOpacity>
+              </>
+            }
           </SafeAreaView>
       )
     }
@@ -143,13 +149,15 @@ export default class Weekly extends React.Component {
     }
   
     renderItem(item) {
+      let bodyColor = get(this.state,'calendarBody','') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarBody','') === 'Milk Punch' ? '#f4e3c9' 
+      : get(this.state,'calendarBody','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarBody','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarBody','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarBody','') === 'Tusk' ? '#d7e0b1': '#fff'  
       let startTime = moment(get(item, 'startTime', '')).format('hh:mm A')
       let endTime = moment(get(item, 'endTime', '')).format('hh:mm A')
       let eventDate = moment(get(item, 'eventDate', '')).format('DD-MM-YYYY')
       return (
         <TouchableOpacity
           testID={testIDs.agenda.ITEM}
-          style={[styles.item, {height: item.height}]} 
+          style={[styles.item, {height: item.height, backgroundColor: bodyColor}]} 
           onPress={this.onNavigate.bind(this, get(item, '_id', ''))}
         >
         <View style={{flex:1}}>
@@ -164,7 +172,7 @@ export default class Weekly extends React.Component {
     renderEmptyData() {
       return (
         <View style={styles.emptyDate}>
-          <Text>This is empty date!</Text>
+          <Text>There is no event on this date!</Text>
         </View>
       )
     }
@@ -189,7 +197,6 @@ export default class Weekly extends React.Component {
 
 const styles = StyleSheet.create({
   item: {
-    backgroundColor: 'white',
     flex: 1,
     borderRadius: 5,
     padding: 10,

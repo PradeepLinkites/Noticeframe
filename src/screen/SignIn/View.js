@@ -16,11 +16,12 @@ export default class Login extends React.Component {
     this.state = {
       email: '',
       password: '',
+      licenseKeyNumber: '',
       emailError: false,
       emailValidError: false,
       passError: false,
       loading: false,
-      loginUserData:{},
+      loginUserData: {},
     }
   }
 
@@ -54,7 +55,7 @@ export default class Login extends React.Component {
 
   login = async () => {
     const { navigation, store } = this.props
-    const { email, password } = this.state
+    const { email, password,licenseKeyNumber } = this.state
     var error = true
     var validateEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
     this.setState({
@@ -85,15 +86,16 @@ export default class Login extends React.Component {
      const {
       email,
       password,
+      licenseKeyNumber,
       emailError,
       emailValidError,
       passError,
       loading,
     } = this.state
     return (
-      <SafeAreaView style={AppStyles.container}>
+      <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
         <KeyboardAvoidingView
-          behavior={Platform.OS == "ios" ? "padding" : "height"}
+          behavior={Platform.OS == "ios" ? "padding" : null}
           style={AppStyles.container}
         >
         <ScrollView style={AppStyles.scrollContainer}>
@@ -130,6 +132,19 @@ export default class Login extends React.Component {
               value={password}
             />
             {passError && <Text style={AppStyles.error}>Please enter password</Text>}  
+            <TextInput style = {AppStyles.textinput}
+              secureTextEntry={true}
+              underlineColorAndroid = "transparent"
+              placeholder = "License Key Number"
+              placeholderTextColor = "#A2a2a2"
+              autoCapitalize = "none"
+              placeholderStyle={{ fontSize: 16 ,fontWeight: '500'}}
+              numberOfLines={1}
+              autoCorrect={false}
+              onChangeText={licenseKeyNumber => this.setState({ licenseKeyNumber })}
+              // onFocus={this.onFocus.bind(this, 'licenseKeyNumber')}
+              value={licenseKeyNumber}
+            />
             <TouchableOpacity
                style = {AppStyles.loginButton}
                onPress = {

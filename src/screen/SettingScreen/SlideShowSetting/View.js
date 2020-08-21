@@ -22,7 +22,7 @@ export default class SlideShowSetting extends React.Component {
     super(props)
     this.state = {
       selectValue: '',
-      transitions: 'Fade-in',
+      transitions: '',
       settingDetails:[],
       eventName: 0,
       eventDate: 0,
@@ -173,7 +173,7 @@ export default class SlideShowSetting extends React.Component {
                   selectStyle={{borderColor: "transparent"}}
                   style={{ right:20 }}
                   data={data}
-                  initValue={"Select transition"}
+                  initValue={transitions}
                   onChange={(option)=>this.setState({ transitions: option.label })} 
                   />
                 <Image source={require('../../../assets/sidemenuAssets/Arrow_down.png')} style={styles.DropdownStyle}/>

@@ -35,6 +35,7 @@ export default class Monthly extends React.Component {
         const user1 = JSON.parse(user)
         if(!isEmpty(user1)){
           this.props.getEventCalender(user1._id)
+          this.props.getSetting(user1._id)
           this.setState({userId: user1._id})
         }
       })
@@ -117,6 +118,7 @@ export default class Monthly extends React.Component {
     })
     let bodyColor = get(this.state,'calendarBody','') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarBody','') === 'Milk Punch' ? '#f4e3c9' 
     : get(this.state,'calendarBody','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarBody','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarBody','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarBody','') === 'Tusk' ? '#d7e0b1': '#fff'
+    // console.log('bodyColor==>>', bodyColor)
     return (
       <SafeAreaView style={{flex:1}}>
         {isLoading ?

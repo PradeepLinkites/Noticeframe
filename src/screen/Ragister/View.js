@@ -35,15 +35,23 @@ export default class Login extends React.Component {
     }
   }
 
+
   static getDerivedStateFromProps(nextProps, prevState){
     return {  createUserData: nextProps.createUserData }
- }
+  }
 
  componentDidUpdate(prevProps){
   if(this.props.createUserData !== prevProps.createUserData) {
       if(this.props.createUserPhase) {
         this.props.resetPhase()
         this.setState({ createUserData: this.props.createUserData, isLoading: false })
+        this.setState({firstName: '',
+          lastName: '',
+          mobileNumber: '',
+          email: '',
+          password: '',
+          confirmPassword: '' 
+        })
         AsyncStorage.setItem('@user',JSON.stringify(this.props.createUserData))
         this.props.navigation.navigate('Home')
       } else {
@@ -82,7 +90,8 @@ export default class Login extends React.Component {
 
     var error = true
     var validateEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
-    const validatePassword = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+    // const validatePassword = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+    const validatePassword = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/
     this.setState({
       firstNameError: false,
       lastNameError: false,
@@ -156,7 +165,7 @@ export default class Login extends React.Component {
           behavior={Platform.OS == "ios" ? "padding" : "height"}
           style={AppStyles.container}
         >
-        <ScrollView style={AppStyles.scrollContainer}>
+        <ScrollView style={AppStyles.scrollContainer} showsVerticalScrollIndicator={false} >
         <Navbar navigation={this.props.navigation} navTitle={route} type={'register'} />
         <View style={AppStyles.topRegister}>
           <Image source={require('../../assets/logo/Logo_NF.png')} style={AppStyles.logoStyle} /> 
@@ -235,7 +244,7 @@ export default class Login extends React.Component {
               value={password}
             />
             <TouchableOpacity onPress={()=>this.setState({ showPassword: !showPassword })} style={styles.eyeContainer}>
-              <Image source={showPassword ? require('../../assets/icons/Eye.png') :require('../../assets/icons/Eye_cross.png') } style={showPassword ? styles.eyeImage : [styles.eyeImage,{height: 28,marginTop: 0}]} />
+              <Image source={showPassword ? require('../../assets/icons/Eye.png') :require('../../assets/icons/Eye_cross.png') } style={showPassword ? styles.eyeImage : [styles.eyeImage,{ height: 24 }]} />
             </TouchableOpacity>
             </View>
             {passwordError && (
@@ -256,7 +265,7 @@ export default class Login extends React.Component {
               value={confirmPassword}
             />
             <TouchableOpacity onPress={()=>this.setState({ showConfirmPassword: !showConfirmPassword })} style={styles.eyeContainer}>
-              <Image source={showConfirmPassword ? require('../../assets/icons/Eye.png') :require('../../assets/icons/Eye_cross.png') } style={showConfirmPassword ? styles.eyeImage : [styles.eyeImage,{height: 28,marginTop: 0}]} />
+              <Image source={showConfirmPassword ? require('../../assets/icons/Eye.png') :require('../../assets/icons/Eye_cross.png') } style={showConfirmPassword ? styles.eyeImage : [styles.eyeImage,{ height: 24 }]} />
             </TouchableOpacity>
           </View>
           {confirmPassError && (
@@ -291,78 +300,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     marginTop: 25,
     right:10,
-    height: 25,
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(27) : AppSizes.verticalScale(27),
     width: 35,
-    // backgroundColor:'red'
   },
   eyeImage: {
-    marginTop: 4,
     position: 'absolute',
     right: 2,
-    height: 20,
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(20),
     width: 30,
     resizeMode : 'stretch',
   },
 })
-//   logoContainer:{
-//     height: 250, 
-//     justifyContent: 'center', 
-//     alignItems: 'center',
-//   },
-//   logoStyle:{
-//     height: 120,
-//     width: 120
-//   },
-//   text:{
-//      marginTop: 25,
-//      color: '#939393',  
-//      fontSize: 18,
-//      fontWeight: '700',
-//      letterSpacing: 0.6
-//   },
-//   textinput: {
-//     fontSize: 18,
-//     color: 'black',
-//     marginBottom: 30,
-//     borderBottomColor: '#A2a2a2',
-//     borderBottomWidth: 1.5
-//   },
-//   mainContainer:{
-//     paddingLeft: 20,
-//     paddingRight: 20,
-//   },
-//   loginButton: {
-//      backgroundColor: '#ff6600',
-//      justifyContent:'center',
-//      alignItems:'center',
-//      height: 55,
-//      marginTop: 15,
-//      borderRadius: 30
-//   },
-//   submitButtonText:{
-//      color: 'white',
-//      fontSize: 20,
-//      fontWeight: '700',
-//      letterSpacing: 1
-//   },
-//   forgotText:{
-//     color: '#939393',  
-//     fontSize: 18,
-//     fontWeight: '700',
-//     letterSpacing: 0.8,
-//     alignSelf: 'center',
-//     marginTop: 20
-//  },
-//   SignupView:{
-//     marginTop: 8,
-//     flexDirection:'row',
-//     justifyContent:'center',
-//     alignItems: 'center',
-//   },
-//  signupText:{
-//   color: '#939393',  
-//   fontSize: 18,
-//   fontWeight: '700',
-//   letterSpacing: 0.8
-// },
-// })
