@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import {Animated, ActivityIndicator, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions } from 'react-native'
+import {ImageBackground, FlatList, ActivityIndicator, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions } from 'react-native'
 import { get , isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import Swiper from 'react-native-swiper'
@@ -91,15 +91,14 @@ export default class SlideShow extends React.Component {
         :
         <View style={styles.container}>
           {size(slideShowData) > 0 ?
-          // <ScrollView>
-            <Swiper
+          <Swiper
             dot={<View style={{backgroundColor: '#A2a2a2', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3}} />}
             activeDot={<View style={{backgroundColor: '#ff6600', width: 8, height: 8, borderRadius: 4, marginLeft: 3, marginRight: 3}} />} 
             paginationStyle={{
-              bottom: 40
+              bottom: 10
             }}
             autoplay={true}
-            autoplayTimeout={6}
+            autoplayTimeout={4}
             loop={true}
             index={swiperIndex}
             onIndexChanged={(index)=> this.setState({swiperIndex: index})}
@@ -112,39 +111,44 @@ export default class SlideShow extends React.Component {
               let uri = get(item, 'eventPicture[0].uri', 'https://oilandgascouncil.com/wp-content/uploads/placeholder-event.png')
               return(
                 <View key={ind}>
-                  <Image source={{ uri: uri }} style={styles.backgroundImage}/>
-                  <View style={styles.BigEventContainer}>
-                    <View style={[styles.eventView,{backgroundColor:'rgba(248, 247, 216, 0.2)'}]}>
-                      <Text style={styles.eventTitleText}>{item.eventName}</Text>
-                      <Text style={styles.eventDateText}>{date}</Text>
-                    <Text style={styles.eventDateText}>{start_time} to {end_time}</Text>
-                    </View>
-                    {slideShowData.map((item, ind)=>{
-                    const date = moment(item.eventDate).format("DD MMM, YYYY")
-                    const start_time = moment(item.startTime).format("hh:mm")
-                    const end_time = moment(item.endTime).format("hh:mm")
-                    return(
-                      <View style={{top : Platform.OS === 'android' ? 60 : 80 }} key={ind}>
-                        <View style={swiperIndex == ind ?  [styles.smallEventContainer,{borderRightWidth: 3,borderRightColor: '#ff9900'}] : styles.smallEventContainer}>
-                          <View style={styles.smallEventView}>
-                            <View style={{justifyContent:'flex-end'}}>
-                              <Text style={styles.smallEventDateText}>{date}</Text>
-                            </View>
-                            <View>
-                              <Text style={styles.smallEventTitleText}>{item.eventName}</Text>
-                              <Text style={styles.smallEventDateText}>{start_time} to {end_time}</Text>
-                            </View>
-                          </View>
-                        </View>
+                  <ImageBackground source={{ uri: uri }} style={styles.backgroundImage}>
+                    <View style={styles.summaryBox}>
+                      <View style={[styles.eventView,{backgroundColor:'rgba(248, 247, 216, 0.2)'}]}>
+                        <Text numberOfLines={2} style={styles.eventTitleText}>{item.eventName}</Text>
+                        <Text style={styles.eventDateText}>{date}</Text>
+                        <Text style={styles.eventDateText}>{start_time} to {end_time}</Text>
                       </View>
-                      )
-                  })}
-                  </View>
+                    </View>
+                    <View style={styles.smallBoxView}>
+                      <FlatList
+                        data={slideShowData}
+                        renderItem={({ item, index }) => {
+                          const date = moment(item.eventDate).format("DD MMM, YYYY")
+                          const start_time = moment(item.startTime).format("hh:mm")
+                          const end_time = moment(item.endTime).format("hh:mm")
+                          return( 
+                            <View style={swiperIndex === index ?  [styles.smallEventContainer,{borderRightWidth: 4, borderRightColor: '#ff9900'}] : styles.smallEventContainer}>
+                              <View style={styles.smallEventView}>
+                                <View style={{ justifyContent:'flex-end' }}>
+                                  <Text style={styles.smallEventDateText}>{date}</Text>
+                                </View>
+                                <View style={{ marginHorizontal: 3, width: Platform.OS === 'android' ? AppSizes.verticalScale(100) : AppSizes.verticalScale(100) }}>
+                                  <View style={{ height: AppSizes.verticalScale(32), marginBottom: 1 }}>
+                                    <Text numberOfLines={2} style={styles.smallEventTitleText}>{item.eventName}</Text>
+                                  </View>
+                                  <Text style={styles.smallEventDateText}>{start_time} to {end_time}</Text>
+                                </View>
+                              </View>
+                            </View>
+                          )
+                        }}
+                      />
+                    </View>
+                  </ImageBackground >
                 </View>
               )
             })}      
           </Swiper>
-          // </ScrollView>   
           : 
           <View style={{justifyContent: 'center',alignItems: 'center',flex: 1,backgroundColor:'#fff', height: deviceHeight}}>
             <Image source={require('../../assets/images/no_event.png')} alt="No Event" style={AppStyles.noEventImageStyle}/>
@@ -167,19 +171,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: deviceHeight,
   },
-  BigEventContainer: {
-    flex:1,
+  summaryBox: {
     position: 'absolute',
-    marginTop: Platform.OS === 'android' ? 100 : 140 ,
+    bottom: Platform.OS === 'android' ? AppSizes.verticalScale(180) : AppSizes.verticalScale(180),
     width: '100%',
-    height: deviceHeight,
     backgroundColor: 'transparent',
-    // backgroundColor: 'rgba(248, 247, 216, 0.3)',
   },
   eventTitleText: {
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(22) : AppSizes.verticalScale(18),
     fontFamily: AppFonts.NBlack,
-    // fontWeight:'900',
     letterSpacing: 1,
     color: '#fff',
     marginBottom: Platform.OS === 'android' ? 3 : 5
@@ -197,10 +197,11 @@ const styles = StyleSheet.create({
     paddingBottom: Platform.OS === 'android' ? 5 : 15 ,
   },
   smallEventContainer: {
-    width: deviceWidth * .5,
+    width: deviceWidth * .6,
     marginBottom: 3,
+    borderRadius: 5,
     alignSelf:'flex-end',
-    right: 20,
+    right: 12,
     backgroundColor: 'rgba(248, 247, 216, 0.2)',
   },
   smallEventView: {
@@ -215,6 +216,7 @@ const styles = StyleSheet.create({
     fontWeight:'800',
     letterSpacing: .5,
     color: '#fff',
+    marginBottom: 8
   },
   smallEventDateText: {
     fontSize: Platform.OS === 'android' ? AppSizes.verticalScale(10) : AppSizes.verticalScale(8),
@@ -222,6 +224,11 @@ const styles = StyleSheet.create({
     letterSpacing: .2,
     color: '#fff'
   },
+  smallBoxView: {
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(250) : AppSizes.verticalScale(250), 
+    top :  Platform.OS === 'android' ? AppSizes.verticalScale(100) : AppSizes.verticalScale(100), 
+    marginBottom: 20
+  }
 })
 
 

@@ -1,11 +1,11 @@
 import React from 'react'
-import {KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, Alert, StyleSheet, Text, View, Button, Image, SafeAreaView, TextInput, TouchableOpacity, Dimensions } from 'react-native'
+import {KeyboardAvoidingView, ScrollView, Platform, ActivityIndicator, Alert, StyleSheet, Text, View, Image, SafeAreaView, TextInput, TouchableOpacity, Dimensions } from 'react-native'
 import { StackActions, NavigationActions } from 'react-navigation'
 import { get, isEmpty , size} from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles } from '../../theme'
 import AsyncStorage from '@react-native-community/async-storage'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import styles from '../../theme/styles'
+import CheckBox from 'react-native-checkbox'
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
@@ -22,6 +22,7 @@ export default class Login extends React.Component {
       passError: false,
       loading: false,
       loginUserData: {},
+      rememberLicenceKey: false
     }
   }
 
@@ -90,7 +91,8 @@ export default class Login extends React.Component {
       emailError,
       emailValidError,
       passError,
-      loading,
+      rememberLicenceKey,
+      loading
     } = this.state
     return (
       <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
@@ -118,6 +120,7 @@ export default class Login extends React.Component {
             />
             {emailError && <Text style={AppStyles.error}>Please enter email</Text>} 
             {emailValidError && <Text style={AppStyles.error}>Please enter the valid email</Text>}
+
             <TextInput style = {AppStyles.textinput}
               secureTextEntry={true}
               underlineColorAndroid = "transparent"
@@ -132,6 +135,7 @@ export default class Login extends React.Component {
               value={password}
             />
             {passError && <Text style={AppStyles.error}>Please enter password</Text>}  
+
             <TextInput style = {AppStyles.textinput}
               secureTextEntry={true}
               underlineColorAndroid = "transparent"
@@ -145,6 +149,16 @@ export default class Login extends React.Component {
               // onFocus={this.onFocus.bind(this, 'licenseKeyNumber')}
               value={licenseKeyNumber}
             />
+             <View style={styles.remember}>
+                <CheckBox 
+                  label="Remember Details"
+                  labelBefore={true}
+                  value={rememberLicenceKey}
+                  onValueChange={()=>this.setState({ rememberLicenceKey: !rememberLicenceKey })}
+                  checkboxStyle={styles.checkboxStyle}
+                  labelStyle={{ fontFamily: AppFonts.NRegular }}
+                />
+             </View>
             <TouchableOpacity
                style = {AppStyles.loginButton}
                onPress = {
@@ -155,7 +169,6 @@ export default class Login extends React.Component {
               ?
               <ActivityIndicator size="small" color="#FFF" />
               :
-              // <Text style = {AppStyles.submitButtonText} onPress={() => this.props.navigation.navigate('Home')}> LOGIN </Text>
               <Text style = {AppStyles.submitButtonText}> LOGIN </Text>
             }
             </TouchableOpacity>
@@ -176,69 +189,15 @@ export default class Login extends React.Component {
   }
 }
 
-// const styles = StyleSheet.create({
-//   container: {
-//      flex: 1,
-//   },
-//   logoContainer:{
-//     height: deviceHeight-400, 
-//     justifyContent: 'center', 
-//     alignItems: 'center',
-//   },
-//   logoStyle:{
-//     height: 120,
-//     width: 120
-//   },
-//   text:{
-//      marginTop: 25,
-//      color: '#939393',  
-//      fontSize: 18,
-//      fontWeight: '700',
-//      letterSpacing: 0.6
-//   },
-//   textinput: {
-//     fontSize: 18,
-//     color: 'black',
-//     marginBottom: 30,
-//     borderBottomColor: '#A2a2a2',
-//     borderBottomWidth: 1.5
-//   },
-//   mainContainer:{
-//     paddingLeft: 20,
-//     paddingRight: 20,
-//   },
-//   loginButton: {
-//      backgroundColor: '#ff6600',
-//      justifyContent:'center',
-//      alignItems:'center',
-//      height: 55,
-//      marginTop: 20,
-//      borderRadius: 30
-//   },
-//   submitButtonText:{
-//      color: 'white',
-//      fontSize: 20,
-//      fontWeight: '700',
-//      letterSpacing: 1
-//   },
-//   forgotText:{
-//     color: '#939393',  
-//     fontSize: 18,
-//     fontWeight: '700',
-//     letterSpacing: 0.8,
-//     alignSelf: 'center',
-//     marginTop: 20
-//  },
-//   SignupView:{
-//     marginTop: 8,
-//     flexDirection:'row',
-//     justifyContent:'center',
-//     alignItems: 'center',
-//   },
-//  signupText:{
-//   color: '#939393',  
-//   fontSize: 18,
-//   fontWeight: '700',
-//   letterSpacing: 0.8
-// },
-// })
+const styles = StyleSheet.create({
+  remember: {
+    marginTop: 10, 
+    flexDirection: 'row', 
+    justifyContent:'flex-end'  
+  },
+  checkboxStyle: {
+    fontFamily: AppFonts.NRegular,
+    height: Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(18),
+    width:  Platform.OS === 'android' ? AppSizes.verticalScale(18) : AppSizes.verticalScale(18),
+  }
+})

@@ -402,7 +402,7 @@ export default class CreateEvent extends React.Component {
                     style={styles.eventInputBox}
                     placeholder = "Event Name"
                     placeholderTextColor="#000"
-                    maxLength={20}
+                    maxLength={60}
                     onChangeText={text => this.onEventChange(text)}
                     value={this.state.eventName}
                   />
