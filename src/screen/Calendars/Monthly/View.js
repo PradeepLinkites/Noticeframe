@@ -173,12 +173,12 @@ export default class Monthly extends React.Component {
           />
           <Modal isVisible={this.state.isModalVisible}>
             <View style={{ backgroundColor:'#fff', paddingTop: 10 }}>
-                <Text style={{ alignSelf:'center',fontSize: 20, top: 3}}>List of Events</Text>
+                <Text style={styles.modalHeader}>List of Events</Text>
                 {this.state.eventDetails.map((item,ind) => {
                   if(item.date === this.state.currentDate){
                     return(
                     <View>
-                      <TouchableOpacity style={styles.event} onPress={this.onNavigate.bind(this, get(item, 'id', ''))} key = {ind}>
+                      <TouchableOpacity style={[styles.event, {backgroundColor: bodyColor}]} onPress={this.onNavigate.bind(this, get(item, 'id', ''))} key = {ind}>
                         <View style={styles.eventDuration}>
                           <View style={styles.durationContainer}>
                             <View style={styles.durationDot} />
@@ -241,7 +241,6 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff',
   },
   event: {
-    backgroundColor:'#ff6600',
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -263,7 +262,7 @@ durationContainer: {
 durationDot: {
     width: 4,
     height: 4,
-    backgroundColor: 'grey',
+    backgroundColor: '#ff6600',
     marginRight: 5,
     alignSelf: 'center',
     borderRadius: 4/2,
@@ -286,5 +285,12 @@ plusButtonStyle: {
   position: 'absolute',                                          
   bottom: Platform.OS === 'android' ? 22 : 32,                                                    
   right: Platform.OS === 'android' ? 26 : 15,  
+},
+modalHeader: {
+  alignSelf:'center',
+  fontSize: 20, 
+  top: 3,
+  fontFamily: AppFonts.NBlack,
+  fontWeight: '700'
 }
 })

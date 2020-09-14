@@ -105,8 +105,8 @@ export default class Weekly extends React.Component {
                   renderEmptyData = {this.renderEmptyData.bind(this)}
                   // onDayPress={(day)=>{console.log('day pressed')}}
                   theme={{
-                    backgroundColor: '#ffffff',
-                    calendarBackground: bodyColor,
+                    backgroundColor: bodyColor,
+                    // calendarBackground: bodyColor,
                     agendaDayTextColor: '#3b5261',
                     textSectionTitleColor:'#000',
                     textDayHeaderFontSize: 16,
