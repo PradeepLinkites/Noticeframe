@@ -26,6 +26,16 @@ export default class Login extends React.Component {
     }
   }
 
+  componentDidMount(){
+    AsyncStorage.getItem('@LicenceKey')
+    .then((licenceKey) => {
+      if(!isEmpty(licenceKey)){
+        const isRemember = true
+        this.setState({ rememberLicenceKey: true , licenseKeyNumber : JSON.parse(licenceKey) })
+      }
+    })
+  }
+
   static getDerivedStateFromProps(nextProps, prevState){
     return { loginUserData: nextProps.loginUserData }
   }
@@ -37,6 +47,9 @@ export default class Login extends React.Component {
         this.setState({ loginUserData: this.props.loginUserData, loading: false, email: '', password: '' })
         // this.props.screenProps.User(this.props.loginUserData)
         AsyncStorage.setItem('@user',JSON.stringify(this.props.loginUserData))
+        if(this.state.rememberLicenceKey){
+          AsyncStorage.setItem('@LicenceKey',JSON.stringify(this.props.loginUserData.licenseKeyNumber))
+        }
         this.props.navigation.navigate('Home')
       } else {
         this.setState({ loading: false })
@@ -137,7 +150,7 @@ export default class Login extends React.Component {
             {passError && <Text style={AppStyles.error}>Please enter password</Text>}  
 
             <TextInput style = {AppStyles.textinput}
-              secureTextEntry={true}
+              secureTextEntry={false}
               underlineColorAndroid = "transparent"
               placeholder = "License Key Number"
               placeholderTextColor = "#A2a2a2"
@@ -146,7 +159,7 @@ export default class Login extends React.Component {
               numberOfLines={1}
               autoCorrect={false}
               onChangeText={licenseKeyNumber => this.setState({ licenseKeyNumber })}
-              // onFocus={this.onFocus.bind(this, 'licenseKeyNumber')}
+              editable={!rememberLicenceKey}
               value={licenseKeyNumber}
             />
              <View style={styles.remember}>
@@ -154,7 +167,7 @@ export default class Login extends React.Component {
                   label="Remember Details"
                   labelBefore={true}
                   value={rememberLicenceKey}
-                  onValueChange={()=>this.setState({ rememberLicenceKey: !rememberLicenceKey })}
+                  onChange={(value)=>this.setState({ rememberLicenceKey: value })}
                   checkboxStyle={styles.checkboxStyle}
                   labelStyle={{ fontFamily: AppFonts.NRegular }}
                 />

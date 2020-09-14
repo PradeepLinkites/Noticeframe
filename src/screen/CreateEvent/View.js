@@ -233,7 +233,7 @@ export default class CreateEvent extends React.Component {
   }
 
   selectPhotoTapped() {
-    this.setState({ isLoading: true, imageOpenModal: false })
+    this.setState({ imageOpenModal: false })
     const options = {
       quality: 1.0,
       maxWidth: 500,
@@ -568,7 +568,7 @@ export default class CreateEvent extends React.Component {
               </TouchableOpacity>
             </View>
             <View style={[styles.eventContainer,{borderBottomWidth : 0 }]}>
-               <Text style={styles.listTitle} >Every Recurrence</Text>
+               <Text style={styles.listTitle} >Event Recurrence</Text>
               <View style={{flexDirection:'row', justifyContent:'space-between'}}>
                 <Text style={[styles.repeatText,{marginTop: 15}]}>Repeat</Text>
                 {/* <View style={{flexDirection:'row'}}>
@@ -580,9 +580,10 @@ export default class CreateEvent extends React.Component {
                 {Platform.OS === 'android' ? 
                   <Picker
                     selectedValue={repeat}
-                    style={{ width: 140}}
+                    style={{ width: 176 }}
                     onValueChange={(itemValue, itemIndex) => this.onSelectRecurrence(itemValue)}
                   >
+                    <Picker.Item label="One Time Event" value="One Time Event" />
                     <Picker.Item label="Everyday" value="Everyday" />
                     <Picker.Item label="Weekly" value="Weekly" />
                     <Picker.Item label="Monthly" value="Monthly" />
@@ -596,7 +597,7 @@ export default class CreateEvent extends React.Component {
                     data={recurrence}
                     fontSize={16}
                     dropdownOffset={{ top: 10, left: 0 }}
-                    containerStyle={{width:120}}
+                    containerStyle={{width: 140}}
                   />
                 }
               </View>

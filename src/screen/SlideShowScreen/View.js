@@ -122,6 +122,7 @@ export default class SlideShow extends React.Component {
                     <View style={styles.smallBoxView}>
                       <FlatList
                         data={slideShowData}
+                        keyExtractor={item => item._id}
                         renderItem={({ item, index }) => {
                           const date = moment(item.eventDate).format("DD MMM, YYYY")
                           const start_time = moment(item.startTime).format("hh:mm")

@@ -548,7 +548,7 @@ export default class EditEvent extends React.Component {
               </TouchableOpacity>
             </View>
             <View style={[styles.eventContainer,{borderBottomWidth : 0 }]}>
-               <Text style={styles.listTitle} >Every Recurrence</Text>
+               <Text style={styles.listTitle} >Event Recurrence</Text>
               <View style={{flexDirection:'row', justifyContent:'space-between'}}>
               <Text style={[styles.repeatText,{marginTop: 15}]}>Repeat</Text>
                 {/* <View style={{flexDirection:'row'}}>
@@ -563,6 +563,7 @@ export default class EditEvent extends React.Component {
                     style={{ width: 140}}
                     onValueChange={(itemValue, itemIndex) => this.onSelectRecurrence(itemValue)}
                   >
+                    <Picker.Item label="One Time Event" value="One Time Event" />
                     <Picker.Item label="Everyday" value="Everyday" />
                     <Picker.Item label="Weekly" value="Weekly" />
                     <Picker.Item label="Monthly" value="Monthly" />

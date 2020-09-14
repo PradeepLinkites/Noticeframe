@@ -9,6 +9,26 @@ import AsyncStorage from '@react-native-community/async-storage'
 import { get , isEmpty, size } from 'lodash'
 import EventCalendar from 'react-native-events-calendar'
 import { useIsFocused } from '@react-navigation/native';
+import { Calendar } from 'react-native-big-calendar'
+
+const events = [
+  {
+    title: 'Meeting',
+    start: new Date(2020, 9, 14, 5, 30),
+    end: new Date(2020, 9, 14, 6, 30),
+  },
+  {
+    title: 'Coffee break',
+    start: new Date(2020, 9, 15, 15, 45),
+    end: new Date(2020, 9, 15, 16, 30),
+  },
+  {
+    title: 'Repair my car',
+    start: new Date(2020, 1, 16, 7, 45),
+    end: new Date(2020, 1, 16, 13, 30),
+  },
+]
+
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 let { width } = Dimensions.get('window')
@@ -124,6 +144,15 @@ export default class Daily extends React.Component {
               )
             }}
           /> 
+
+        {/* <Calendar 
+          events={events} 
+          height={600} 
+          mode="3days"
+          onPressCell={()=>alert('call')}
+          onPressDateHeader={()=>alert('header')}
+          swipeEnabled={true}
+        /> */}
        </ScrollView>
        <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
           <Image source={require('../../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
