@@ -69,21 +69,28 @@ export default class DayView extends React.PureComponent {
 
   _renderLines () {
     const offset = CALENDER_HEIGHT / 24
-    const { format24h } = this.props
+    const { format24h, bodyColor } = this.props
 
     return range(0, 25).map((item, i) => {
       let timeText
+      let setTime
       if (i === 0) {
+        setTime = ``
         timeText = ``
       } else if (i < 12) {
+        setTime = !format24h ? `${i}:00 AM` : i 
         timeText = !format24h ? `${i} AM` : i
       } else if (i === 12) {
+        setTime = !format24h ? `${i}:00 PM` : i
         timeText = !format24h ? `${i} PM` : i
       } else if (i === 24) {
-        timeText = !format24h ? `12 AM` : 0
+        setTime = !format24h ? `12:00 AM` : i
+        timeText = !format24h ? `12 AM` : i
       } else {
+        setTime = !format24h ? `${i - 12}:00 PM` : i
         timeText = !format24h ? `${i - 12} PM` : i
       }
+      
       const { width, styles } = this.props
       return [
         <Text
@@ -93,14 +100,16 @@ export default class DayView extends React.PureComponent {
           {timeText}
         </Text>,
         i === 0 ? null : (
-        <View
+        <TouchableOpacity
+          onPress={()=>this.props._timeText(setTime, 'line')}
           key={`line${i}`}
-          style={[styles.line, { top: offset * i, width: width - 20, backgroundColor: '#A2a2a2' }]}
+          style={[styles.line, { top: offset * i, width: width - 20,  height: 50, borderBottomWidth: 1, backgroundColor: bodyColor, borderBottomColor: '#A2a2a2', borderTopColor: '#A2a2a2'  }]}
         />
         ),
-        <View
+        <TouchableOpacity
+          onPress={()=>this.props._timeText(setTime, 'lineHalf')}
           key={`lineHalf${i}`}
-          style={[styles.line, { top: offset * (i + 0.5), width: width - 20, backgroundColor: '#A2a2a2' }]}
+          style={[styles.line, { top: offset * (i + 0.5), width: width - 20, backgroundColor: bodyColor , height: 50, borderBottomWidth: 1, borderBottomColor: '#A2a2a2' }]}
         />
       ]
     })
@@ -173,10 +182,10 @@ export default class DayView extends React.PureComponent {
   }
 
   render () {
-    const { styles, bodyColor } = this.props
+    const { styles, bodyColor, calendarHeader } = this.props
     return (
       <ScrollView ref={ref => (this._scrollView = ref)}
-        contentContainerStyle={[styles.contentStyle, { width: this.props.width, backgroundColor: bodyColor }]}
+        contentContainerStyle={[styles.contentStyle, { width: this.props.width, backgroundColor: '#fff' }]}
       >
         {this._renderLines()}
         {this._renderEvents()}

@@ -77,6 +77,7 @@ export default class CreateEvent extends React.Component {
       imageOpenModal: false,
       imageUploadModal: false,
       imageList: [],
+      selectedTime: ''
     }
     this._initState = this.state 
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this)
@@ -87,7 +88,15 @@ export default class CreateEvent extends React.Component {
 
   onFocusFunction = () => {
     const {state} = this.props.navigation
-    this.setState({  eventPicture: [] })
+    let selectDate = new Date(state.params.date)
+    let selectTime = state.params.time
+    if(state.params.time === ''){
+      let time = '12:30 AM'
+      this.setState({ eventDate:  selectDate , selectedTime: time })
+    }if(state.params.route == 'calender'){
+      this.setState({ eventDate:  selectDate , selectedTime: selectTime })
+    }
+    this.setState({ eventPicture: [] })
     AsyncStorage.getItem('@user')
     .then((user) => {
       const user1 = JSON.parse(user)
@@ -453,7 +462,7 @@ export default class CreateEvent extends React.Component {
             <View style={styles.colorContainer}>
               <View style={{flexDirection:'row',justifyContent:'space-between', marginTop: 8}}>
                 <View>
-                  <Text style={[styles.listTitle,{fontWeight:'700',top: 10 ,marginLeft: 10 }]}>Default Fill colour</Text>
+                  <Text style={[styles.listTitle,{fontWeight:'700',top: 10 ,}]}>Default Fill colour</Text>
                 </View>
                 <View style={{flexDirection:'row'}}>
                   <View style={ [styles.roundColorView, {backgroundColor : defaultFillColor === 'White' ? '#ffffff' : defaultFillColor === 'Hawkes Blue' ? '#d5d6ea' : defaultFillColor === 'Milk Punch' ? '#f4e3c9' 
@@ -472,7 +481,7 @@ export default class CreateEvent extends React.Component {
                  {/* <Image source={require('../../assets/sidemenuAssets/Arrow_down.png')} style={styles.colorDropdownStyle}/> */}
                 </View>
               </View>
-              {this.state.selectColorError && <Text style={[AppStyles.error,{marginLeft: 10 }]}>Please select the color</Text>}
+              {this.state.selectColorError && <Text style={AppStyles.error}>Please select the color</Text>}
             </View>
             <View style={[styles.selectGroupView,{marginTop: 10}]}>
               <View style={{flexDirection:'row',justifyContent:'space-between'}}>
@@ -502,7 +511,7 @@ export default class CreateEvent extends React.Component {
                     onPress={()=>this.setState({isStartPickerVisible : true})}  
                     disabled ={get(this.state,'eventDate','') === '' ? true : false}               
                   >
-                    {get(this.state,'startTime','') !== '' ? moment(get(this.state,'startTime','')).format('h:mm A') : 'Select time' }
+                    {get(this.state,'startTime','') !== '' ? moment(get(this.state,'startTime','')).format('h:mm A') : get(this.state,'selectedTime','') !== '' ? get(this.state,'selectedTime',''):   'Select time' }
                   </Button>
                   <DateTimePickerModal
                     minimumDate={new Date()}

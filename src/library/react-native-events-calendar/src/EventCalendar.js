@@ -45,10 +45,11 @@ export default class EventCalendar extends React.Component {
   }
 
   _renderItem({ index, item }) {
-    const { width, format24h, initDate, scrollToFirst } = this.props
+    const { width, format24h, initDate, scrollToFirst, calendarHeader, bodyColor } = this.props
     const date = moment(initDate).add(index - this.props.size, 'days')
     return (
       <DayView
+        _timeText={this._timeText.bind(this)}
         date={date}
         index={index}
         format24h={format24h}
@@ -60,7 +61,8 @@ export default class EventCalendar extends React.Component {
         width={width}
         styles={this.styles}
         scrollToFirst={scrollToFirst}
-        bodyColor={this.props.bodyColor}
+        bodyColor={bodyColor}
+        calendarHeader={calendarHeader}
       />
       // <View style={{backgroundColor:'red', width: width, height:500}} />
     )
@@ -73,6 +75,15 @@ export default class EventCalendar extends React.Component {
     const date = moment(this.props.initDate).add(index - this.props.size, 'days')
     this.refs.calendar.scrollToIndex({ index, animated: false })
     this.setState({ index, date })
+  }
+
+  _timeText = (timeText, name) => {
+    if(name === 'lineHalf'){
+      let timeText2 = timeText.replace('00', '30')
+      console.log(name, '==', timeText2)
+      this.props.showTime(timeText2, this.state.date.format(this.props.formatHeader || 'DD MMMM YYYY'))
+    }
+      this.props.showTime(timeText, this.state.date.format(this.props.formatHeader || 'DD MMMM YYYY'))
   }
 
   render() {

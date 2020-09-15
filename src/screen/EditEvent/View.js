@@ -431,7 +431,7 @@ export default class EditEvent extends React.Component {
               </View>
             }
             <View style={styles.colorContainer}>
-              <View style={{flexDirection:'row',justifyContent:'space-between',marginTop: 8 ,paddingLeft: 10}}>
+              <View style={{flexDirection:'row',justifyContent:'space-between',marginTop: 8 }}>
                 <View>
                   <Text style={[styles.listTitle,{fontWeight:'700',top: 10 }]}>Default Fill colour</Text>
                 </View>
