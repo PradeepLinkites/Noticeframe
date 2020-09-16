@@ -278,7 +278,7 @@ export default class EventScreen extends React.Component {
           }
         </>
         }
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent', {from: 'orangeButton'})} style={styles.plusButtonStyle}>
           <Image source={require('../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
         </TouchableOpacity>
       </SafeAreaView>

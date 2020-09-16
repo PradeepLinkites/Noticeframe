@@ -80,10 +80,11 @@ export default class EventCalendar extends React.Component {
   _timeText = (timeText, name) => {
     if(name === 'lineHalf'){
       let timeText2 = timeText.replace('00', '30')
-      console.log(name, '==', timeText2)
       this.props.showTime(timeText2, this.state.date.format(this.props.formatHeader || 'DD MMMM YYYY'))
     }
+    if(name === 'line'){
       this.props.showTime(timeText, this.state.date.format(this.props.formatHeader || 'DD MMMM YYYY'))
+    }
   }
 
   render() {

@@ -95,8 +95,8 @@ export default class Daily extends React.Component {
   }
 
   showTime(time, date){
-    let route = 'calender'
-    this.props.navigation.navigate('CreateEvent',{date, time, route})
+    let from = 'calender'
+    this.props.navigation.navigate('CreateEvent',{date, time, from })
   }
 
   render() {
@@ -139,9 +139,9 @@ export default class Daily extends React.Component {
             /> 
           }
        </ScrollView>
-       <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
+        {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
           <Image source={require('../../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </SafeAreaView>
     )
   }

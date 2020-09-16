@@ -88,15 +88,12 @@ export default class CreateEvent extends React.Component {
 
   onFocusFunction = () => {
     const {state} = this.props.navigation
-    let selectDate = new Date(state.params.date)
-    let selectTime = state.params.time
-    if(state.params.time === ''){
-      let time = '12:30 AM'
-      this.setState({ eventDate:  selectDate , selectedTime: time })
-    }if(state.params.route == 'calender'){
-      this.setState({ eventDate:  selectDate , selectedTime: selectTime })
+    console.log('state====>>>', state)
+    
+    this.selectTimeAndDate() 
+    if(get(state, 'params.from', '') === "orangeButton"){
+      this.setState({eventDate: '', selectedTime: '', eventPicture: [] })
     }
-    this.setState({ eventPicture: [] })
     AsyncStorage.getItem('@user')
     .then((user) => {
       const user1 = JSON.parse(user)
@@ -108,6 +105,21 @@ export default class CreateEvent extends React.Component {
         this.setState({ userId: user1._id})
       }
     })
+  }
+
+  selectTimeAndDate = () => {
+    const {state} = this.props.navigation   
+    if(get(state, 'params.from', '') === "calender"){
+      let selectDate = new Date(get(state, 'params.date', ''))
+      let selectTime = get(state, 'params.time', '')
+
+      if(selectTime === ''){
+        let time = '12:30 AM'
+        this.setState({ eventDate:  selectDate , selectedTime: time })
+      }if(state !== ''){
+        this.setState({ eventDate:  selectDate , selectedTime: selectTime })
+      }
+    }
   }
 
   componentDidMount(){

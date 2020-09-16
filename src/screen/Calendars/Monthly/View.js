@@ -85,11 +85,17 @@ export default class Monthly extends React.Component {
 
   onDayPress = (day, newDates) => {
     let eventDate = newDates.dateString
+    let isDate = false
     this.state.eventDetails.map(item=> {
       if(item.date === eventDate){
+        isDate = true
         this.setState({ isModalVisible: !this.state.isModalVisible , currentDate : eventDate })
       }
     })
+    if(isDate === false){
+      let from = 'calender'
+      this.props.navigation.navigate('CreateEvent',{ date: eventDate, time: '', from })
+    }
     // this.setState({ selectedDate: day.dateString })
   }
 
@@ -226,9 +232,9 @@ export default class Monthly extends React.Component {
           }  */}
         </ScrollView>
         }
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
+        {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
           <Image source={require('../../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </SafeAreaView>
     )
   }
