@@ -83,6 +83,21 @@ export default class Weekly extends React.Component {
     this.props.navigation.navigate('EventDetail',{id : id})
   }
 
+  onDayPress = (day) => {
+    const { allEvents } = this.state
+    let eventDate = day.dateString
+    let isDate = false
+    for (const item in allEvents) {
+      if(item === eventDate){
+        isDate = true
+      }
+    }
+    if(isDate === false){
+      let from = 'calender'
+      this.props.navigation.navigate('CreateEvent',{ date: eventDate, time: '', from })
+    }
+  }
+
   render() {
     const { allEvents, calendarHeader, calendarBody, isLoading } = this.state
     let bodyColor = get(this.state,'calendarBody','') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarBody','') === 'Milk Punch' ? '#f4e3c9' 
@@ -103,7 +118,7 @@ export default class Weekly extends React.Component {
                   pastScrollRange={10}
                   futureScrollRange={10}
                   renderEmptyData = {this.renderEmptyData.bind(this)}
-                  // onDayPress={(day)=>{console.log('day pressed')}}
+                  onDayPress={(day) => this.onDayPress(day)}
                   theme={{
                     backgroundColor: bodyColor,
                     // calendarBackground: bodyColor,
@@ -113,13 +128,12 @@ export default class Weekly extends React.Component {
                     textDayHeaderFontWeight: '500',
                   }}
                   // onCalendarToggled={(calendarOpened) => {console.log(calendarOpened)}}
-                  // onDayPress={(day)=>{console.log('day pressed')}}
                   // rowHasChanged={this.rowHasChanged.bind(this)}
                   // loadItemsForMonth={this.loadItems.bind(this)}
                 />
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
+                {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('CreateEvent')} style={styles.plusButtonStyle}>
                   <Image source={require('../../../assets/icons/Add.png')} style={{height: 52, width: 52}}/>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </>
             }
           </SafeAreaView>
