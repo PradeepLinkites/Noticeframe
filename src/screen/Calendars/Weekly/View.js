@@ -1,21 +1,20 @@
 import React from 'react'
 import { StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import WeeklyCalendar from 'react-native-weekly-calendar';
+
 // import styles from './styles'
 import moment from 'moment'
 import AsyncStorage from '@react-native-community/async-storage'
 import { _, get , isEmpty, size } from 'lodash'
 import {Agenda} from 'react-native-calendars';
 import sizes from '../../../theme/sizes';
-import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
+import { withNavigationFocus } from 'react-navigation';
+
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 const testIDs = require('./testIDs')
 
-
-export default class Weekly extends React.Component {
+class Weekly extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -100,9 +99,16 @@ export default class Weekly extends React.Component {
 
   render() {
     const { allEvents, calendarHeader, calendarBody, isLoading } = this.state
+    const { isFocused } = this.props
     let bodyColor = get(this.state,'calendarBody','') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarBody','') === 'Milk Punch' ? '#f4e3c9' 
     : get(this.state,'calendarBody','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarBody','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarBody','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarBody','') === 'Tusk' ? '#d7e0b1': '#fff'
-      return (
+   
+    let headerColor = get(this.state,'calendarHeader','') === 'White' ? '#ffffff' : get(this.state,'calendarHeader','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarHeader','') === 'Milk Punch' ? '#f4e3c9' 
+    : get(this.state,'calendarHeader','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarHeader','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarHeader','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarHeader','') === 'Tusk' ? '#d7e0b1': '#fff'    
+    
+    console.log('color', headerColor, '==', bodyColor)
+
+    return (
           <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
             {isLoading ?
              <ActivityIndicator color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
@@ -120,8 +126,8 @@ export default class Weekly extends React.Component {
                   renderEmptyData = {this.renderEmptyData.bind(this)}
                   onDayPress={(day) => this.onDayPress(day)}
                   theme={{
-                    backgroundColor: bodyColor,
-                    // calendarBackground: bodyColor,
+                    calendarBackground: isFocused ? 'skyblue': '#fff',
+                    backgroundColor: isFocused ? 'pink': '#fff',
                     agendaDayTextColor: '#3b5261',
                     textSectionTitleColor:'#000',
                     textDayHeaderFontSize: 16,
@@ -210,6 +216,8 @@ export default class Weekly extends React.Component {
       return date.toISOString().split('T')[0];
     }
   }
+
+export default withNavigationFocus(Weekly)
 
 const styles = StyleSheet.create({
   item: {

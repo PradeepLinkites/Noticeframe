@@ -87,9 +87,7 @@ export default class CreateEvent extends React.Component {
   }
 
   onFocusFunction = () => {
-    const {state} = this.props.navigation
-    console.log('state====>>>', state)
-    
+    const {state} = this.props.navigation    
     this.selectTimeAndDate() 
     if(get(state, 'params.from', '') === "orangeButton"){
       this.setState({eventDate: '', selectedTime: '', eventPicture: [] })

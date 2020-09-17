@@ -185,7 +185,7 @@ export default class DayView extends React.PureComponent {
     const { styles, bodyColor, calendarHeader } = this.props
     return (
       <ScrollView ref={ref => (this._scrollView = ref)}
-        contentContainerStyle={[styles.contentStyle, { width: this.props.width, backgroundColor: '#fff' }]}
+        contentContainerStyle={[styles.contentStyle, { width: this.props.width, backgroundColor: bodyColor }]}
       >
         {this._renderLines()}
         {this._renderEvents()}

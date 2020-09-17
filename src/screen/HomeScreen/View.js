@@ -7,6 +7,8 @@ import {
   SafeAreaView, 
   Dimensions, 
   TouchableOpacity, 
+  BackHandler,
+  Alert
 } from 'react-native'
 import { get,  isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
@@ -15,11 +17,13 @@ import { FlatGrid } from 'react-native-super-grid';
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage'
 import moment from "moment"
+import { withNavigationFocus } from 'react-navigation';
+
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
 
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,6 +42,7 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     this.setState({ isLoading: true })
     AsyncStorage.getItem('@user')
     .then((user) => {
@@ -47,6 +52,35 @@ export default class HomeScreen extends React.Component {
         this.props.getSetting(user1._id)
       }
     })
+  }
+  
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  handleBackButton = () => {
+    if (this.props.isFocused) {
+      Alert.alert(
+        'Exit App',
+        // 'Exiting the application?',
+        'Are you sure you want to exit the application?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel'
+          },
+          {
+            text: 'OK',
+            onPress: () => BackHandler.exitApp()
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+      return true;
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -126,6 +160,8 @@ export default class HomeScreen extends React.Component {
     )
   }
 }
+
+export default withNavigationFocus(HomeScreen)
 
 const styles = StyleSheet.create({
   text:{

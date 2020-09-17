@@ -344,7 +344,6 @@ class Logout extends React.Component {
 		alert('logout Successfully')
 		AsyncStorage.removeItem('@user');
 		this.props.screenProps.updateUser({})
-		// LoginManager.logOut()
 		this.props.navigation.navigate('SignIn')
 	}
 

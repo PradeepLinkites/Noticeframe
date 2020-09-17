@@ -149,7 +149,8 @@ export default class Login extends React.Component {
             />
             {passError && <Text style={AppStyles.error}>Please enter password</Text>}  
 
-            <TextInput style = {AppStyles.textinput}
+            <TextInput 
+              style = {[AppStyles.textinput, rememberLicenceKey ? { color: '#A2a2a2' } : {color: '#000'} ]} 
               secureTextEntry={false}
               underlineColorAndroid = "transparent"
               placeholder = "License Key Number"
