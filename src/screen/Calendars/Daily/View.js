@@ -1,15 +1,10 @@
 import React from 'react'
-import { StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
+import { BackHandler, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
-import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
-import WeeklyCalendar from 'react-native-weekly-calendar';
-// import styles from './styles'
 import moment from 'moment'
 import AsyncStorage from '@react-native-community/async-storage'
 import { get , isEmpty, size } from 'lodash'
 import EventCalendar from '../../../library/react-native-events-calendar'
-import { useIsFocused } from '@react-navigation/native';
-import { Calendar } from 'react-native-big-calendar'
 
 const deviceWidth = Dimensions.get('window').width
 const deviceHeight = Dimensions.get('window').height
@@ -30,6 +25,7 @@ export default class Daily extends React.Component {
   }
 
   componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     this.setState({ isLoading: true })
     AsyncStorage.getItem('@user')
     .then((user) => {
@@ -40,6 +36,35 @@ export default class Daily extends React.Component {
         this.setState({userId: user1._id})
       }
     })
+  }
+
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  handleBackButton = () => {
+    if (this.props.isFocused) {
+      Alert.alert(
+        'Exit App',
+        // 'Exiting the application?',
+        'Are you sure you want to exit the application?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel'
+          },
+          {
+            text: 'OK',
+            onPress: () => BackHandler.exitApp()
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+      return true;
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {

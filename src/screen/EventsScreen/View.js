@@ -1,5 +1,5 @@
 import React from 'react'
-import {Share, ActivityIndicator, ScrollView, StyleSheet, Text, View, SafeAreaView, Image, Dimensions, TouchableOpacity } from 'react-native'
+import {BackHandler, Alert, Share, ActivityIndicator, ScrollView, StyleSheet, Text, View, SafeAreaView, Image, Dimensions, TouchableOpacity } from 'react-native'
 import { _, get, isEmpty , size} from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import { FlatGrid } from 'react-native-super-grid';
@@ -50,6 +50,7 @@ export default class EventScreen extends React.Component {
   }
 
   componentDidMount(){
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     this.setState({ isLoading: true })
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction()
@@ -58,8 +59,34 @@ export default class EventScreen extends React.Component {
 
   componentWillUnmount(){
     this.focusListener.remove()
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
 
+  handleBackButton = () => {
+    if (this.props.isFocused) {
+      Alert.alert(
+        'Exit App',
+        // 'Exiting the application?',
+        'Are you sure you want to exit the application?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel'
+          },
+          {
+            text: 'OK',
+            onPress: () => BackHandler.exitApp()
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+      return true;
+    }
+  }
+  
   componentDidUpdate(prevProps) {
     if (this.props.getEventData !== prevProps.getEventData) {
       if(this.props.getEventPhase){

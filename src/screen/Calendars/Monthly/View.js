@@ -1,12 +1,11 @@
 import React from 'react'
-import { ActivityIndicator, Alert, StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
+import { BackHandler, Alert, ActivityIndicator, StyleSheet, Text, View, Button, SafeAreaView, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
 import { get , isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
 import moment from 'moment'
 import {Calendar} from 'react-native-calendars'
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-community/async-storage'
-import { Avatar, Card, Title, Paragraph } from 'react-native-paper';
 
 export default class Monthly extends React.Component {
   constructor(props) {
@@ -27,6 +26,7 @@ export default class Monthly extends React.Component {
   }
 
   componentDidMount() {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     this.setState({ isLoading: true })
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.setState({ isModalVisible: false })
@@ -44,6 +44,32 @@ export default class Monthly extends React.Component {
 
   componentWillUnmount(){
     this.focusListener.remove()
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  handleBackButton = () => {
+    if (this.props.isFocused) {
+      Alert.alert(
+        'Exit App',
+        // 'Exiting the application?',
+        'Are you sure you want to exit the application?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel'
+          },
+          {
+            text: 'OK',
+            onPress: () => BackHandler.exitApp()
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+      return true;
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {

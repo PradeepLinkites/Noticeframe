@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import {ImageBackground, FlatList, ActivityIndicator, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions } from 'react-native'
+import {BackHandler, ImageBackground, FlatList, ActivityIndicator, StyleSheet, Text, View, SafeAreaView, Image, ScrollView, Dimensions } from 'react-native'
 import { get , isEmpty, size } from 'lodash'
 import { AppColors, AppSizes, AppFonts, AppStyles} from '../../theme'
 import Swiper from 'react-native-swiper'
@@ -31,6 +31,7 @@ export default class SlideShow extends React.Component {
   }
 
   onFocusFunction = () => {
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     this.setState({ isLoading: true })
     AsyncStorage.getItem('@user')
     .then((user) => {
@@ -43,6 +44,7 @@ export default class SlideShow extends React.Component {
   }
 
   componentDidMount(){
+    console.log('componentDidMount')
     this.setState({ isLoading: true })
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       this.onFocusFunction()
@@ -51,6 +53,32 @@ export default class SlideShow extends React.Component {
 
   componentWillUnmount(){
     this.focusListener.remove()
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  handleBackButton = () => {
+    if (this.props.isFocused) {
+      Alert.alert(
+        'Exit App',
+        // 'Exiting the application?',
+        'Are you sure you want to exit the application?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel'
+          },
+          {
+            text: 'OK',
+            onPress: () => BackHandler.exitApp()
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+      return true;
+    }
   }
 
   componentDidUpdate(prevProps) { 

@@ -1,6 +1,6 @@
 import React from 'react'
-import { StyleSheet, Text, View, Button, SafeAreaView, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native'
-import { AppColors, AppSizes, AppFonts, AppStyles} from '../../../theme'
+import {BackHandler, Alert, StyleSheet, Text, View,  SafeAreaView,  Dimensions, TouchableOpacity } from 'react-native'
+import { AppSizes, AppFonts, AppStyles} from '../../../theme'
 
 // import styles from './styles'
 import moment from 'moment'
@@ -30,7 +30,7 @@ class Weekly extends React.Component {
   }
 
   componentDidMount() {
-    // this.setState({ isLoading: true })
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       AsyncStorage.getItem('@user')
       .then((user) => {
@@ -44,8 +44,34 @@ class Weekly extends React.Component {
     })
   }
 
-  componentWillUnmount () {
+  componentWillUnmount(){
     this.focusListener.remove()
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+  }
+
+  handleBackButton = () => {
+    if (this.props.isFocused) {
+      Alert.alert(
+        'Exit App',
+        // 'Exiting the application?',
+        'Are you sure you want to exit the application?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel'
+          },
+          {
+            text: 'OK',
+            onPress: () => BackHandler.exitApp()
+          }
+        ],
+        {
+          cancelable: false
+        }
+      );
+      return true;
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -100,15 +126,15 @@ class Weekly extends React.Component {
   render() {
     const { allEvents, calendarHeader, calendarBody, isLoading } = this.state
     const { isFocused } = this.props
-    let bodyColor = get(this.state,'calendarBody','') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarBody','') === 'Milk Punch' ? '#f4e3c9' 
-    : get(this.state,'calendarBody','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarBody','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarBody','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarBody','') === 'Tusk' ? '#d7e0b1': '#fff'
-   
-    let headerColor = get(this.state,'calendarHeader','') === 'White' ? '#ffffff' : get(this.state,'calendarHeader','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarHeader','') === 'Milk Punch' ? '#f4e3c9' 
-    : get(this.state,'calendarHeader','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarHeader','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarHeader','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarHeader','') === 'Tusk' ? '#d7e0b1': '#fff'    
-    
-    console.log('color', headerColor, '==', bodyColor)
 
+    let bodyColor = get(this.props, 'getSettingData.Calendar.calendarBody', 'default_body') === 'White' ? '#ffffff' : get(this.props, 'getSettingData.Calendar.calendarBody', 'default_body') === 'Hawkes Blue' ? '#d5d6ea' : get(this.props, 'getSettingData.Calendar.calendarBody', 'default_body') === 'Milk Punch' ? '#f4e3c9' 
+    : get(this.props, 'getSettingData.Calendar.calendarBody', 'default_body') === 'Coral Candy' ? '#f5d5cb': get(this.props, 'getSettingData.Calendar.calendarBody', 'default_body') === 'Cruise' ? '#b5dce1': get(this.props, 'getSettingData.Calendar.calendarBody', 'default_body') === 'Swirl' ? '#d6cdc8': get(this.props, 'getSettingData.Calendar.calendarBody', 'default_body') === 'Tusk' ? '#d7e0b1': '#fff'
+   
+    let headerColor = get(this.props,'getSettingData.Calendar.calendarHeader', 'default_header') === 'White' ? '#ffffff' : get(this.props,'getSettingData.Calendar.calendarHeader', 'default_header') === 'Hawkes Blue' ? '#d5d6ea' : get(this.props,'getSettingData.Calendar.calendarHeader', 'default_header') === 'Milk Punch' ? '#f4e3c9' 
+    : get(this.props,'getSettingData.Calendar.calendarHeader', 'default_header') === 'Coral Candy' ? '#f5d5cb': get(this.props,'getSettingData.Calendar.calendarHeader', 'default_header') === 'Cruise' ? '#b5dce1': get(this.props,'getSettingData.Calendar.calendarHeader', 'default_header') === 'Swirl' ? '#d6cdc8': get(this.props,'getSettingData.Calendar.calendarHeader', 'default_header') === 'Tusk' ? '#d7e0b1': '#fff'    
+    
     return (
+        isFocused && 
           <SafeAreaView style={[AppStyles.container,{backgroundColor:'#fff'}]}>
             {isLoading ?
              <ActivityIndicator color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
@@ -126,8 +152,8 @@ class Weekly extends React.Component {
                   renderEmptyData = {this.renderEmptyData.bind(this)}
                   onDayPress={(day) => this.onDayPress(day)}
                   theme={{
-                    calendarBackground: isFocused ? 'skyblue': '#fff',
-                    backgroundColor: isFocused ? 'pink': '#fff',
+                    calendarBackground: headerColor,
+                    backgroundColor: bodyColor ,
                     agendaDayTextColor: '#3b5261',
                     textSectionTitleColor:'#000',
                     textDayHeaderFontSize: 16,
@@ -168,7 +194,7 @@ class Weekly extends React.Component {
           items: newItems
         });
       }, 1000);
-    }
+    } 
   
     renderItem(item) {
       let bodyColor = get(this.state,'calendarBody','') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarBody','') === 'Milk Punch' ? '#f4e3c9' 
@@ -179,7 +205,7 @@ class Weekly extends React.Component {
       return (
         <TouchableOpacity
           testID={testIDs.agenda.ITEM}
-          style={[styles.item, {height: item.height, backgroundColor: bodyColor}]} 
+          style={[styles.item, {height: item.height, backgroundColor: '#fff'}]} 
           onPress={this.onNavigate.bind(this, get(item, '_id', ''))}
         >
         <View style={{flex:1}}>
@@ -225,7 +251,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginRight: 10,
-    marginTop: 17
+    marginTop: 17,
+    marginBottom: 2,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.36,
+    shadowRadius: 6.68,
+
+    elevation: 11,
+
   },
   emptyDate: {
     flex: 1, justifyContent:'center',alignItems:'center'
