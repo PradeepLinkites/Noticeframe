@@ -45,7 +45,7 @@ export default class Login extends React.Component {
       if(this.props.loginUserPhase) {
         this.props.resetPhase()
         this.setState({ loginUserData: this.props.loginUserData, loading: false, email: '', password: '' })
-        // this.props.screenProps.User(this.props.loginUserData)
+        this.props.screenProps.updateUser(this.props.loginUserData)
         AsyncStorage.setItem('@user',JSON.stringify(this.props.loginUserData))
         if(this.state.rememberLicenceKey){
           AsyncStorage.setItem('@LicenceKey',JSON.stringify(this.props.loginUserData.licenseKeyNumber))

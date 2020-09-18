@@ -27,7 +27,8 @@ export default class CreateEvent extends React.Component {
       userId: '',
       selectedItems: [],
       selectedItemsError: false,
-      message: ''
+      message: '',
+      emailValidError: ''
     }
     this._initState = this.state 
     this.selectPhotoTapped = this.selectPhotoTapped.bind(this);
@@ -141,6 +142,20 @@ export default class CreateEvent extends React.Component {
     this.setState({ selectedItems })
   }
 
+  addNewItem = (value) => {
+    // console.log('value', value)
+    // var validateEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+    // let email = value.name
+    // var error = true
+    // if (email.trim() === '') {
+    //   error = false
+    //   this.setState({ emailError: true })
+    // } else if (!validateEmail.test(email.trim())) {
+    //   error = false
+    //   this.setState({ emailValidError: true })
+    // }
+  }
+
   _cancel =()=> {
     this.setState(this._initState)
     this.props.navigation.goBack(null)
@@ -188,7 +203,7 @@ export default class CreateEvent extends React.Component {
             <View style={styles.eventContainer}>
                 <Text style={[styles.listTitle,{marginBottom: 10}]}>Select Members to join</Text>
                 <MultiSelect
-                  items={userList}
+                  items={userList.length > 0 ? userList : []}
                   uniqueKey="id"
                   onSelectedItemsChange={this.onSelectedItemsChange}
                   selectedItems={get(this.state, 'selectedItems', '')}
@@ -207,6 +222,8 @@ export default class CreateEvent extends React.Component {
                   submitButtonText="Submit"
                   textColor="#A2a2a2"
                   itemFontSize={18}
+                  canAddItems={true}
+                  onAddItem={(value)=>this.addNewItem(value)}
                 />
               {selectedItemsError && <Text style={AppStyles.error}>Please select the member</Text>} 
             </View>

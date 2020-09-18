@@ -10,16 +10,11 @@ import HomePage from '../screen/HomeScreen/Container'
 import CreateEvent from '../screen/CreateEvent/Container'
 import CreateGroup from '../screen/CreateGroup/Container'
 import EditEvent from '../screen/EditEvent/Container'
-// import Signup from '../screen/Signup/Container'
-import Forgot from '../screen/Forgot/Container'
 import { get, size } from 'lodash'
 
 const AuthStack = createStackNavigator({
 	Welcome: {
 		screen: Welcome
-	},
-	Forgot: {
-		screen: Forgot,
 	},
 	SignIn: {
 		screen: SignIn,

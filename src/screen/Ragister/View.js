@@ -53,6 +53,7 @@ export default class Login extends React.Component {
           confirmPassword: '' 
         })
         AsyncStorage.setItem('@user',JSON.stringify(this.props.createUserData))
+        this.props.screenProps.updateUser(this.props.createUserData)
         this.props.navigation.navigate('Home')
       } else {
         this.setState({ isLoading: false })
