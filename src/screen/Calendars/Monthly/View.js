@@ -6,8 +6,9 @@ import moment from 'moment'
 import {Calendar} from 'react-native-calendars'
 import Modal from 'react-native-modal';
 import AsyncStorage from '@react-native-community/async-storage'
+import { withNavigationFocus } from 'react-navigation';
 
-export default class Monthly extends React.Component {
+class Monthly extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -144,21 +145,22 @@ export default class Monthly extends React.Component {
 
   render() {
     const { isLoading, eventDetails, currentDate, calendarHeader, calendarBody } = this.state
+    const { isFocused } = this.props
     let dates = {}
     eventDetails.forEach((val) => {
       dates[val.date] = { marked: true }  
     })
-    let bodyColor = get(this.state,'calendarBody','') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.state,'calendarBody','') === 'Milk Punch' ? '#f4e3c9' 
-    : get(this.state,'calendarBody','') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarBody','') === 'Cruise' ? '#b5dce1': get(this.state,'calendarBody','') === 'Swirl' ? '#d6cdc8': get(this.state,'calendarBody','') === 'Tusk' ? '#d7e0b1': '#fff'
-    // console.log('bodyColor==>>', bodyColor)
+    let bodyColor = get(this.props, 'getSettingData.Calendar.calendarBody', 'default_header') === 'White' ? '#ffffff' : get(this.state,'calendarBody','') === 'Hawkes Blue' ? '#d5d6ea' : get(this.props, 'getSettingData.Calendar.calendarBody', 'default_header') === 'Milk Punch' ? '#f4e3c9' 
+    : get(this.props, 'getSettingData.Calendar.calendarBody', 'default_header') === 'Coral Candy' ? '#f5d5cb': get(this.state,'calendarBody','') === 'Cruise' ? '#b5dce1': get(this.props, 'getSettingData.Calendar.calendarBody', 'default_header') === 'Swirl' ? '#d6cdc8': get(this.props, 'getSettingData.Calendar.calendarBody', 'default_header') === 'Tusk' ? '#d7e0b1': '#fff'
+
     return (
-      <SafeAreaView style={{flex:1}}>
+      isFocused && 
+        <SafeAreaView style={{flex:1}}>
         {isLoading ?
         <ActivityIndicator animating = {isLoading} color = {'#3b5261'} size = "small" style = {AppStyles.activityIndicator} />
         :
         <ScrollView style={styles.container}>
           <Calendar
-            // monthFormat={'dd MMM yyyy'}
             style={{
               borderWidth: .5,
               borderColor: 'gray',
@@ -265,6 +267,8 @@ export default class Monthly extends React.Component {
     )
   }
 }
+
+export default withNavigationFocus(Monthly)
 
 const styles = StyleSheet.create({
   container: {
